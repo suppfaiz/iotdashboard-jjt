@@ -10,8 +10,24 @@ fi
 # Wait for MySQL database to become ready
 echo "Waiting for database connection..."
 until php -r "
+\$env = [];
+if (file_exists('.env')) {
+    foreach (file('.env') as \$line) {
+        \$line = trim(\$line);
+        if (\$line && strpos(\$line, '=') !== false && strpos(\$line, '#') !== 0) {
+            list(\$k, \$v) = explode('=', \$line, 2);
+            \$env[trim(\$k)] = trim(\$v, '\"\'');
+        }
+    }
+}
+\$host = \$env['DB_HOST'] ?? getenv('DB_HOST') ?? '127.0.0.1';
+\$port = \$env['DB_PORT'] ?? getenv('DB_PORT') ?? '3306';
+\$dbname = \$env['DB_DATABASE'] ?? getenv('DB_DATABASE') ?? 'laravel';
+\$user = \$env['DB_USERNAME'] ?? getenv('DB_USERNAME') ?? 'root';
+\$pass = \$env['DB_PASSWORD'] ?? getenv('DB_PASSWORD') ?? '';
+
 try {
-    \$db = new PDO('mysql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_DATABASE'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
+    \$db = new PDO(\"mysql:host=\$host;port=\$port;dbname=\$dbname\", \$user, \$pass);
     exit(0);
 } catch (Exception \$e) {
     exit(1);
@@ -35,8 +51,24 @@ php artisan migrate --force
 # Seed database if users table is empty
 echo "Checking if database needs seeding..."
 USER_COUNT=$(php -r "
+\$env = [];
+if (file_exists('.env')) {
+    foreach (file('.env') as \$line) {
+        \$line = trim(\$line);
+        if (\$line && strpos(\$line, '=') !== false && strpos(\$line, '#') !== 0) {
+            list(\$k, \$v) = explode('=', \$line, 2);
+            \$env[trim(\$k)] = trim(\$v, '\"\'');
+        }
+    }
+}
+\$host = \$env['DB_HOST'] ?? getenv('DB_HOST') ?? '127.0.0.1';
+\$port = \$env['DB_PORT'] ?? getenv('DB_PORT') ?? '3306';
+\$dbname = \$env['DB_DATABASE'] ?? getenv('DB_DATABASE') ?? 'laravel';
+\$user = \$env['DB_USERNAME'] ?? getenv('DB_USERNAME') ?? 'root';
+\$pass = \$env['DB_PASSWORD'] ?? getenv('DB_PASSWORD') ?? '';
+
 try {
-    \$db = new PDO('mysql:host=' . env('DB_HOST') . ';port=' . env('DB_PORT') . ';dbname=' . env('DB_DATABASE'), env('DB_USERNAME'), env('DB_PASSWORD'));
+    \$db = new PDO(\"mysql:host=\$host;port=\$port;dbname=\$dbname\", \$user, \$pass);
     \$stmt = \$db->query('SELECT COUNT(*) FROM users');
     echo \$stmt->fetchColumn();
 } catch (Exception \$e) {
