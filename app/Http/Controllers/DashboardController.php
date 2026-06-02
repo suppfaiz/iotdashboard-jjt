@@ -55,15 +55,19 @@ class DashboardController extends Controller
             ->orderBy('date')
             ->get();
 
+        $driver = \Illuminate\Support\Facades\DB::connection()->getDriverName();
+        $monthlyFormat = $driver === 'sqlite' ? "strftime('%Y-%m', date)" : 'DATE_FORMAT(date, "%Y-%m")';
+        $yearlyFormat = $driver === 'sqlite' ? "strftime('%Y', date)" : 'YEAR(date)';
+
         $monthlyLogs = \Illuminate\Support\Facades\DB::table('daily_energy_logs')
-            ->selectRaw('DATE_FORMAT(date, "%Y-%m") as label, SUM(total_kwh_harian) as total')
+            ->selectRaw("{$monthlyFormat} as label, SUM(total_kwh_harian) as total")
             ->where('date', '>=', now()->subMonths(12))
             ->groupBy('label')
             ->orderBy('label')
             ->get();
 
         $yearlyLogs = \Illuminate\Support\Facades\DB::table('daily_energy_logs')
-            ->selectRaw('YEAR(date) as label, SUM(total_kwh_harian) as total')
+            ->selectRaw("{$yearlyFormat} as label, SUM(total_kwh_harian) as total")
             ->groupBy('label')
             ->orderBy('label')
             ->get();
