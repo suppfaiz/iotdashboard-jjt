@@ -14,11 +14,17 @@ if ! [ -x "$(command -v docker)" ]; then
     echo "[*] Attempting to install Docker..."
     if [ -f /etc/debian_version ]; then
         sudo apt-get update
-        sudo apt-get install -y docker.io docker-compose-plugin
+        if ! [ -x "$(command -v curl)" ]; then
+            sudo apt-get install -y curl
+        fi
+        echo "[*] Running official Docker installation script..."
+        curl -fsSL https://get.docker.com -o get-docker.sh
+        sudo sh get-docker.sh
+        rm get-docker.sh
         sudo systemctl start docker
         sudo systemctl enable docker
     else
-        echo "[!] Please install Docker and try again."
+        echo "[!] Please install Docker manually and try again."
         exit 1
     fi
 fi
@@ -28,10 +34,26 @@ DOCKER_COMPOSE="docker compose"
 if ! docker compose version &>/dev/null; then
     echo "[!] Docker Compose v2 command not found. Trying 'docker-compose'..."
     if ! [ -x "$(command -v docker-compose)" ]; then
-        echo "[-] Error: Docker Compose is not installed."
-        exit 1
+        echo "[*] Attempting to install Docker Compose..."
+        if [ -f /etc/debian_version ]; then
+            sudo apt-get update
+            sudo apt-get install -y docker-compose || sudo apt-get install -y docker-compose-v2 || true
+            if ! [ -x "$(command -v docker-compose)" ] && ! docker compose version &>/dev/null; then
+                echo "[-] Error: Failed to install Docker Compose. Please install it manually."
+                exit 1
+            fi
+            if docker compose version &>/dev/null; then
+                DOCKER_COMPOSE="docker compose"
+            else
+                DOCKER_COMPOSE="docker-compose"
+            fi
+        else
+            echo "[-] Error: Docker Compose is not installed."
+            exit 1
+        fi
+    else
+        DOCKER_COMPOSE="docker-compose"
     fi
-    DOCKER_COMPOSE="docker-compose"
 fi
 
 # Check and setup .env file
