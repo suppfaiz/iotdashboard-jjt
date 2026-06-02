@@ -36,6 +36,18 @@ services:
     networks:
       - iot-network
 
+  # Web-based Database Manager (Adminer)
+  adminer:
+    image: adminer:latest
+    container_name: iot_dashboard_adminer
+    restart: always
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./database:/var/www/html/database
+    networks:
+      - iot-network
+
 networks:
   iot-network:
     driver: bridge
