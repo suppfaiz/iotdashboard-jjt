@@ -10,7 +10,9 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            background-color: #f8fafc;
+            background-image: radial-gradient(rgba(148, 163, 184, 0.12) 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
             color: #0f172a;
             min-height: 100vh;
         }
@@ -18,8 +20,8 @@
         .orb {
             position: fixed;
             border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.12;
+            filter: blur(100px);
+            opacity: 0.22;
             z-index: 0;
             animation: float 25s infinite ease-in-out;
             pointer-events: none;
@@ -27,7 +29,7 @@
         .orb-1 {
             width: 500px;
             height: 500px;
-            background: radial-gradient(circle, #3b82f6 0%, rgba(59, 130, 246, 0) 70%);
+            background: radial-gradient(circle, #60a5fa 0%, rgba(96, 165, 250, 0.1) 70%);
             top: -10%;
             left: -10%;
             animation-delay: 0s;
@@ -35,7 +37,7 @@
         .orb-2 {
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, #10b981 0%, rgba(16, 185, 129, 0) 70%);
+            background: radial-gradient(circle, #34d399 0%, rgba(52, 211, 153, 0.1) 70%);
             bottom: -15%;
             right: -10%;
             animation-delay: -5s;
@@ -43,7 +45,7 @@
         .orb-3 {
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, #06b6d4 0%, rgba(6, 182, 212, 0) 70%);
+            background: radial-gradient(circle, #22d3ee 0%, rgba(34, 211, 238, 0.1) 70%);
             bottom: 30%;
             left: 15%;
             animation-delay: -10s;
