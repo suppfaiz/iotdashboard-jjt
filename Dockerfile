@@ -7,9 +7,6 @@ WORKDIR /var/www
 RUN apk update && apk add --no-cache \
     nginx \
     supervisor \
-    nodejs \
-    npm \
-    git \
     curl \
     libpng-dev \
     libxml2-dev \
@@ -22,9 +19,6 @@ RUN apk update && apk add --no-cache \
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql bcmath sockets pcntl gd zip opcache
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
 # Copy application source code
 COPY . /var/www
 
@@ -34,13 +28,6 @@ COPY .docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Set permissions for Entrypoint
 RUN chmod +x /var/www/.docker/entrypoint.sh
-
-# Install PHP Dependencies
-RUN composer diagnose || true
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
-
-# Install Node dependencies and compile assets for production
-RUN npm install && npm run build
 
 # Make storage folders writable
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache

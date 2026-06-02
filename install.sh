@@ -101,6 +101,49 @@ update_env_val "MQTT_PORT" "1883"
 
 echo "[+] Configuration updated successfully."
 
+# Check and install PHP 8.3 & extensions on Ubuntu/Debian host if missing
+if ! [ -x "$(command -v php)" ]; then
+    echo "[*] PHP is not installed on the host. Attempting to install PHP 8.3..."
+    if [ -f /etc/debian_version ]; then
+        sudo apt-get update
+        sudo apt-get install -y software-properties-common
+        sudo add-apt-repository -y ppa:ondrej/php
+        sudo apt-get update
+        sudo apt-get install -y php8.3-cli php8.3-xml php8.3-curl php8.3-mbstring php8.3-zip php8.3-gd php8.3-bcmath php8.3-sockets php8.3-mysql unzip
+    else
+        echo "[!] Please install PHP 8.3 manually and run this script again."
+        exit 1
+    fi
+fi
+
+# Check and install Composer on host if missing
+if ! [ -x "$(command -v composer)" ]; then
+    echo "[*] Composer is not installed on the host. Installing Composer..."
+    curl -sS https://getcomposer.org/installer | php
+    sudo mv composer.phar /usr/local/bin/composer
+fi
+
+# Check and install Node.js & NPM on host if missing
+if ! [ -x "$(command -v npm)" ]; then
+    echo "[*] Node.js/NPM is not installed on the host. Installing Node.js..."
+    if [ -f /etc/debian_version ]; then
+        curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+    else
+        echo "[!] Please install Node.js (v20+) and NPM manually."
+        exit 1
+    fi
+fi
+
+# Run Composer Install on Host
+echo "[*] Running 'composer install' on host..."
+composer install --no-dev --optimize-autoloader --no-interaction
+
+# Run NPM install and build on Host
+echo "[*] Compiling assets with NPM on host..."
+npm install
+npm run build
+
 # Start services
 echo "[*] Building and starting docker containers..."
 $DOCKER_COMPOSE down || true

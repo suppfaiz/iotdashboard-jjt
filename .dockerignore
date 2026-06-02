@@ -1,8 +1,6 @@
 .git
 .env
-vendor
 node_modules
-public/build
 public/storage
 storage/*.key
 storage/framework/cache/data/*
