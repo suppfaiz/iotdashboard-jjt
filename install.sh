@@ -90,12 +90,24 @@ update_env_val() {
     fi
 }
 
-update_env_val "DB_CONNECTION" "mysql"
-update_env_val "DB_HOST" "db"
-update_env_val "DB_PORT" "3306"
-update_env_val "DB_DATABASE" "dashboard_iot_baru"
-update_env_val "DB_USERNAME" "root"
-update_env_val "DB_PASSWORD" "$DB_PASSWORD"
+comment_env_val() {
+    local key="$1"
+    if grep -q "^${key}=" .env; then
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            sed -i "" "s|^${key}=|# ${key}=|" .env
+        else
+            sed -i "s|^${key}=|# ${key}=|" .env
+        fi
+    fi
+}
+
+update_env_val "DB_CONNECTION" "sqlite"
+update_env_val "DB_DATABASE" "/var/www/database/database.sqlite"
+comment_env_val "DB_HOST"
+comment_env_val "DB_PORT"
+comment_env_val "DB_USERNAME"
+comment_env_val "DB_PASSWORD"
+
 update_env_val "REVERB_HOST" "\"$VPS_IP\""
 update_env_val "VITE_REVERB_HOST" "\"$VPS_IP\""
 update_env_val "REVERB_PORT" "8081"
@@ -104,6 +116,12 @@ update_env_val "MQTT_HOST" "mqtt"
 update_env_val "MQTT_PORT" "1883"
 
 echo "[+] Configuration updated successfully."
+
+# Setup SQLite database file on host
+echo "[*] Setting up SQLite database on host..."
+mkdir -p database
+touch database/database.sqlite
+chmod -R 777 database
 
 # Check if PHP is installed and version is at least 8.4
 PHP_VERSION=$(php -r 'echo PHP_VERSION;' 2>/dev/null || echo "0")

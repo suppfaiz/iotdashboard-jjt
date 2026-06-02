@@ -11,31 +11,14 @@ services:
       - "80:80"
       - "8081:8081"
     environment:
-      - DB_HOST=db
-      - DB_PORT=3306
       - MQTT_HOST=mqtt
       - MQTT_PORT=1883
     volumes:
       - app-storage:/var/www/storage
       - ./.env:/var/www/.env
+      - ./database:/var/www/database
     depends_on:
-      - db
       - mqtt
-    networks:
-      - iot-network
-
-  # MySQL Database
-  db:
-    image: mysql:8.0
-    container_name: iot_dashboard_db
-    restart: always
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-dashboard_iot_baru}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
-    ports:
-      - "3306:3306"
-    volumes:
-      - db-data:/var/lib/mysql
     networks:
       - iot-network
 
@@ -58,8 +41,6 @@ networks:
     driver: bridge
 
 volumes:
-  db-data:
-    driver: local
   app-storage:
     driver: local
   mqtt-data:
