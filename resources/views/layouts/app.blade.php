@@ -7,12 +7,13 @@
     <title>IoT Energy Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            background-image: radial-gradient(rgba(148, 163, 184, 0.12) 1.5px, transparent 1.5px);
-            background-size: 24px 24px;
+            background-color: #f8fafc !important;
+            background-image: radial-gradient(circle, rgba(148, 163, 184, 0.25) 1.5px, transparent 1.5px) !important;
+            background-size: 24px 24px !important;
             color: #0f172a;
             min-height: 100vh;
         }
@@ -20,9 +21,9 @@
         .orb {
             position: fixed;
             border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.22;
-            z-index: 0;
+            filter: blur(120px);
+            opacity: 0.32;
+            z-index: -10;
             animation: float 25s infinite ease-in-out;
             pointer-events: none;
         }
@@ -76,7 +77,6 @@
             background: rgba(148, 163, 184, 0.5);
         }
     </style>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="antialiased relative pb-20 md:pb-0 overflow-x-hidden">
     <!-- Ambient Background Orbs -->
