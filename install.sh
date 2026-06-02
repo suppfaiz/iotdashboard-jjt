@@ -112,6 +112,26 @@ update_env_val "REVERB_HOST" "\"$VPS_IP\""
 update_env_val "VITE_REVERB_HOST" "\"$VPS_IP\""
 update_env_val "REVERB_PORT" "8081"
 update_env_val "VITE_REVERB_PORT" "8081"
+
+# Ensure Reverb Keys exist in the .env file
+if ! grep -q "^REVERB_APP_ID=" .env; then
+    update_env_val "REVERB_APP_ID" "533833"
+fi
+if ! grep -q "^REVERB_APP_KEY=" .env; then
+    update_env_val "REVERB_APP_KEY" "azt0mh1mhiwobwenacjr"
+fi
+if ! grep -q "^REVERB_APP_SECRET=" .env; then
+    update_env_val "REVERB_APP_SECRET" "cr4owmnc0g59xex0yi3j"
+fi
+if ! grep -q "^REVERB_SCHEME=" .env; then
+    update_env_val "REVERB_SCHEME" "http"
+fi
+
+# Set VITE keys using literal values to prevent Vite bundler expansion issues
+VAL_REVERB_APP_KEY=$(grep "^REVERB_APP_KEY=" .env | cut -d'=' -f2- | tr -d '"' | tr -d "'")
+update_env_val "VITE_REVERB_APP_KEY" "$VAL_REVERB_APP_KEY"
+update_env_val "VITE_REVERB_SCHEME" "http"
+
 update_env_val "MQTT_HOST" "mqtt"
 update_env_val "MQTT_PORT" "1883"
 
