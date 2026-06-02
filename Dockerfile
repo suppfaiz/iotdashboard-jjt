@@ -25,6 +25,7 @@ COPY . /var/www
 # Configure Nginx & Supervisor
 COPY .docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY .docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN mkdir -p /var/log/supervisor
 
 # Set permissions for Entrypoint
 RUN chmod +x /var/www/.docker/entrypoint.sh

@@ -45,4 +45,5 @@ php artisan storage:link --force
 
 # Start supervisor
 echo "Starting Supervisor..."
+mkdir -p /var/log/supervisor
 exec supervisord -n -c /etc/supervisor/conf.d/supervisord.conf
