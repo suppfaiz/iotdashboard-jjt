@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      network: host
     container_name: iot_dashboard_app
     restart: always
     ports:
