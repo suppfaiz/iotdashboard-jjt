@@ -36,6 +36,7 @@ COPY .docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN chmod +x /var/www/.docker/entrypoint.sh
 
 # Install PHP Dependencies
+RUN composer diagnose || true
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # Install Node dependencies and compile assets for production
