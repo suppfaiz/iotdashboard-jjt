@@ -45,7 +45,8 @@ services:
       - "8082:8080"
     volumes:
       - ./database:/data
-    command: database.sqlite
+    environment:
+      - SQLITE_DATABASE=/data/database.sqlite
     networks:
       - iot-network
 
