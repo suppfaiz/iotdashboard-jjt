@@ -161,7 +161,7 @@ fi
 
 # Run Composer Install on Host
 echo "[*] Running 'composer install' on host..."
-composer install --no-dev --optimize-autoloader --no-interaction
+composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # Run NPM install and build on Host
 echo "[*] Compiling assets with NPM on host..."
