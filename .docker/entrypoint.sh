@@ -30,9 +30,10 @@ try {
     \$db = new PDO(\"mysql:host=\$host;port=\$port;dbname=\$dbname\", \$user, \$pass);
     exit(0);
 } catch (Exception \$e) {
+    echo \"Connection error: \" . \$e->getMessage() . PHP_EOL;
     exit(1);
 }
-" 2>/dev/null; do
+"; do
     echo "Database not ready yet, sleeping 2 seconds..."
     sleep 2
 done
