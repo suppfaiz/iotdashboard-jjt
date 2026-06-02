@@ -30,6 +30,7 @@ try {
     \$db = new PDO(\"mysql:host=\$host;port=\$port;dbname=\$dbname\", \$user, \$pass);
     exit(0);
 } catch (Exception \$e) {
+    echo \"Debug: Trying to connect with host=\$host, port=\$port, dbname=\$dbname, user=\$user, pass_len=\" . strlen(\$pass) . PHP_EOL;
     echo \"Connection error: \" . \$e->getMessage() . PHP_EOL;
     exit(1);
 }
