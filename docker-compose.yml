@@ -17,6 +17,7 @@ services:
       - MQTT_PORT=1883
     volumes:
       - app-storage:/var/www/storage
+      - ./.env:/var/www/.env
     depends_on:
       - db
       - mqtt
