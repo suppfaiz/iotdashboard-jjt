@@ -24,12 +24,14 @@ if ! [ -x "$(command -v docker)" ]; then
 fi
 
 # Check if docker compose (v2) is installed
+DOCKER_COMPOSE="docker compose"
 if ! docker compose version &>/dev/null; then
     echo "[!] Docker Compose v2 command not found. Trying 'docker-compose'..."
     if ! [ -x "$(command -v docker-compose)" ]; then
         echo "[-] Error: Docker Compose is not installed."
         exit 1
     fi
+    DOCKER_COMPOSE="docker-compose"
 fi
 
 # Check and setup .env file
@@ -38,51 +40,49 @@ if [ ! -f .env ]; then
     cp .env.example .env
 fi
 
+# Auto-detect public IP
+echo "[*] Detecting public IP address..."
+DEFAULT_IP=$(curl -s --max-time 3 ifconfig.me || curl -s --max-time 3 icanhazip.com || echo "127.0.0.1")
+
 # Ask for VPS IP / Domain for WebSockets
-read -p "Enter your VPS Public IP Address or Domain (e.g. 103.123.45.67): " VPS_IP
-if [ -z "$VPS_IP" ]; then
-    echo "[!] VPS IP/Domain cannot be empty."
-    exit 1
-fi
+read -p "Enter your VPS Public IP Address or Domain [default: $DEFAULT_IP]: " VPS_IP
+VPS_IP=${VPS_IP:-$DEFAULT_IP}
 
 # Generate random secure passwords for DB
 DB_PASSWORD=$(openssl rand -hex 16 2>/dev/null || echo "JamkridaSecurePass123")
 
-# Update .env configuration using Python for cross-platform portability
+# Update .env configuration
 echo "[*] Updating .env configuration..."
-python3 -c "
-with open('.env', 'r') as f:
-    lines = f.readlines()
-new_lines = []
-for line in lines:
-    if line.startswith('DB_HOST='):
-        new_lines.append('DB_HOST=db\n')
-    elif line.startswith('DB_PASSWORD='):
-        new_lines.append('DB_PASSWORD=$DB_PASSWORD\n')
-    elif line.startswith('REVERB_HOST='):
-        new_lines.append('REVERB_HOST=\"$VPS_IP\"\n')
-    elif line.startswith('VITE_REVERB_HOST='):
-        new_lines.append('VITE_REVERB_HOST=\"$VPS_IP\"\n')
-    elif line.startswith('REVERB_PORT='):
-        new_lines.append('REVERB_PORT=8081\n')
-    elif line.startswith('VITE_REVERB_PORT='):
-        new_lines.append('VITE_REVERB_PORT=8081\n')
-    elif line.startswith('MQTT_HOST='):
-        new_lines.append('MQTT_HOST=mqtt\n')
-    elif line.startswith('MQTT_PORT='):
-        new_lines.append('MQTT_PORT=1883\n')
-    else:
-        new_lines.append(line)
-with open('.env', 'w') as f:
-    f.writelines(new_lines)
-"
+
+update_env_val() {
+    local key="$1"
+    local val="$2"
+    if grep -q "^${key}=" .env; then
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            sed -i "" "s|^${key}=.*|${key}=${val}|" .env
+        else
+            sed -i "s|^${key}=.*|${key}=${val}|" .env
+        fi
+    else
+        echo "${key}=${val}" >> .env
+    fi
+}
+
+update_env_val "DB_HOST" "db"
+update_env_val "DB_PASSWORD" "$DB_PASSWORD"
+update_env_val "REVERB_HOST" "\"$VPS_IP\""
+update_env_val "VITE_REVERB_HOST" "\"$VPS_IP\""
+update_env_val "REVERB_PORT" "8081"
+update_env_val "VITE_REVERB_PORT" "8081"
+update_env_val "MQTT_HOST" "mqtt"
+update_env_val "MQTT_PORT" "1883"
 
 echo "[+] Configuration updated successfully."
 
 # Start services
 echo "[*] Building and starting docker containers..."
-docker compose down || true
-docker compose up -d --build
+$DOCKER_COMPOSE down || true
+$DOCKER_COMPOSE up -d --build
 
 echo ""
 echo "========================================================="
@@ -98,6 +98,6 @@ echo "Default Credentials:"
 echo "Email:           admin@admin.com"
 echo "Password:        password"
 echo ""
-echo "Monitor Logs:    docker compose logs -f"
-echo "Stop Service:    docker compose down"
+echo "Monitor Logs:    $DOCKER_COMPOSE logs -f"
+echo "Stop Service:    $DOCKER_COMPOSE down"
 echo "========================================================="
