@@ -13,7 +13,6 @@ storage/logs/*
 bootstrap/cache/*
 docker-compose.yml
 Dockerfile
-.docker
 install.sh
 README.md
 UAT_Report_and_Blueprint.pdf
