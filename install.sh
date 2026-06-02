@@ -90,7 +90,11 @@ update_env_val() {
     fi
 }
 
+update_env_val "DB_CONNECTION" "mysql"
 update_env_val "DB_HOST" "db"
+update_env_val "DB_PORT" "3306"
+update_env_val "DB_DATABASE" "dashboard_iot_baru"
+update_env_val "DB_USERNAME" "root"
 update_env_val "DB_PASSWORD" "$DB_PASSWORD"
 update_env_val "REVERB_HOST" "\"$VPS_IP\""
 update_env_val "VITE_REVERB_HOST" "\"$VPS_IP\""
