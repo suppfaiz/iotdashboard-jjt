@@ -11,8 +11,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc !important;
-            background-image: radial-gradient(circle, rgba(148, 163, 184, 0.25) 1.5px, transparent 1.5px) !important;
+            background: #f8fafc radial-gradient(circle, rgba(148, 163, 184, 0.28) 1.5px, transparent 1.5px) !important;
             background-size: 24px 24px !important;
             color: #0f172a;
             min-height: 100vh;
@@ -22,8 +21,8 @@
             position: fixed;
             border-radius: 50%;
             filter: blur(120px);
-            opacity: 0.32;
-            z-index: -10;
+            opacity: 0.35;
+            z-index: 1; /* Render in front of body background but behind z-10 content wrapper */
             animation: float 25s infinite ease-in-out;
             pointer-events: none;
         }
@@ -83,6 +82,9 @@
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
+
+    <!-- Main Content Stacking Wrapper -->
+    <div class="relative z-10 min-h-screen flex flex-col">
 
     <nav class="bg-white/85 backdrop-blur-xl border-b border-slate-200/80 shadow-sm sticky top-0 z-50">
         @php
@@ -232,6 +234,7 @@
             &copy; {{ date('Y') }} DEPT IT JAMKRIDA JATENG
         </p>
     </div>
+    </div> <!-- End Main Content Stacking Wrapper -->
 
     <script>
         function toggleDropdown() {
