@@ -31,6 +31,11 @@ try {
     exit(0);
 } catch (Exception \$e) {
     echo \"Debug: Trying to connect with host=\$host, port=\$port, dbname=\$dbname, user=\$user, pass_len=\" . strlen(\$pass) . PHP_EOL;
+    if (file_exists('.env')) {
+        echo \"Raw .env file contents:\" . PHP_EOL . file_get_contents('.env') . PHP_EOL;
+    } else {
+        echo \".env file does not exist inside the container!\" . PHP_EOL;
+    }
     echo \"Connection error: \" . \$e->getMessage() . PHP_EOL;
     exit(1);
 }
