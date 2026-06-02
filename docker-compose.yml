@@ -46,6 +46,7 @@ services:
     volumes:
       - ./database:/var/www/html/database
       - ./.docker/adminer-login.php:/var/www/html/index.php
+      - ./.docker/adminer-class.php:/var/www/html/adminer-class.php
     networks:
       - iot-network
 
