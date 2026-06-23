@@ -1,11 +1,17 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
+// Bootstrap Laravel application to make env() and database models available
+$app = require_once __DIR__ . '/bootstrap/app.php';
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+$kernel->bootstrap();
 
 use PhpMqtt\Client\MqttClient;
 use PhpMqtt\Client\ConnectionSettings;
 
-$server   = 'broker.emqx.io';
-$port     = 1883;
+// Load MQTT configs from DB or env (defaults to localhost for development)
+$server   = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value') ?? env('MQTT_HOST', 'localhost');
+$port     = (int) (\App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883));
+$username = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME');
+$password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD');
 $clientId = 'laravel_mock_publisher_' . rand(1000, 9999);
 
 $mqtt = new MqttClient($server, $port, $clientId);
@@ -14,13 +20,16 @@ $connectionSettings = (new ConnectionSettings)
     ->setUseTls(false)
     ->setTlsSelfSignedAllowed(false);
 
+if (!empty($username)) {
+    $connectionSettings->setUsername($username);
+}
+if (!empty($password)) {
+    $connectionSettings->setPassword($password);
+}
+
 $mqtt->connect($connectionSettings, true);
 
 // Fetch device from DB
-$app = require_once __DIR__ . '/bootstrap/app.php';
-$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
-$kernel->bootstrap();
-
 $devices = \App\Models\Device::all();
 while($devices->isEmpty()) {
     echo "Waiting for device...\n";
