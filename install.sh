@@ -202,10 +202,21 @@ docker run --rm -v "$(pwd)/.docker:/config" eclipse-mosquitto:latest mosquitto_p
     echo "$MQTT_USER:$MQTT_PASSWORD" > .docker/passwd
 }
 chmod 644 .docker/passwd
-
 echo "[*] Building and starting docker containers..."
 $DOCKER_COMPOSE down || true
 $DOCKER_COMPOSE up -d --build
+
+echo "[*] Waiting for container services to start..."
+sleep 5
+
+echo "[*] Generating application encryption key inside container..."
+$DOCKER_COMPOSE exec -T app php artisan key:generate --force
+
+echo "[*] Running database migrations inside container..."
+$DOCKER_COMPOSE exec -T app php artisan migrate --force
+
+echo "[*] Seeding database with default users and operational groups..."
+$DOCKER_COMPOSE exec -T app php artisan db:seed --force
 
 echo ""
 echo "========================================================="
