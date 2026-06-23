@@ -115,7 +115,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="mqtt_host" class="block text-sm font-semibold text-gray-700 mb-2">MQTT Host</label>
-                            <input type="text" name="mqtt_host" id="mqtt_host" value="{{ old('mqtt_host', $mqttHost->value ?? 'broker.hivemq.com') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                            <input type="text" name="mqtt_host" id="mqtt_host" value="{{ old('mqtt_host', $mqttHost->value ?? 'broker.emqx.io') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
                         </div>
                         
                         <div>

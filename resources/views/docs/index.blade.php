@@ -45,7 +45,7 @@
                     <h4 class="text-sm font-bold text-gray-800 mb-3">Core Technical Stack:</h4>
                     <ul class="list-disc pl-5 space-y-2 text-sm text-gray-600">
                         <li><strong>Firmware:</strong> Arduino C++ listening to PZEM-004T v3 sensor over UART.</li>
-                        <li><strong>Ingress Protocol:</strong> MQTT over TCP (broker.hivemq.com or customized HiveMQ instances).</li>
+                        <li><strong>Ingress Protocol:</strong> MQTT over TCP (broker.emqx.io or customized instances).</li>
                         <li><strong>Backend Listener:</strong> Continuous PHP Artisan command daemon daemonized on server.</li>
                         <li><strong>Reactive Layer:</strong> Laravel Reverb (WebSocket server) with Pusher Protocol wrapper.</li>
                         <li><strong>Frontend State:</strong> Vanilla Javascript Echo client with Alpine.js reactivity wrappers.</li>

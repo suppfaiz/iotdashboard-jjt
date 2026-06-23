@@ -70,8 +70,11 @@ DEFAULT_IP=$(curl -s --max-time 3 ifconfig.me || curl -s --max-time 3 icanhazip.
 read -p "Enter your VPS Public IP Address or Domain [default: $DEFAULT_IP]: " VPS_IP
 VPS_IP=${VPS_IP:-$DEFAULT_IP}
 
-# Generate random secure passwords for DB
+# Generate random secure credentials for DB, MQTT, and Adminer
 DB_PASSWORD=$(openssl rand -hex 16 2>/dev/null || echo "JamkridaSecurePass123")
+MQTT_USER="jamkrida_sensor"
+MQTT_PASSWORD=$(openssl rand -hex 16 2>/dev/null || echo "MqttSecurePass123")
+ADMINER_PASSWORD=$(openssl rand -hex 12 2>/dev/null || echo "AdminerSecurePass123")
 
 # Update .env configuration
 echo "[*] Updating .env configuration..."
@@ -110,8 +113,8 @@ comment_env_val "DB_PASSWORD"
 
 update_env_val "REVERB_HOST" "\"$VPS_IP\""
 update_env_val "VITE_REVERB_HOST" "\"$VPS_IP\""
-update_env_val "REVERB_PORT" "8081"
-update_env_val "VITE_REVERB_PORT" "8081"
+update_env_val "REVERB_PORT" "8085"
+update_env_val "VITE_REVERB_PORT" "8085"
 
 # Ensure Reverb Keys exist in the .env file
 if ! grep -q "^REVERB_APP_ID=" .env; then
@@ -134,6 +137,9 @@ update_env_val "VITE_REVERB_SCHEME" "http"
 
 update_env_val "MQTT_HOST" "mqtt"
 update_env_val "MQTT_PORT" "1883"
+update_env_val "MQTT_USERNAME" "$MQTT_USER"
+update_env_val "MQTT_PASSWORD" "$MQTT_PASSWORD"
+update_env_val "ADMINER_PASSWORD" "$ADMINER_PASSWORD"
 
 echo "[+] Configuration updated successfully."
 
@@ -189,6 +195,14 @@ npm install
 npm run build
 
 # Start services
+echo "[*] Generating Mosquitto MQTT credentials file..."
+# Generate the passwd file inside the .docker directory using the eclipse-mosquitto image tool
+docker run --rm -v "$(pwd)/.docker:/config" eclipse-mosquitto:latest mosquitto_passwd -c -b /config/passwd "$MQTT_USER" "$MQTT_PASSWORD" || {
+    echo "[!] Warning: Failed to generate encrypted mosquitto passwd file via Docker. Writing unencrypted fallback."
+    echo "$MQTT_USER:$MQTT_PASSWORD" > .docker/passwd
+}
+chmod 644 .docker/passwd
+
 echo "[*] Building and starting docker containers..."
 $DOCKER_COMPOSE down || true
 $DOCKER_COMPOSE up -d --build
@@ -200,11 +214,13 @@ echo "========================================================="
 echo "Your IoT Dashboard has been successfully deployed."
 echo ""
 echo "Web URL:         http://$VPS_IP"
-echo "Database GUI:    http://$VPS_IP:8082"
+echo "Database GUI:    http://$VPS_IP:8082 (Password: $ADMINER_PASSWORD)"
 echo "MQTT Broker:     mqtt://$VPS_IP:1883"
-echo "WebSocket Port:  8081"
+echo "MQTT User:       $MQTT_USER"
+echo "MQTT Password:   $MQTT_PASSWORD"
+echo "WebSocket Port:  8085"
 echo ""
-echo "Default Credentials:"
+echo "Default Credentials (Web App):"
 echo "Email:           admin@admin.com"
 echo "Password:        password"
 echo ""

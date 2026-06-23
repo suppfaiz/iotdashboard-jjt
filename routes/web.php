@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/devices/{device}', [DeviceController::class, 'destroy'])->name('devices.destroy');
         Route::post('/devices/{device}/firmware', [DeviceController::class, 'uploadFirmware'])->name('devices.upload_firmware');
         Route::post('/devices/{device}/trigger-ota', [DeviceController::class, 'triggerOta'])->name('devices.trigger_ota');
+        Route::post('/devices/{device}/reset-energy', [DeviceController::class, 'resetEnergy'])->name('devices.reset_energy');
+        Route::post('/devices/{device}/restart', [DeviceController::class, 'restart'])->name('devices.restart');
 
         // Logs
         Route::get('/logs', [LogController::class, 'index'])->name('logs.index');

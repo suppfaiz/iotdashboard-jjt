@@ -146,34 +146,46 @@
 
     <!-- Top 3 Energy Consumers -->
     <div class="glass-card rounded-3xl p-6 flex flex-col justify-between shadow-sm">
-        <div class="mb-5">
-            <h3 class="text-lg font-bold text-slate-900 tracking-tight">Top 3 Energy Consumers</h3>
-            <p class="text-xs text-slate-500 font-medium mt-1">Devices with the highest cumulative energy usage (kWh)</p>
+        <div>
+            <div class="mb-5">
+                <h3 class="text-lg font-bold text-slate-900 tracking-tight">Top 3 Energy Consumers</h3>
+                <p class="text-xs text-slate-500 font-medium mt-1">Devices with the highest cumulative energy usage (kWh)</p>
+            </div>
+            
+            <div class="space-y-3.5">
+                @forelse($topDevices as $index => $topDevice)
+                    <div class="flex items-center justify-between p-4.5 rounded-2xl bg-white/60 border border-slate-200/60 hover:bg-white hover:border-slate-350 transition-all duration-300 shadow-sm">
+                        <div class="flex items-center space-x-3.5">
+                            <div class="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm shadow-inner
+                                {{ $index === 0 ? 'bg-amber-100 text-amber-700 border border-amber-200' : ($index === 1 ? 'bg-slate-100 text-slate-700 border border-slate-200' : 'bg-orange-100 text-orange-700 border border-orange-200') }}">
+                                #{{ $index + 1 }}
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-800 leading-snug">{{ $topDevice['name'] }}</h4>
+                                <span class="inline-block mt-1 px-2.5 py-0.5 text-[9px] font-bold bg-blue-50 text-blue-600 rounded-full uppercase tracking-wider border border-blue-100">{{ $topDevice['group_name'] }}</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-sm font-extrabold text-slate-900 tracking-wide">{{ number_format($topDevice['energy'], 3, ',', '.') }}</span>
+                            <span class="text-[9px] font-bold text-slate-450 block uppercase tracking-widest mt-0.5">kWh</span>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-8 text-slate-400 text-sm">
+                        No active telemetry devices found.
+                    </div>
+                @endforelse
+            </div>
         </div>
-        
-        <div class="space-y-4 flex-grow flex flex-col justify-center">
-            @forelse($topDevices as $index => $topDevice)
-                <div class="flex items-center justify-between p-4.5 rounded-2xl bg-white/60 border border-slate-200/60 hover:bg-white hover:border-slate-350 transition-all duration-300 shadow-sm">
-                    <div class="flex items-center space-x-3.5">
-                        <div class="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm shadow-inner
-                            {{ $index === 0 ? 'bg-amber-100 text-amber-700 border border-amber-200' : ($index === 1 ? 'bg-slate-100 text-slate-700 border border-slate-200' : 'bg-orange-100 text-orange-700 border border-orange-200') }}">
-                            #{{ $index + 1 }}
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-bold text-slate-800 leading-snug">{{ $topDevice['name'] }}</h4>
-                            <span class="inline-block mt-1 px-2.5 py-0.5 text-[9px] font-bold bg-blue-50 text-blue-600 rounded-full uppercase tracking-wider border border-blue-100">{{ $topDevice['group_name'] }}</span>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-sm font-extrabold text-slate-900 tracking-wide">{{ number_format($topDevice['energy'], 3, ',', '.') }}</span>
-                        <span class="text-[9px] font-bold text-slate-450 block uppercase tracking-widest mt-0.5">kWh</span>
-                    </div>
-                </div>
-            @empty
-                <div class="text-center py-8 text-slate-400 text-sm">
-                    No active telemetry devices found.
-                </div>
-            @endforelse
+
+        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-[10px] font-semibold text-slate-400">Updated in real-time</span>
+            <a href="{{ route('logs.index') }}" class="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors flex items-center gap-1 group">
+                View Detailed Logs
+                <svg class="w-3 h-3 transform group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
         </div>
     </div>
 </div>
@@ -236,13 +248,13 @@
                             </div>
                             <div class="bg-blue-50 rounded-xl p-3 border border-blue-100 shadow-sm">
                                 <span class="text-[9px] uppercase font-extrabold text-blue-500 block tracking-widest mb-0.5">Energy</span>
-                                <span class="text-base font-bold text-blue-700"><span id="energy-{{ $device->device_id }}">{{ number_format(Cache::get("energy:{$device->device_id}", 0), 3) }}</span> <span class="text-xs text-blue-500 font-normal">kWh</span></span>
+                                <span class="text-base font-bold text-blue-700"><span id="energy-{{ $device->device_id }}">{{ number_format(Cache::get("daily_energy:{$device->device_id}", 0), 3) }}</span> <span class="text-xs text-blue-500 font-normal">kWh</span></span>
                             </div>
                             <div class="bg-emerald-50 rounded-xl p-3 border border-emerald-100 shadow-sm col-span-2 flex items-center justify-between">
                                 <div>
                                     <span class="text-[9px] uppercase font-extrabold text-emerald-600 block tracking-widest mb-0.5">Estimated Cost</span>
                                     <span class="text-base font-extrabold text-emerald-700">
-                                        Rp <span id="cost-{{ $device->device_id }}">{{ number_format(Cache::get("energy:{$device->device_id}", 0) * $plnTariff, 0, ',', '.') }}</span>
+                                        Rp <span id="cost-{{ $device->device_id }}">{{ number_format(Cache::get("daily_energy:{$device->device_id}", 0) * $plnTariff, 0, ',', '.') }}</span>
                                     </span>
                                 </div>
                                 <div class="p-2 bg-emerald-100 border border-emerald-200 rounded-lg text-emerald-600">
@@ -366,11 +378,10 @@
 <script>
     const plnTariff = {{ $plnTariff }};
     
-    // Dynamic registry of device energy metrics used to recalculate executive summary
     const energyRegistry = {
         @foreach($groups as $group)
             @foreach($group->devices as $device)
-                "{{ $device->device_id }}": {{ Cache::get("energy:{$device->device_id}", 0) }},
+                "{{ $device->device_id }}": {{ Cache::get("daily_energy:{$device->device_id}", 0) }},
             @endforeach
         @endforeach
     };

@@ -33,8 +33,8 @@ RUN chmod +x /var/www/.docker/entrypoint.sh
 # Make storage folders writable
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Expose ports: 80 (Nginx), 8081 (Laravel Reverb WebSockets)
-EXPOSE 80 8081
+# Expose ports: 80 (Nginx), 8085 (Laravel Reverb WebSockets)
+EXPOSE 80 8085
 
 # Define Entrypoint script
 ENTRYPOINT ["/var/www/.docker/entrypoint.sh"]

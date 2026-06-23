@@ -9,7 +9,7 @@ services:
     restart: always
     ports:
       - "80:80"
-      - "8081:8081"
+      - "8085:8085"
     environment:
       - MQTT_HOST=mqtt
       - MQTT_PORT=1883
@@ -43,6 +43,8 @@ services:
     restart: always
     ports:
       - "8082:8080"
+    environment:
+      - ADMINER_PASSWORD=${ADMINER_PASSWORD:-password}
     volumes:
       - ./database:/var/www/html/database
       - ./.docker/adminer-login.php:/var/www/html/index.php

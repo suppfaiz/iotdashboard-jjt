@@ -22,7 +22,7 @@ class DashboardController extends Controller
         $totalVolatileKwh = 0;
         foreach ($groups as $group) {
             foreach ($group->devices as $device) {
-                $energy = Cache::get("energy:{$device->device_id}");
+                $energy = Cache::get("daily_energy:{$device->device_id}");
                 if ($energy) {
                     $totalVolatileKwh += $energy;
                 }
@@ -36,7 +36,7 @@ class DashboardController extends Controller
         $deviceEnergyList = collect();
         foreach ($groups as $group) {
             foreach ($group->devices as $device) {
-                $energy = Cache::get("energy:{$device->device_id}", 0);
+                $energy = Cache::get("daily_energy:{$device->device_id}", 0);
                 $deviceEnergyList->push([
                     'name' => $device->name,
                     'device_id' => $device->device_id,

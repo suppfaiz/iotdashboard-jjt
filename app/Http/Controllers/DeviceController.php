@@ -23,7 +23,7 @@ class DeviceController extends Controller
                 'voltage' => \Illuminate\Support\Facades\Cache::get("voltage:{$device->device_id}", 0),
                 'current' => \Illuminate\Support\Facades\Cache::get("current:{$device->device_id}", 0),
                 'power' => \Illuminate\Support\Facades\Cache::get("power:{$device->device_id}", 0),
-                'energy' => \Illuminate\Support\Facades\Cache::get("energy:{$device->device_id}", 0),
+                'energy' => \Illuminate\Support\Facades\Cache::get("daily_energy:{$device->device_id}", 0),
                 'status' => $isOnline ? 'Online' : 'Offline',
                 'last_seen' => $lastSeen,
             ];
@@ -61,10 +61,12 @@ class DeviceController extends Controller
 
         $wifi_ssid = $request->wifi_ssid;
         $wifi_password = $request->wifi_password;
-        $mqtt_host = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value') ?? env('MQTT_HOST', 'broker.hivemq.com');
+        $mqtt_host = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value') ?? env('MQTT_HOST', 'broker.emqx.io');
         $mqtt_port = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
+        $mqtt_user = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME', '');
+        $mqtt_password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD', '');
 
-        $code = view('devices.code_template', compact('device', 'wifi_ssid', 'wifi_password', 'mqtt_host', 'mqtt_port'))->render();
+        $code = view('devices.code_template', compact('device', 'wifi_ssid', 'wifi_password', 'mqtt_host', 'mqtt_port', 'mqtt_user', 'mqtt_password'))->render();
         $device->provisioning_code = $code;
         $device->save();
 
@@ -86,7 +88,7 @@ class DeviceController extends Controller
             'voltage' => \Illuminate\Support\Facades\Cache::get("voltage:{$device->device_id}", 0),
             'current' => \Illuminate\Support\Facades\Cache::get("current:{$device->device_id}", 0),
             'power' => \Illuminate\Support\Facades\Cache::get("power:{$device->device_id}", 0),
-            'energy' => \Illuminate\Support\Facades\Cache::get("energy:{$device->device_id}", 0),
+            'energy' => \Illuminate\Support\Facades\Cache::get("daily_energy:{$device->device_id}", 0),
         ];
 
         $plnTariff = \App\Models\SystemConfig::where('key', 'pln_tariff')->value('value') ?? 1444.70;
@@ -138,14 +140,23 @@ class DeviceController extends Controller
         $url = asset('storage/' . $device->firmware_path);
         
         try {
-            $server   = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value') ?? env('MQTT_HOST', 'broker.hivemq.com');
+            $server   = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value') ?? env('MQTT_HOST', 'broker.emqx.io');
             $port     = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
+            $username = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME');
+            $password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD');
             $clientId = env('MQTT_CLIENT_ID', 'laravel_ota_' . rand(1000, 9999));
 
             $mqtt = new \PhpMqtt\Client\MqttClient($server, $port, $clientId);
             $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)
                 ->setKeepAliveInterval(60)
                 ->setUseTls(false);
+
+            if (!empty($username)) {
+                $connectionSettings->setUsername($username);
+            }
+            if (!empty($password)) {
+                $connectionSettings->setPassword($password);
+            }
                 
             $mqtt->connect($connectionSettings, true);
             
@@ -160,6 +171,86 @@ class DeviceController extends Controller
             return redirect()->back()->with('success', 'OTA Update command sent via MQTT!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Failed to send MQTT command: ' . $e->getMessage());
+        }
+    }
+
+    public function resetEnergy(Device $device)
+    {
+        try {
+            $server   = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value') ?? env('MQTT_HOST', 'broker.emqx.io');
+            $port     = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
+            $username = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME');
+            $password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD');
+            $clientId = env('MQTT_CLIENT_ID', 'laravel_reset_' . rand(1000, 9999));
+
+            $mqtt = new \PhpMqtt\Client\MqttClient($server, $port, $clientId);
+            $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)
+                ->setKeepAliveInterval(60)
+                ->setUseTls(false);
+
+            if (!empty($username)) {
+                $connectionSettings->setUsername($username);
+            }
+            if (!empty($password)) {
+                $connectionSettings->setPassword($password);
+            }
+                
+            $mqtt->connect($connectionSettings, true);
+            
+            $payload = json_encode([
+                'cmd' => 'reset_energy'
+            ]);
+            
+            $mqtt->publish("cmd/{$device->device_id}", $payload, 0);
+            $mqtt->disconnect();
+
+            // Reset the cache for this device so it immediately goes to 0 on the dashboard
+            \Illuminate\Support\Facades\Cache::put("energy:{$device->device_id}", 0, now()->addDays(2));
+            
+            // Also broadcast the update so the UI updates instantly
+            broadcast(new \App\Events\TelemetryUpdated($device->device_id, [
+                'energy' => 0.000
+            ]));
+            
+            return redirect()->back()->with('success', 'Reset energy command sent to device!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to send reset command: ' . $e->getMessage());
+        }
+    }
+
+    public function restart(Device $device)
+    {
+        try {
+            $server   = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value') ?? env('MQTT_HOST', 'broker.emqx.io');
+            $port     = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
+            $username = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME');
+            $password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD');
+            $clientId = env('MQTT_CLIENT_ID', 'laravel_restart_' . rand(1000, 9999));
+
+            $mqtt = new \PhpMqtt\Client\MqttClient($server, $port, $clientId);
+            $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)
+                ->setKeepAliveInterval(60)
+                ->setUseTls(false);
+
+            if (!empty($username)) {
+                $connectionSettings->setUsername($username);
+            }
+            if (!empty($password)) {
+                $connectionSettings->setPassword($password);
+            }
+                
+            $mqtt->connect($connectionSettings, true);
+            
+            $payload = json_encode([
+                'cmd' => 'restart'
+            ]);
+            
+            $mqtt->publish("cmd/{$device->device_id}", $payload, 0);
+            $mqtt->disconnect();
+            
+            return redirect()->back()->with('success', 'Restart command sent to device!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to send restart command: ' . $e->getMessage());
         }
     }
 }

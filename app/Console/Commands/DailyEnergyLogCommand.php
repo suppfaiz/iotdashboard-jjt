@@ -20,7 +20,7 @@ class DailyEnergyLogCommand extends Command
         
         $count = 0;
         foreach ($devices as $device) {
-            $energy = Cache::get("energy:{$device->device_id}");
+            $energy = Cache::get("daily_energy:{$device->device_id}");
             
             if ($energy !== null) {
                 DailyEnergyLog::updateOrCreate(

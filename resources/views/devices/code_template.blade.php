@@ -11,6 +11,8 @@ const char* password = "{{ $wifi_password }}";
 
 const char* mqtt_server = "{{ $mqtt_host }}";
 const int mqtt_port = {{ $mqtt_port }};
+const char* mqtt_user = "{{ $mqtt_user }}";
+const char* mqtt_password = "{{ $mqtt_password }}";
 const char* mqtt_topic = "{{ $device->mqtt_topic }}";
 const char* mqtt_cmd_topic = "cmd/{{ $device->device_id }}";
 const char* device_id = "{{ $device->device_id }}";
@@ -81,6 +83,13 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
             Serial.println("HTTP_UPDATE_OK");
             break;
         }
+      } else if (doc["cmd"] == "reset_energy") {
+        Serial.println("Resetting energy count...");
+        pzem.resetEnergy();
+      } else if (doc["cmd"] == "restart") {
+        Serial.println("Restart command received! Rebooting ESP32...");
+        delay(500);
+        ESP.restart();
       }
     }
   }
@@ -88,8 +97,21 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
 
 void reconnect() {
   while (!client.connected()) {
+    // Ensure WiFi is active before attempting MQTT connection
+    if (WiFi.status() != WL_CONNECTED) {
+      Serial.println("WiFi connection lost! Reconnecting WiFi...");
+      setup_wifi();
+    }
+
     Serial.print("Attempting MQTT connection...");
-    if (client.connect(device_id)) {
+    bool connected = false;
+    if (strlen(mqtt_user) > 0) {
+      connected = client.connect(device_id, mqtt_user, mqtt_password);
+    } else {
+      connected = client.connect(device_id);
+    }
+
+    if (connected) {
       Serial.println("connected");
       // Subscribe to command topic
       client.subscribe(mqtt_cmd_topic);
@@ -110,9 +132,18 @@ void setup() {
   
   // Custom initialization for PZEM if needed
   // Serial2.begin(9600, SERIAL_8N1, PZEM_RX_PIN, PZEM_TX_PIN);
+  
+  // Reset energy on boot to start from 0 kWh (Uncomment if you want to start from 0 every boot)
+  // pzem.resetEnergy();
 }
 
 void loop() {
+  // Check WiFi connection status and reconnect if lost
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("WiFi connection lost! Reconnecting...");
+    setup_wifi();
+  }
+
   if (!client.connected()) {
     reconnect();
   }
@@ -121,8 +152,8 @@ void loop() {
   static unsigned long lastMsg = 0;
   unsigned long now = millis();
   
-  // Publish telemetry every 5 seconds
-  if (now - lastMsg > 5000) {
+  // Publish telemetry every 2000ms (2 seconds) for stable real-time tracking
+  if (now - lastMsg > 2000) {
     lastMsg = now;
     
     // Read from PZEM-004T
@@ -153,7 +184,8 @@ void loop() {
     payload += "\"voltage\":" + String(voltage, 2) + ",";
     payload += "\"current\":" + String(current, 3) + ",";
     payload += "\"power\":" + String(power, 2) + ",";
-    payload += "\"energy\":" + String(energy, 3);
+    payload += "\"energy\":" + String(energy, 3) + ",";
+    payload += "\"ip\":\"" + WiFi.localIP().toString() + "\"";
     payload += "}";
     
     client.publish(mqtt_topic, payload.c_str());

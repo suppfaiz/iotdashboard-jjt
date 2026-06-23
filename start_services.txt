@@ -1,0 +1,53 @@
+======================================================================
+     PANDUAN MENJALANKAN LAYANAN (SERVICES) - JAMKRIDA ENERGY DASHBOARD
+======================================================================
+
+Dokumen ini berisi daftar perintah terminal (command) yang perlu dijalankan 
+satu-satu untuk menghidupkan seluruh sistem IoT Dashboard pada lokal mesin.
+
+Jalankan perintah-perintah berikut di terminal terpisah (di folder root project):
+
+----------------------------------------------------------------------
+1. LARAVEL SERVER (Aplikasi Web Utama)
+----------------------------------------------------------------------
+Menjalankan server web lokal untuk mengakses dashboard di browser (default: http://127.0.0.1:8000).
+
+Command:
+  php artisan serve
+
+----------------------------------------------------------------------
+2. REVERB WEBSOCKET SERVER (Server Realtime)
+----------------------------------------------------------------------
+Menjalankan server WebSocket menggunakan Laravel Reverb di port 8085 agar dashboard bisa menerima data sensor secara realtime tanpa refresh halaman.
+
+Command:
+  php artisan reverb:start --port=8085 --debug
+
+----------------------------------------------------------------------
+3. MQTT LISTENER WORKER (Penghubung Sensor)
+----------------------------------------------------------------------
+Script background daemon yang bertugas terus-menerus mendengarkan data telemetry dari broker MQTT (HiveMQ), menyimpannya ke cache database, dan mem-broadcast-nya ke WebSocket.
+
+Command:
+  php artisan mqtt:listen
+
+----------------------------------------------------------------------
+4. QUEUE LISTENER (Antrean Pekerjaan)
+----------------------------------------------------------------------
+Menangani antrean pekerjaan Laravel (seperti broadcast event realtime yang diantrekan).
+
+Command:
+  php artisan queue:listen
+
+----------------------------------------------------------------------
+5. VITE ASSETS (Kompilasi JS/CSS)
+----------------------------------------------------------------------
+* Pilih salah satu:
+  - Mode Development (Auto refresh aset saat koding):
+    npm run dev
+  - Mode Produksi (Kompilasi statis sekali jalan - direkomendasikan):
+    npm run build
+
+======================================================================
+Tips: Pastikan file `.env` sudah terkonfigurasi dengan benar sebelum memulai!
+======================================================================

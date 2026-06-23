@@ -39,6 +39,20 @@
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 Ping Device
             </button>
+            <form action="{{ route('devices.reset_energy', $device->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to reset the accumulated energy for this device?');" class="inline">
+                @csrf
+                <button type="submit" class="text-sm bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded transition-colors flex items-center shadow-sm border border-amber-500">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reset Energy
+                </button>
+            </form>
+            <form action="{{ route('devices.restart', $device->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to restart this device remotely?');" class="inline">
+                @csrf
+                <button type="submit" class="text-sm bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded transition-colors flex items-center shadow-sm border border-rose-600">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    Restart Device
+                </button>
+            </form>
             <a href="{{ route('devices.provisioning', $device->id) }}" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 px-3 py-1.5 rounded transition-colors flex items-center shadow-sm">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
                 Provisioning
@@ -72,6 +86,10 @@
                 <div class="flex justify-between">
                     <dt class="text-gray-500">Registered</dt>
                     <dd class="text-gray-900">{{ $device->created_at->format('M d, Y') }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-gray-500">IP Address</dt>
+                    <dd class="text-gray-900 font-mono bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100" id="device-ip">{{ Cache::get("ip:{$device->device_id}", 'N/A') }}</dd>
                 </div>
             </dl>
         </div>
@@ -258,6 +276,11 @@
                             const cost = energyVal * {{ $plnTariff }};
                             costElem.innerText = cost.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
                         }
+                    }
+                    
+                    if(data.ip !== undefined) {
+                        const ipElem = document.getElementById('device-ip');
+                        if (ipElem) ipElem.innerText = data.ip;
                     }
                     
                     // Update active status
