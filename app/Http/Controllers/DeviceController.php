@@ -75,6 +75,7 @@ class DeviceController extends Controller
 
     public function provisioning(Device $device)
     {
+        $this->ensureProvisioningCodeUpToDate($device);
         return view('devices.provisioning', compact('device'));
     }
 
@@ -82,6 +83,7 @@ class DeviceController extends Controller
     {
         // Load the device details
         $device->load('group');
+        $this->ensureProvisioningCodeUpToDate($device);
         
         // Fetch latest metrics from cache
         $metrics = [
@@ -95,6 +97,32 @@ class DeviceController extends Controller
 
         return view('devices.show', compact('device', 'metrics', 'plnTariff'));
     }
+
+    protected function ensureProvisioningCodeUpToDate(Device $device)
+    {
+        $oldCode = $device->provisioning_code;
+        if ($oldCode && strpos($oldCode, 'mqtt_user') === false) {
+            $wifi_ssid = 'YOUR_WIFI_SSID';
+            if (preg_match('/const char\* ssid = "(.*?)";/', $oldCode, $matchesSsid)) {
+                $wifi_ssid = $matchesSsid[1];
+            }
+            
+            $wifi_password = 'YOUR_WIFI_PASSWORD';
+            if (preg_match('/const char\* password = "(.*?)";/', $oldCode, $matchesPassword)) {
+                $wifi_password = $matchesPassword[1];
+            }
+
+            $mqtt_host = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value') ?? env('MQTT_HOST', 'broker.emqx.io');
+            $mqtt_port = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
+            $mqtt_user = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME', '');
+            $mqtt_password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD', '');
+
+            $code = view('devices.code_template', compact('device', 'wifi_ssid', 'wifi_password', 'mqtt_host', 'mqtt_port', 'mqtt_user', 'mqtt_password'))->render();
+            $device->provisioning_code = $code;
+            $device->save();
+        }
+    }
+
 
     public function ping(Device $device)
     {
