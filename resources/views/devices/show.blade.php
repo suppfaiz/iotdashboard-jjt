@@ -31,37 +31,43 @@
             </span>
         </h1>
         <div class="flex items-center gap-3">
-            <button onclick="printBarcode()" class="text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded transition-colors flex items-center shadow-sm">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                Print Label
-            </button>
+            @if(auth()->user()->role === 'admin')
+                <button onclick="printBarcode()" class="text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded transition-colors flex items-center shadow-sm">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    Print Label
+                </button>
+            @endif
+            
             <button onclick="pingDevice()" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded transition-colors flex items-center shadow-sm">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 Ping Device
             </button>
-            <form action="{{ route('devices.reset_energy', $device->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to reset the accumulated energy for this device?');" class="inline">
-                @csrf
-                <button type="submit" class="text-sm bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded transition-colors flex items-center shadow-sm border border-amber-500">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                    Reset Energy
-                </button>
-            </form>
-            <form action="{{ route('devices.restart', $device->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to restart this device remotely?');" class="inline">
-                @csrf
-                <button type="submit" class="text-sm bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded transition-colors flex items-center shadow-sm border border-rose-600">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    Restart Device
-                </button>
-            </form>
-            <a href="{{ route('devices.provisioning', $device->id) }}" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 px-3 py-1.5 rounded transition-colors flex items-center shadow-sm">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                Provisioning
-            </a>
-            <form action="{{ route('devices.destroy', $device->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this device?');" class="inline">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="text-sm text-red-600 hover:text-red-700 transition-colors bg-red-50 hover:bg-red-100 border border-red-200 px-3 py-1.5 rounded">Delete</button>
-            </form>
+            
+            @if(auth()->user()->role === 'admin')
+                <form action="{{ route('devices.reset_energy', $device->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to reset the accumulated energy for this device?');" class="inline">
+                    @csrf
+                    <button type="submit" class="text-sm bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded transition-colors flex items-center shadow-sm border border-amber-500">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        Reset Energy
+                    </button>
+                </form>
+                <form action="{{ route('devices.restart', $device->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to restart this device remotely?');" class="inline">
+                    @csrf
+                    <button type="submit" class="text-sm bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded transition-colors flex items-center shadow-sm border border-rose-600">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Restart Device
+                    </button>
+                </form>
+                <a href="{{ route('devices.provisioning', $device->id) }}" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 px-3 py-1.5 rounded transition-colors flex items-center shadow-sm">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    Provisioning
+                </a>
+                <form action="{{ route('devices.destroy', $device->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this device?');" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="text-sm text-red-600 hover:text-red-700 transition-colors bg-red-50 hover:bg-red-100 border border-red-200 px-3 py-1.5 rounded">Delete</button>
+                </form>
+            @endif
             <a href="{{ route('dashboard') }}" class="text-sm text-gray-500 hover:text-gray-900 transition-colors ml-2">← Back</a>
         </div>
     </div>
@@ -124,98 +130,118 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>    @if(auth()->user()->role === 'admin')
+        <!-- OTA Firmware Management -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    OTA Firmware Update
+                </h3>
+            </div>
+            <div class="p-6">
+                @if(session('success') && str_contains(session('success'), 'Firmware'))
+                    <div class="mb-4 bg-green-50 border-l-4 border-green-500 p-3 rounded">
+                        <p class="text-sm text-green-800">{{ session('success') }}</p>
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="mb-4 bg-red-50 border-l-4 border-red-500 p-3 rounded">
+                        <p class="text-sm text-red-800">{{ session('error') }}</p>
+                    </div>
+                @endif
 
-    <!-- OTA Firmware Management -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-            <h3 class="text-lg font-medium text-gray-900 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                OTA Firmware Update
-            </h3>
-        </div>
-        <div class="p-6">
-            @if(session('success') && str_contains(session('success'), 'Firmware'))
-                <div class="mb-4 bg-green-50 border-l-4 border-green-500 p-3 rounded">
-                    <p class="text-sm text-green-800">{{ session('success') }}</p>
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="mb-4 bg-red-50 border-l-4 border-red-500 p-3 rounded">
-                    <p class="text-sm text-red-800">{{ session('error') }}</p>
-                </div>
-            @endif
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Upload Form -->
-                <div>
-                    <h4 class="text-sm font-medium text-gray-700 mb-3">1. Upload Firmware (.bin)</h4>
-                    <form action="{{ route('devices.upload_firmware', $device->id) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-3">
-                        @csrf
-                        <input type="file" name="firmware" accept=".bin" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
-                        <button type="submit" class="self-start text-sm bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded transition-colors shadow-sm border border-gray-700">
-                            Upload File
-                        </button>
-                    </form>
-                </div>
-                
-                <!-- Trigger OTA Form -->
-                <div class="border-l border-gray-200 pl-6">
-                    <h4 class="text-sm font-medium text-gray-700 mb-3">2. Push Update to Device</h4>
-                    @if($device->firmware_path)
-                        <div class="mb-3 text-xs text-green-600 flex items-center">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            Latest firmware ready: {{ basename($device->firmware_path) }}
-                        </div>
-                        <form action="{{ route('devices.trigger_ota', $device->id) }}" method="POST">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Upload Form -->
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-700 mb-3">1. Upload Firmware (.bin)</h4>
+                        <form action="{{ route('devices.upload_firmware', $device->id) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-3">
                             @csrf
-                            <button type="submit" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors shadow-sm flex items-center">
+                            <input type="file" name="firmware" accept=".bin" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+                            <button type="submit" class="self-start text-sm bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded transition-colors shadow-sm border border-gray-700">
+                                Upload File
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Trigger OTA Form -->
+                    <div class="border-l border-gray-200 pl-6">
+                        <h4 class="text-sm font-medium text-gray-700 mb-3">2. Push Update to Device</h4>
+                        @if($device->firmware_path)
+                            <div class="mb-3 text-xs text-green-600 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Latest firmware ready: {{ basename($device->firmware_path) }}
+                            </div>
+                            <form action="{{ route('devices.trigger_ota', $device->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors shadow-sm flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                    Push OTA Update
+                                </button>
+                            </form>
+                        @else
+                            <div class="mb-3 text-xs text-yellow-600 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                No firmware uploaded yet. Please upload a .bin file first.
+                            </div>
+                            <button disabled class="text-sm bg-gray-100 text-gray-400 border border-gray-200 px-4 py-2 rounded cursor-not-allowed flex items-center">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                                 Push OTA Update
                             </button>
-                        </form>
-                    @else
-                        <div class="mb-3 text-xs text-yellow-600 flex items-center">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                            No firmware uploaded yet. Please upload a .bin file first.
-                        </div>
-                        <button disabled class="text-sm bg-gray-100 text-gray-400 border border-gray-200 px-4 py-2 rounded cursor-not-allowed flex items-center">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                            Push OTA Update
-                        </button>
-                    @endif
+                        @endif
+                    </div>
+                </div>
+
+                <!-- OTA Progress Bar -->
+                <div id="ota-progress-container" class="mt-6 border-t border-gray-100 pt-6 hidden">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center justify-between">
+                        <span id="ota-status-label" class="flex items-center gap-2">
+                            <svg class="animate-spin h-4 w-4 text-blue-600" id="ota-spinner" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span id="ota-status-text" class="font-bold text-gray-800">OTA Update Progress</span>
+                        </span>
+                        <span id="ota-progress-percent" class="text-blue-600 font-bold">0%</span>
+                    </h4>
+                    <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden relative shadow-inner">
+                        <div id="ota-progress-bar" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-full rounded-full transition-all duration-300 ease-out" style="width: 0%;"></div>
+                    </div>
+                    <div class="flex justify-between items-center mt-2 text-xs text-gray-500">
+                        <span id="ota-status-message" class="italic">Initiating firmware transfer...</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Connection Debugger -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-        <div class="px-6 py-3 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-            <h3 class="text-sm font-medium text-gray-700 flex items-center">
-                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M4 17h16a2 2 0 002-2V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                Connection Debugger
-            </h3>
-            <button onclick="document.getElementById('debug-log').innerHTML = ''" class="text-xs text-gray-500 hover:text-gray-900 transition-colors">Clear Log</button>
+        <!-- Connection Debugger -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+            <div class="px-6 py-3 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                <h3 class="text-sm font-medium text-gray-700 flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M4 17h16a2 2 0 002-2V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    Connection Debugger
+                </h3>
+                <button onclick="document.getElementById('debug-log').innerHTML = ''" class="text-xs text-gray-500 hover:text-gray-900 transition-colors">Clear Log</button>
+            </div>
+            <div class="p-4 bg-gray-900 font-mono text-xs text-green-400 h-48 overflow-y-auto" id="debug-log">
+                <div class="mb-1"><span class="text-gray-500">[{{ now()->format('H:i:s') }}]</span> System ready. Waiting for telemetry or ping...</div>
+            </div>
         </div>
-        <div class="p-4 bg-gray-900 font-mono text-xs text-green-400 h-48 overflow-y-auto" id="debug-log">
-            <div class="mb-1"><span class="text-gray-500">[{{ now()->format('H:i:s') }}]</span> System ready. Waiting for telemetry or ping...</div>
-        </div>
-    </div>
 
-    <!-- Provisioning Code -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h3 class="text-lg font-medium text-gray-900">Provisioning Code (Arduino C++)</h3>
-            <button onclick="copyCode()" class="inline-flex items-center text-xs text-gray-700 hover:text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded transition-colors shadow-sm">
-                <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                Copy to Clipboard
-            </button>
+        <!-- Provisioning Code -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-medium text-gray-900">Provisioning Code (Arduino C++)</h3>
+                <button onclick="copyCode()" class="inline-flex items-center text-xs text-gray-700 hover:text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded transition-colors shadow-sm">
+                    <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    Copy to Clipboard
+                </button>
+            </div>
+            <div class="p-0 bg-gray-50 border-t border-gray-200">
+                <pre class="p-6 text-sm text-gray-800 font-mono overflow-x-auto"><code id="cpp-code">{{ $device->provisioning_code ?? '// Code not found. Please re-provision the device.' }}</code></pre>
+            </div>
         </div>
-        <div class="p-0 bg-gray-50 border-t border-gray-200">
-            <pre class="p-6 text-sm text-gray-800 font-mono overflow-x-auto"><code id="cpp-code">{{ $device->provisioning_code ?? '// Code not found. Please re-provision the device.' }}</code></pre>
-        </div>
-    </div>
+    @endif
     
     <!-- Printable Barcode Container -->
     <div id="print-label-container" style="display: none;" class="bg-white text-black text-center font-sans">
@@ -310,6 +336,47 @@
                     setTimeout(() => {
                         container.classList.remove('ring-2', 'ring-blue-500', 'rounded-lg');
                     }, 300);
+                })
+                .listen('OtaProgressUpdated', (e) => {
+                    logDebug(`OTA Progress: ${e.progress}% [${e.status}]`);
+                    const container = document.getElementById('ota-progress-container');
+                    const bar = document.getElementById('ota-progress-bar');
+                    const percent = document.getElementById('ota-progress-percent');
+                    const msg = document.getElementById('ota-status-message');
+                    const spinner = document.getElementById('ota-spinner');
+                    const statusText = document.getElementById('ota-status-text');
+
+                    if (container) container.classList.remove('hidden');
+
+                    if (e.progress !== undefined && bar && percent) {
+                        bar.style.width = e.progress + '%';
+                        percent.innerText = e.progress + '%';
+                    }
+
+                    if (e.status === 'started') {
+                        if (spinner) spinner.classList.remove('hidden');
+                        if (statusText) statusText.innerText = 'OTA Firmware Update Started';
+                        if (msg) msg.innerText = e.message || 'Starting HTTP firmware download on ESP32...';
+                        if (bar) bar.className = "bg-gradient-to-r from-blue-500 to-indigo-600 h-full rounded-full transition-all duration-300 ease-out";
+                    } else if (e.status === 'downloading') {
+                        if (spinner) spinner.classList.remove('hidden');
+                        if (statusText) statusText.innerText = 'Downloading Firmware';
+                        if (msg) msg.innerText = e.message || 'Downloading OTA binary...';
+                        if (bar) bar.className = "bg-gradient-to-r from-blue-500 to-indigo-600 h-full rounded-full transition-all duration-300 ease-out";
+                    } else if (e.status === 'completed') {
+                        if (spinner) spinner.classList.add('hidden');
+                        if (statusText) statusText.innerText = 'Update Completed';
+                        if (msg) msg.innerHTML = '<span class="text-green-600 font-bold">✨ Firmware updated successfully! Device is rebooting now.</span>';
+                        if (bar) bar.className = "bg-emerald-500 h-full rounded-full transition-all duration-300 ease-out";
+                        setTimeout(() => {
+                            if (container) container.classList.add('hidden');
+                        }, 10000);
+                    } else if (e.status === 'failed') {
+                        if (spinner) spinner.classList.add('hidden');
+                        if (statusText) statusText.innerText = 'Update Failed';
+                        if (msg) msg.innerHTML = `<span class="text-rose-600 font-bold">❌ Update failed: ${e.message || 'Unknown error'}</span>`;
+                        if (bar) bar.className = "bg-rose-500 h-full rounded-full transition-all duration-300 ease-out";
+                    }
                 });
         }
     });

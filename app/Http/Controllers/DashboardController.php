@@ -18,19 +18,50 @@ class DashboardController extends Controller
 
         $plnTariff = SystemConfig::where('key', 'pln_tariff')->value('value') ?? 1444.70;
 
-        // Calculate total current accumulated energy from cache for display
+        // Calculate total current accumulated energy and multi-tariff cost from cache
         $totalVolatileKwh = 0;
+        $estimatedCost = 0;
         foreach ($groups as $group) {
             foreach ($group->devices as $device) {
-                $energy = Cache::get("daily_energy:{$device->device_id}");
-                if ($energy) {
-                    $totalVolatileKwh += $energy;
+                $energy = Cache::get("daily_energy:{$device->device_id}", 0);
+                $totalVolatileKwh += $energy;
+                
+                $deviceCost = Cache::get("daily_cost:{$device->device_id}");
+                if ($deviceCost === null) {
+                    $deviceCost = $energy * $plnTariff;
                 }
+                $estimatedCost += $deviceCost;
+                
                 $device->last_seen = Cache::get("last_seen:{$device->device_id}", 0);
             }
         }
 
-        $estimatedCost = $totalVolatileKwh * $plnTariff;
+        // Predictive Billing Forecasting
+        // Get daily logs for all active devices in the past 7 days
+        $past7DaysLogs = \Illuminate\Support\Facades\DB::table('daily_energy_logs')
+            ->selectRaw('date, SUM(total_kwh_harian) as daily_sum')
+            ->where('date', '>=', now()->subDays(7)->toDateString())
+            ->groupBy('date')
+            ->get();
+
+        $numDays = $past7DaysLogs->count();
+        $avgDailyKwh = 0;
+        if ($numDays > 0) {
+            $avgDailyKwh = $past7DaysLogs->sum('daily_sum') / $numDays;
+        } else {
+            $avgDailyKwh = $totalVolatileKwh;
+        }
+
+        // Current Month Energy
+        $currentMonthStart = now()->startOfMonth()->toDateString();
+        $currentMonthKwh = \Illuminate\Support\Facades\DB::table('daily_energy_logs')
+            ->where('date', '>=', $currentMonthStart)
+            ->sum('total_kwh_harian') ?? 0;
+
+        $currentMonthCost = $currentMonthKwh * $plnTariff;
+        $remainingDays = max(0, now()->daysInMonth - now()->day);
+        
+        $projectedBilling = $currentMonthCost + ($avgDailyKwh * $remainingDays * $plnTariff);
 
         // Calculate Top 3 Devices using kWh
         $deviceEnergyList = collect();
@@ -78,6 +109,6 @@ class DashboardController extends Controller
             'yearly' => $yearlyLogs,
         ];
 
-        return view('dashboard', compact('groups', 'plnTariff', 'totalVolatileKwh', 'estimatedCost', 'chartData', 'topDevices'));
+        return view('dashboard', compact('groups', 'plnTariff', 'totalVolatileKwh', 'estimatedCost', 'chartData', 'topDevices', 'projectedBilling'));
     }
 }

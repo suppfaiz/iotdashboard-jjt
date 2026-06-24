@@ -4,6 +4,8 @@
 #include <HTTPClient.h>
 #include <HTTPUpdate.h>
 #include <ArduinoJson.h>
+#include <LittleFS.h>
+#include <time.h>
 
 // --- Config ---
 const char* ssid = "{{ $wifi_ssid }}";
@@ -35,18 +37,143 @@ PZEM004Tv30 pzem(PZEM_SERIAL, PZEM_RX_PIN, PZEM_TX_PIN);
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+// For non-blocking reconnection
+unsigned long lastReconnectAttempt = 0;
+
+// OTA Progress Tracking State
+int last_progress_publish = -10;
+
+void update_progress(int cur, int total) {
+  int pct = (cur * 100) / total;
+  if (pct - last_progress_publish >= 10 || pct == 100) {
+    last_progress_publish = pct;
+    String p = "{\"progress\":" + String(pct) + ",\"status\":\"downloading\"}";
+    String ota_topic = "telemetry/ota_status/" + String(device_id);
+    client.publish(ota_topic.c_str(), p.c_str());
+    Serial.printf("OTA Progress: %d%%\n", pct);
+  }
+}
+
+// NTP sync
+bool syncNTP() {
+  Serial.println("Syncing time via NTP...");
+  configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+  int retry = 0;
+  time_t nowTime = 0;
+  while (nowTime < 1000000000 && retry < 10) {
+    delay(500);
+    time(&nowTime);
+    retry++;
+  }
+  if (nowTime >= 1000000000) {
+    Serial.printf("Time synced. Current Unix time: %ld\n", (long)nowTime);
+    return true;
+  }
+  Serial.println("NTP Sync Failed");
+  return false;
+}
+
+// Offline telemetry logging to LittleFS
+void log_offline(float v, float a, float w, float kwh) {
+  File file = LittleFS.open("/offline_log.json", "a");
+  if (!file) {
+    Serial.println("Failed to open offline_log.json for appending");
+    return;
+  }
+  unsigned long uptime = millis() / 1000;
+  String line = "{\"v\":" + String(v, 2) + 
+                ",\"a\":" + String(a, 3) + 
+                ",\"w\":" + String(w, 2) + 
+                ",\"kwh\":" + String(kwh, 4) + 
+                ",\"uptime\":" + String(uptime) + "}\n";
+  file.print(line);
+  file.close();
+  Serial.println("Saved offline telemetry: " + line);
+}
+
+// Upload offline logs on reconnection
+void upload_offline_logs() {
+  if (!LittleFS.exists("/offline_log.json")) {
+    return;
+  }
+  
+  if (!syncNTP()) {
+    Serial.println("NTP Sync failed. Will retry historical upload on next connection check.");
+    return;
+  }
+  
+  File file = LittleFS.open("/offline_log.json", "r");
+  if (!file) {
+    Serial.println("Failed to open offline log for reading");
+    return;
+  }
+  
+  time_t ntp_now;
+  time(&ntp_now);
+  unsigned long uptime_now = millis() / 1000;
+  
+  Serial.println("Uploading historical telemetry logs...");
+  
+  while (file.available()) {
+    String line = file.readStringUntil('\n');
+    line.trim();
+    if (line.length() == 0) continue;
+    
+    StaticJsonDocument<256> doc;
+    DeserializationError error = deserializeJson(doc, line);
+    if (!error) {
+      float v = doc["v"];
+      float a = doc["a"];
+      float w = doc["w"];
+      float kwh = doc["kwh"];
+      unsigned long entry_uptime = doc["uptime"];
+      
+      // Calculate historical timestamp
+      long entry_timestamp = (long)ntp_now - (long)(uptime_now - entry_uptime);
+      
+      String histPayload = "{";
+      histPayload += "\"voltage\":" + String(v, 2) + ",";
+      histPayload += "\"current\":" + String(a, 3) + ",";
+      histPayload += "\"power\":" + String(w, 2) + ",";
+      histPayload += "\"energy\":" + String(kwh, 4) + ",";
+      histPayload += "\"timestamp\":" + String(entry_timestamp);
+      histPayload += "}";
+      
+      String histTopic = "telemetry/historical/" + String(device_id);
+      client.publish(histTopic.c_str(), histPayload.c_str());
+      Serial.println("Uploaded historical entry: " + histPayload);
+      
+      delay(50); // slight delay to prevent MQTT broker congestion
+    }
+  }
+  
+  file.close();
+  LittleFS.remove("/offline_log.json");
+  Serial.println("Offline log cleared from LittleFS.");
+}
+
 void setup_wifi() {
   delay(10);
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
+  
+  // Non-blocking connect with timeout on boot
+  int retries = 0;
+  while (WiFi.status() != WL_CONNECTED && retries < 20) {
     delay(500);
     Serial.print(".");
+    retries++;
   }
-  Serial.println("");
-  Serial.println("WiFi connected");
+  
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("\nWiFi connected");
+    Serial.print("IP Address: ");
+    Serial.println(WiFi.localIP());
+  } else {
+    Serial.println("\nWiFi connection timed out. Starting in offline buffer mode.");
+  }
 }
 
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
@@ -69,18 +196,35 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
         String url = doc["url"].as<String>();
         Serial.println("OTA Update Triggered! URL: " + url);
         
+        // Notify dashboard OTA has started
+        last_progress_publish = 0;
+        String startPayload = "{\"progress\":0,\"status\":\"started\"}";
+        client.publish(("telemetry/ota_status/" + String(device_id)).c_str(), startPayload.c_str());
+        
         WiFiClient clientOTA;
         t_httpUpdate_return ret = httpUpdate.update(clientOTA, url);
         
         switch (ret) {
           case HTTP_UPDATE_FAILED:
             Serial.printf("HTTP_UPDATE_FAILED Error (%d): %s\n", httpUpdate.getLastError(), httpUpdate.getLastErrorString().c_str());
+            {
+              String failPayload = "{\"progress\":" + String(last_progress_publish >= 0 ? last_progress_publish : 0) + ",\"status\":\"failed\",\"message\":\"" + String(httpUpdate.getLastErrorString().c_str()) + "\"}";
+              client.publish(("telemetry/ota_status/" + String(device_id)).c_str(), failPayload.c_str());
+            }
             break;
           case HTTP_UPDATE_NO_UPDATES:
             Serial.println("HTTP_UPDATE_NO_UPDATES");
+            {
+              String noPayload = "{\"progress\":0,\"status\":\"failed\",\"message\":\"No updates available.\"}";
+              client.publish(("telemetry/ota_status/" + String(device_id)).c_str(), noPayload.c_str());
+            }
             break;
           case HTTP_UPDATE_OK:
             Serial.println("HTTP_UPDATE_OK");
+            {
+              String okPayload = "{\"progress\":100,\"status\":\"completed\"}";
+              client.publish(("telemetry/ota_status/" + String(device_id)).c_str(), okPayload.c_str());
+            }
             break;
         }
       } else if (doc["cmd"] == "reset_energy") {
@@ -95,14 +239,19 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
-void reconnect() {
-  while (!client.connected()) {
-    // Ensure WiFi is active before attempting MQTT connection
-    if (WiFi.status() != WL_CONNECTED) {
-      Serial.println("WiFi connection lost! Reconnecting WiFi...");
-      setup_wifi();
+bool reconnect() {
+  if (WiFi.status() != WL_CONNECTED) {
+    static unsigned long lastWiFiAttempt = 0;
+    if (millis() - lastWiFiAttempt > 10000) {
+      lastWiFiAttempt = millis();
+      Serial.println("WiFi disconnected. Reconnecting...");
+      WiFi.begin(ssid, password);
     }
+    return false;
+  }
 
+  if (millis() - lastReconnectAttempt > 5000) {
+    lastReconnectAttempt = millis();
     Serial.print("Attempting MQTT connection...");
     bool connected = false;
     if (strlen(mqtt_user) > 0) {
@@ -113,47 +262,51 @@ void reconnect() {
 
     if (connected) {
       Serial.println("connected");
-      // Subscribe to command topic
       client.subscribe(mqtt_cmd_topic);
+      // Upload any offline logs saved on LittleFS
+      upload_offline_logs();
+      return true;
     } else {
       Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      delay(5000);
+      Serial.println(client.state());
     }
   }
+  return false;
 }
 
 void setup() {
   Serial.begin(115200);
+  
+  // Initialize LittleFS
+  if (!LittleFS.begin(true)) {
+    Serial.println("LittleFS Mount Failed");
+  }
+  
   setup_wifi();
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(mqttCallback);
   
-  // Custom initialization for PZEM if needed
-  // Serial2.begin(9600, SERIAL_8N1, PZEM_RX_PIN, PZEM_TX_PIN);
-  
-  // Reset energy on boot to start from 0 kWh (Uncomment if you want to start from 0 every boot)
-  // pzem.resetEnergy();
+  // Register OTA update progress callback
+  httpUpdate.onProgress(update_progress);
 }
 
 void loop() {
-  // Check WiFi connection status and reconnect if lost
-  if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("WiFi connection lost! Reconnecting...");
-    setup_wifi();
+  bool isConnected = client.connected();
+  if (!isConnected) {
+    isConnected = reconnect();
   }
-
-  if (!client.connected()) {
-    reconnect();
+  
+  if (isConnected) {
+    client.loop();
   }
-  client.loop();
 
   static unsigned long lastMsg = 0;
   unsigned long now = millis();
   
-  // Publish telemetry every 2000ms (2 seconds) for stable real-time tracking
-  if (now - lastMsg > 2000) {
+  // Telemetry publish interval (2000ms if connected, 10000ms if disconnected to conserve space)
+  unsigned long publishInterval = isConnected ? 2000 : 10000;
+  
+  if (now - lastMsg > publishInterval) {
     lastMsg = now;
     
     // Read from PZEM-004T
@@ -161,23 +314,12 @@ void loop() {
     float current = pzem.current();
     float power = pzem.power();
     float energy = pzem.energy();
-    float frequency = pzem.frequency();
-    float pf = pzem.pf();
     
     // Check if readings are valid
-    if(isnan(voltage)){
-        Serial.println("Error reading voltage");
-        voltage = 0.0;
-    } else if (isnan(current)) {
-        Serial.println("Error reading current");
-        current = 0.0;
-    } else if (isnan(power)) {
-        Serial.println("Error reading power");
-        power = 0.0;
-    } else if (isnan(energy)) {
-        Serial.println("Error reading energy");
-        energy = 0.0;
-    }
+    if (isnan(voltage)) voltage = 0.0;
+    if (isnan(current)) current = 0.0;
+    if (isnan(power))   power = 0.0;
+    if (isnan(energy))  energy = 0.0;
 
     // Build JSON Payload
     String payload = "{";
@@ -188,7 +330,16 @@ void loop() {
     payload += "\"ip\":\"" + WiFi.localIP().toString() + "\"";
     payload += "}";
     
-    client.publish(mqtt_topic, payload.c_str());
-    Serial.println("Published: " + payload);
+    if (isConnected) {
+      if (client.publish(mqtt_topic, payload.c_str())) {
+        Serial.println("Published: " + payload);
+      } else {
+        Serial.println("Publish failed. Saving to LittleFS offline buffer...");
+        log_offline(voltage, current, power, energy);
+      }
+    } else {
+      Serial.println("MQTT Offline. Saving to LittleFS offline buffer...");
+      log_offline(voltage, current, power, energy);
+    }
   }
 }

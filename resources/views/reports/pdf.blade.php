@@ -229,7 +229,7 @@
 
     <!-- Footer Page -->
     <div class="footer">
-        Jamkrida Energy IoT Platform &bull; Confidential Internal Report
+        Jamkrida Energy IoT Platform &bull; Repository: https://github.com/suppfaiz/iotdashboard-jjt &bull; Confidential Internal Report
     </div>
 
 </body>

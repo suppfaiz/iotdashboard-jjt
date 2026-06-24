@@ -85,45 +85,160 @@
                 @csrf
                 @method('PUT')
                 
+                <!-- Section 1: Financial & Time of Use (ToU) Billing -->
                 <div class="px-6 py-5 border-b border-gray-100 bg-gray-50/50">
-                    <h2 class="text-lg font-bold text-gray-900">Financial Estimation Settings</h2>
-                    <p class="text-xs text-gray-500 mt-0.5">Parameters used to calculate electricity expenditure estimates.</p>
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <h2 class="text-lg font-bold text-gray-900">Financial & Time of Use (ToU) Billing</h2>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-0.5">Parameters used to calculate electricity billing estimates and peak tariff structures.</p>
                 </div>
                 
-                <div class="p-6">
-                    <div class="mb-6">
-                        <label for="pln_tariff" class="block text-sm font-semibold text-gray-700 mb-2">PLN Base Tariff (Rp/kWh)</label>
-                        <div class="relative rounded-xl shadow-sm max-w-md">
-                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                                <span class="text-gray-400 font-bold text-sm">Rp</span>
-                            </div>
-                            <input type="number" step="0.01" name="pln_tariff" id="pln_tariff" value="{{ old('pln_tariff', $plnTariff->value ?? '1444.70') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 pl-11 pr-16 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
-                                <span class="text-gray-400 font-bold text-sm">/ kWh</span>
+                <div class="p-6 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="pln_tariff" class="block text-sm font-semibold text-gray-700 mb-2">PLN Base Tariff (Rp/kWh)</label>
+                            <div class="relative rounded-xl shadow-sm">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                                    <span class="text-gray-400 font-bold text-sm">Rp</span>
+                                </div>
+                                <input type="number" step="0.01" name="pln_tariff" id="pln_tariff" value="{{ old('pln_tariff', $configs['pln_tariff'] ?? '1444.70') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 pl-11 pr-16 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                                    <span class="text-gray-400 font-bold text-sm">/ kWh</span>
+                                </div>
                             </div>
                         </div>
-                        <p class="mt-2.5 text-xs text-gray-500 leading-normal">This rate will be used dynamically to multiply all logged active energy data on the main dashboard analytics.</p>
+
+                        <div>
+                            <label for="pln_tariff_wbp" class="block text-sm font-semibold text-gray-700 mb-2">Peak Tariff / WBP (Rp/kWh)</label>
+                            <div class="relative rounded-xl shadow-sm">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                                    <span class="text-gray-400 font-bold text-sm text-amber-600">Rp</span>
+                                </div>
+                                <input type="number" step="0.01" name="pln_tariff_wbp" id="pln_tariff_wbp" value="{{ old('pln_tariff_wbp', $configs['pln_tariff_wbp'] ?? '2000.00') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 pl-11 pr-16 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                                    <span class="text-gray-400 font-bold text-sm">/ kWh</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="pln_tariff_lwbp" class="block text-sm font-semibold text-gray-700 mb-2">Off-Peak Tariff / LWBP (Rp/kWh)</label>
+                            <div class="relative rounded-xl shadow-sm">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                                    <span class="text-gray-400 font-bold text-sm text-emerald-600">Rp</span>
+                                </div>
+                                <input type="number" step="0.01" name="pln_tariff_lwbp" id="pln_tariff_lwbp" value="{{ old('pln_tariff_lwbp', $configs['pln_tariff_lwbp'] ?? '1444.70') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 pl-11 pr-16 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                                    <span class="text-gray-400 font-bold text-sm">/ kWh</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="wbp_start" class="block text-sm font-semibold text-gray-700 mb-2">WBP Start Time (HH:MM)</label>
+                            <input type="text" name="wbp_start" id="wbp_start" placeholder="17:00" value="{{ old('wbp_start', $configs['wbp_start'] ?? '17:00') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                            <p class="mt-1.5 text-xs text-gray-500">Hour when Peak pricing begins (e.g. 17:00).</p>
+                        </div>
+                        
+                        <div>
+                            <label for="wbp_end" class="block text-sm font-semibold text-gray-700 mb-2">WBP End Time (HH:MM)</label>
+                            <input type="text" name="wbp_end" id="wbp_end" placeholder="22:00" value="{{ old('wbp_end', $configs['wbp_end'] ?? '22:00') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                            <p class="mt-1.5 text-xs text-gray-500">Hour when Peak pricing ends (e.g. 22:00).</p>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Section 2: MQTT Broker Integration -->
                 <div class="px-6 py-5 border-t border-b border-gray-100 bg-gray-50/50">
-                    <h2 class="text-lg font-bold text-gray-900">MQTT Broker Integration</h2>
-                    <p class="text-xs text-gray-500 mt-0.5">Settings for receiving telemetry logs from IoT devices.</p>
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                        </svg>
+                        <h2 class="text-lg font-bold text-gray-900">MQTT Broker Integration</h2>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-0.5">Settings for receiving telemetry logs and managing connection with IoT devices.</p>
                 </div>
                 
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="mqtt_host" class="block text-sm font-semibold text-gray-700 mb-2">MQTT Host</label>
-                            <input type="text" name="mqtt_host" id="mqtt_host" value="{{ old('mqtt_host', $mqttHost->value ?? 'broker.emqx.io') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                            <input type="text" name="mqtt_host" id="mqtt_host" value="{{ old('mqtt_host', $configs['mqtt_host'] ?? 'broker.emqx.io') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
                         </div>
                         
                         <div>
                             <label for="mqtt_port" class="block text-sm font-semibold text-gray-700 mb-2">MQTT Port</label>
-                            <input type="number" name="mqtt_port" id="mqtt_port" value="{{ old('mqtt_port', $mqttPort->value ?? '1883') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                            <input type="number" name="mqtt_port" id="mqtt_port" value="{{ old('mqtt_port', $configs['mqtt_port'] ?? '1883') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
                         </div>
                     </div>
                     <p class="mt-4 text-xs text-gray-500 leading-normal">Warning: Changing the broker host/port will require updating the client configurations on the microcontroller assets and restarting the MQTT daemon worker.</p>
+                </div>
+
+                <!-- Section 3: Telegram Bot Notification & Alert Thresholds -->
+                <div class="px-6 py-5 border-t border-b border-gray-100 bg-gray-50/50">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <h2 class="text-lg font-bold text-gray-900">Telegram Notifications & Telemetry Alert Thresholds</h2>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-0.5">Parameters for anomaly alerts and notification integration via Telegram.</p>
+                </div>
+
+                <div class="p-6 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="telegram_bot_token" class="block text-sm font-semibold text-gray-700 mb-2">Telegram Bot Token</label>
+                            <input type="text" name="telegram_bot_token" id="telegram_bot_token" placeholder="e.g. 123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ" value="{{ old('telegram_bot_token', $configs['telegram_bot_token'] ?? '') }}" class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                            <p class="mt-1.5 text-xs text-gray-500">Provide bot token generated by @BotFather.</p>
+                        </div>
+                        
+                        <div>
+                            <label for="telegram_chat_id" class="block text-sm font-semibold text-gray-700 mb-2">Telegram Chat ID</label>
+                            <input type="text" name="telegram_chat_id" id="telegram_chat_id" placeholder="e.g. -100123456789" value="{{ old('telegram_chat_id', $configs['telegram_chat_id'] ?? '') }}" class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                            <p class="mt-1.5 text-xs text-gray-500">Provide target chat ID (admin group or direct user ID).</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="alert_voltage_min" class="block text-sm font-semibold text-gray-700 mb-2">Min Voltage Limit (Volt)</label>
+                            <div class="relative rounded-xl shadow-sm">
+                                <input type="number" step="0.01" name="alert_voltage_min" id="alert_voltage_min" value="{{ old('alert_voltage_min', $configs['alert_voltage_min'] ?? '200.00') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                                    <span class="text-gray-400 font-bold text-sm">V</span>
+                                </div>
+                            </div>
+                            <p class="mt-1.5 text-xs text-gray-500">Minimum voltage threshold to trigger alert.</p>
+                        </div>
+                        
+                        <div>
+                            <label for="alert_voltage_max" class="block text-sm font-semibold text-gray-700 mb-2">Max Voltage Limit (Volt)</label>
+                            <div class="relative rounded-xl shadow-sm">
+                                <input type="number" step="0.01" name="alert_voltage_max" id="alert_voltage_max" value="{{ old('alert_voltage_max', $configs['alert_voltage_max'] ?? '240.00') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                                    <span class="text-gray-400 font-bold text-sm">V</span>
+                                </div>
+                            </div>
+                            <p class="mt-1.5 text-xs text-gray-500">Maximum voltage threshold to trigger alert.</p>
+                        </div>
+
+                        <div>
+                            <label for="alert_power_max" class="block text-sm font-semibold text-gray-700 mb-2">Max Power Limit (Watt)</label>
+                            <div class="relative rounded-xl shadow-sm">
+                                <input type="number" step="0.01" name="alert_power_max" id="alert_power_max" value="{{ old('alert_power_max', $configs['alert_power_max'] ?? '2200.00') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                                    <span class="text-gray-400 font-bold text-sm">W</span>
+                                </div>
+                            </div>
+                            <p class="mt-1.5 text-xs text-gray-500">Maximum power consumption threshold to trigger alert.</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="flex justify-end pt-4 border-t border-gray-200 px-6 pb-6 bg-gray-50">

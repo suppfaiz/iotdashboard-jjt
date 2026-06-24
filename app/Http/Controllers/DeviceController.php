@@ -101,7 +101,7 @@ class DeviceController extends Controller
     protected function ensureProvisioningCodeUpToDate(Device $device)
     {
         $oldCode = $device->provisioning_code;
-        if ($oldCode && strpos($oldCode, 'mqtt_user') === false) {
+        if ($oldCode && strpos($oldCode, 'LittleFS') === false) {
             $wifi_ssid = 'YOUR_WIFI_SSID';
             if (preg_match('/const char\* ssid = "(.*?)";/', $oldCode, $matchesSsid)) {
                 $wifi_ssid = $matchesSsid[1];

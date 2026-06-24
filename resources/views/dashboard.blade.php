@@ -32,6 +32,11 @@
         box-shadow: 0 10px 30px rgba(245, 158, 11, 0.08);
         transform: translateY(-2px);
     }
+    .glow-indigo:hover {
+        border-color: rgba(99, 102, 241, 0.35);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.08);
+        transform: translateY(-2px);
+    }
 
     /* Active Device styling for light theme */
     .device-active {
@@ -67,7 +72,7 @@
 </div>
 
 <!-- Executive Summary Cards -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
     <!-- PLN Tariff -->
     <div class="glass-card glow-cyan rounded-3xl p-6 flex items-center justify-between shadow-sm">
         <div class="space-y-2">
@@ -109,6 +114,21 @@
         <div class="p-4 bg-amber-50 text-amber-600 rounded-2xl border border-amber-100">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Projected Monthly Bill -->
+    <div class="glass-card glow-indigo rounded-3xl p-6 flex items-center justify-between shadow-sm">
+        <div class="space-y-2">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Projected Monthly Bill</p>
+            <p class="text-3xl font-black text-indigo-600 tracking-tight">
+                Rp <span id="projected-cost-value">{{ number_format($projectedBilling, 2, ',', '.') }}</span>
+            </p>
+        </div>
+        <div class="p-4 bg-indigo-50 text-indigo-600 rounded-2xl border border-indigo-100">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
             </svg>
         </div>
     </div>
@@ -386,17 +406,27 @@
         @endforeach
     };
 
+    const costRegistry = {
+        @foreach($groups as $group)
+            @foreach($group->devices as $device)
+                "{{ $device->device_id }}": {{ Cache::get("daily_cost:{$device->device_id}", Cache::get("daily_energy:{$device->device_id}", 0) * $plnTariff) }},
+            @endforeach
+        @endforeach
+    };
+
     function recalculateTotalEnergy() {
-        let total = 0;
+        let totalEnergy = 0;
+        let totalCost = 0;
         for (const deviceId in energyRegistry) {
-            total += energyRegistry[deviceId];
+            totalEnergy += energyRegistry[deviceId];
+        }
+        for (const deviceId in costRegistry) {
+            totalCost += costRegistry[deviceId];
         }
         
         // Update DOM elements
-        document.getElementById('total-energy-value').innerText = total.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
-        
-        const estimatedCost = total * plnTariff;
-        document.getElementById('estimated-cost-value').innerText = estimatedCost.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('total-energy-value').innerText = totalEnergy.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+        document.getElementById('estimated-cost-value').innerText = totalCost.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     // Function to update UI dynamically when telemetries are received
@@ -431,13 +461,14 @@
             if(eElem) eElem.innerText = parseFloat(data.energy).toFixed(3);
             
             const costElem = document.getElementById('cost-' + deviceId);
+            const rawCost = data.cost !== undefined ? parseFloat(data.cost) : (parseFloat(data.energy) * plnTariff);
             if(costElem) {
-                const cost = parseFloat(data.energy) * plnTariff;
-                costElem.innerText = cost.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                costElem.innerText = rawCost.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
             }
             
-            // Keep track of latest energy for this device
+            // Keep track of latest energy & cost for this device
             energyRegistry[deviceId] = parseFloat(data.energy);
+            costRegistry[deviceId] = rawCost;
             recalculateTotalEnergy();
         }
 

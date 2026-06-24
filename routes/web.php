@@ -22,14 +22,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Shared Device Viewing Routes (Any Auth User)
+    Route::get('/devices', [DeviceController::class, 'index'])->name('devices.index');
+    Route::get('/devices/{device}', [DeviceController::class, 'show'])->name('devices.show');
+    Route::get('/devices/{device}/ping', [DeviceController::class, 'ping'])->name('devices.ping');
+
     // Admin-Only Routes
     Route::middleware('admin')->group(function () {
-        // Devices Management & Telemetry Detail
-        Route::get('/devices', [DeviceController::class, 'index'])->name('devices.index');
+        // Device Management and Remote Controls
         Route::post('/devices', [DeviceController::class, 'store'])->name('devices.store');
-        Route::get('/devices/{device}', [DeviceController::class, 'show'])->name('devices.show');
         Route::get('/devices/{device}/provisioning', [DeviceController::class, 'provisioning'])->name('devices.provisioning');
-        Route::get('/devices/{device}/ping', [DeviceController::class, 'ping'])->name('devices.ping');
         Route::delete('/devices/{device}', [DeviceController::class, 'destroy'])->name('devices.destroy');
         Route::post('/devices/{device}/firmware', [DeviceController::class, 'uploadFirmware'])->name('devices.upload_firmware');
         Route::post('/devices/{device}/trigger-ota', [DeviceController::class, 'triggerOta'])->name('devices.trigger_ota');
