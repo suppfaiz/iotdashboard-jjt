@@ -50,7 +50,7 @@ class SystemConfigController extends Controller
         foreach ($keys as $key) {
             SystemConfig::updateOrCreate(
                 ['key' => $key],
-                ['value' => $request->input($key, '')]
+                ['value' => $request->input($key) ?? '']
             );
         }
 
