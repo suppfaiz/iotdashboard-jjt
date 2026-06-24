@@ -109,7 +109,34 @@ class DeviceController extends Controller
     protected function ensureProvisioningCodeUpToDate(Device $device)
     {
         $oldCode = $device->provisioning_code;
-        if ($oldCode && strpos($oldCode, 'LittleFS') === false) {
+        if (!$oldCode) {
+            return;
+        }
+
+        $mqtt_host = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value');
+        if (empty($mqtt_host)) {
+            $envHost = env('MQTT_HOST');
+            if (empty($envHost) || $envHost === 'broker.emqx.io' || $envHost === 'mqtt') {
+                $mqtt_host = app()->runningInConsole() ? '127.0.0.1' : request()->getHost();
+            } else {
+                $mqtt_host = $envHost;
+            }
+        }
+        $mqtt_port = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
+        $mqtt_user = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME', '');
+        $mqtt_password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD', '');
+
+        $oldMqttHost = '';
+        if (preg_match('/const char\* mqtt_server = "(.*?)";/', $oldCode, $matchesHost)) {
+            $oldMqttHost = $matchesHost[1];
+        }
+
+        $oldMqttPort = 1883;
+        if (preg_match('/const int mqtt_port = (\d+);/', $oldCode, $matchesPort)) {
+            $oldMqttPort = intval($matchesPort[1]);
+        }
+
+        if (strpos($oldCode, 'LittleFS') === false || $oldMqttHost !== $mqtt_host || $oldMqttPort !== $mqtt_port) {
             $wifi_ssid = 'YOUR_WIFI_SSID';
             if (preg_match('/const char\* ssid = "(.*?)";/', $oldCode, $matchesSsid)) {
                 $wifi_ssid = $matchesSsid[1];
@@ -120,18 +147,12 @@ class DeviceController extends Controller
                 $wifi_password = $matchesPassword[1];
             }
 
-            $mqtt_host = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value');
-            if (empty($mqtt_host)) {
-                $envHost = env('MQTT_HOST');
-                if (empty($envHost) || $envHost === 'broker.emqx.io' || $envHost === 'mqtt') {
-                    $mqtt_host = app()->runningInConsole() ? '127.0.0.1' : request()->getHost();
-                } else {
-                    $mqtt_host = $envHost;
-                }
+            if (preg_match('/const char\* mqtt_user = "(.*?)";/', $oldCode, $matchesUser) && !empty($matchesUser[1])) {
+                $mqtt_user = $matchesUser[1];
             }
-            $mqtt_port = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
-            $mqtt_user = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME', '');
-            $mqtt_password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD', '');
+            if (preg_match('/const char\* mqtt_password = "(.*?)";/', $oldCode, $matchesPass) && !empty($matchesPass[1])) {
+                $mqtt_password = $matchesPass[1];
+            }
 
             $code = view('devices.code_template', compact('device', 'wifi_ssid', 'wifi_password', 'mqtt_host', 'mqtt_port', 'mqtt_user', 'mqtt_password'))->render();
             $device->provisioning_code = $code;
