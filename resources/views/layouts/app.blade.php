@@ -154,6 +154,21 @@
                                 @endif
                             </div>
                             <div class="max-h-80 overflow-y-auto">
+                                <!-- Changelog Update Alert -->
+                                <button type="button" onclick="openChangelogModal()" class="w-full text-left block px-4 py-3.5 hover:bg-blue-50/40 transition-colors border-b border-slate-150 bg-blue-50/10">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 mt-0.5">
+                                            <div class="w-8 h-8 rounded-lg bg-blue-100/80 border border-blue-200/60 flex items-center justify-center text-blue-600">
+                                                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                            </div>
+                                        </div>
+                                        <div class="ml-3 w-0 flex-1">
+                                            <p class="text-xs font-bold text-slate-800">🚀 Dashboard V2.0 Updates!</p>
+                                            <p class="text-[10px] text-slate-500 mt-0.5">Click to view 6 new secure features.</p>
+                                            <span class="inline-block mt-1 text-[9px] font-bold text-blue-600 bg-blue-100/50 px-2 py-0.5 rounded-full uppercase tracking-wider">New Release</span>
+                                        </div>
+                                    </div>
+                                </button>
                                 @forelse($offlineNotifications as $notif)
                                 <a href="{{ route('devices.index') }}" class="block px-4 py-3.5 hover:bg-slate-50/50 transition-colors border-b border-slate-100 last:border-0">
                                     <div class="flex items-start">
@@ -275,9 +290,28 @@
             clockEl.textContent = `${dayName}, ${day} ${monthName} ${year} | ${hours}:${minutes}:${seconds}`;
         }
         
+        function openChangelogModal() {
+            const dropdown = document.getElementById('notification-dropdown');
+            if (dropdown) dropdown.classList.add('hidden');
+            const modal = document.getElementById('changelog-modal');
+            if (modal) modal.classList.remove('hidden');
+        }
+        
+        function closeChangelogModal() {
+            const modal = document.getElementById('changelog-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+        
         document.addEventListener('DOMContentLoaded', () => {
             updateRealtimeClock();
             setInterval(updateRealtimeClock, 1000);
+            
+            // Auto open changelog for new v2 update
+            const hasSeen = localStorage.getItem('changelog_seen_v2');
+            if (!hasSeen) {
+                setTimeout(openChangelogModal, 1200);
+                localStorage.setItem('changelog_seen_v2', 'true');
+            }
         });
     </script>
 
@@ -317,5 +351,87 @@
         </div>
     </div>
     @endauth
+
+    <!-- Changelog Modal -->
+    <div id="changelog-modal" class="hidden fixed inset-0 z-[100] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" aria-hidden="true" onclick="closeChangelogModal()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:min-h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-middle bg-white/90 backdrop-blur-2xl rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full border border-slate-200/80">
+                <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                    <div class="flex items-center gap-2">
+                        <span class="p-2 bg-blue-50 text-blue-600 rounded-xl border border-blue-100">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                        </span>
+                        <div>
+                           <h3 class="text-base font-bold text-slate-900 leading-none">What's New in Version 2.0</h3>
+                           <p class="text-[10px] text-slate-500 font-medium mt-1">Released June 24, 2026</p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="closeChangelogModal()" class="text-slate-400 hover:text-slate-600 transition-colors p-1.5 hover:bg-slate-100 rounded-xl">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+                
+                <div class="p-6 space-y-5 max-h-[60vh] overflow-y-auto">
+                    <!-- Feature 1 -->
+                    <div class="flex gap-4">
+                        <div class="w-6 h-6 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 text-xs font-bold flex-shrink-0">1</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800">Calibration Multipliers</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">Admin-only multiplier calibration configuration for voltage and current scaling (e.g. adjust scaling drift to calibrate with physical meters).</p>
+                        </div>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="flex gap-4">
+                        <div class="w-6 h-6 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 text-xs font-bold flex-shrink-0">2</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800">Telegram Bot Notifications</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">Instant alerts dispatched to Telegram for device offline states, recovery back online, and monthly budget limit crossings.</p>
+                        </div>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="flex gap-4">
+                        <div class="w-6 h-6 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 text-xs font-bold flex-shrink-0">3</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800">Interactive Terminal Console</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">Interactive Remote Console on the device page allowing administrators to execute custom JSON commands directly on nodes.</p>
+                        </div>
+                    </div>
+                    <!-- Feature 4 -->
+                    <div class="flex gap-4">
+                        <div class="w-6 h-6 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 text-xs font-bold flex-shrink-0">4</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800">Monthly Energy & Cost Budgets</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">Configure target monthly cost (Rp) and consumption (kWh) budgets per device with alert markers at 80% and 100% usage.</p>
+                        </div>
+                    </div>
+                    <!-- Feature 5 -->
+                    <div class="flex gap-4">
+                        <div class="w-6 h-6 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 text-xs font-bold flex-shrink-0">5</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800">Weekly Energy Comparison Analytics</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">A new "Weekly" dashboard chart tab that renders a side-by-side analysis of This Week vs. Last Week consumption trends.</p>
+                        </div>
+                    </div>
+                    <!-- Feature 6 -->
+                    <div class="flex gap-4">
+                        <div class="w-6 h-6 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 text-xs font-bold flex-shrink-0">6</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800">Authentication-Locked CSV Export</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">Secure, authenticated CSV report exports for daily log analytics, allowing quick spreadsheet downloads.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50/50 px-6 py-4 border-t border-slate-100 flex justify-between items-center">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Jamkrida IoT Dashboard</span>
+                    <button type="button" onclick="closeChangelogModal()" class="rounded-xl px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-sm transition-colors">
+                        Got it!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
