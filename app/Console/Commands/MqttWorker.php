@@ -396,7 +396,7 @@ class MqttWorker extends Command
             }
 
             // Broadcast telemetry updated to WebSockets
-            broadcast(new \App\Events\TelemetryUpdated($deviceId, $data));
+            broadcast(new TelemetryUpdated($deviceId, $data));
         }
     }
 

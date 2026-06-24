@@ -181,7 +181,7 @@ class DeviceController extends Controller
         return redirect()->route('dashboard')->with('success', 'Device deleted successfully.');
     }
 
-    public function uploadFirmware(\Illuminate\Http\Request $request, Device $device)
+    public function uploadFirmware(Request $request, Device $device)
     {
         $request->validate([
             'firmware' => 'required|file' // usually bins might not have mime check working well
