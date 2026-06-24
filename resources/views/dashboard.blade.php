@@ -286,6 +286,68 @@
                             </div>
                         </div>
 
+                        @if($device->monthly_budget_kwh || $device->monthly_budget_cost)
+                            <div class="border-t border-slate-100 pt-3.5 mt-2.5 mb-4">
+                                <span class="text-[9px] uppercase font-extrabold text-slate-450 block tracking-widest mb-2">Monthly Budget Forecast</span>
+                                
+                                @if($device->monthly_budget_kwh)
+                                    @php
+                                        $kwhPercent = $device->monthly_budget_kwh > 0 ? ($device->current_month_kwh / $device->monthly_budget_kwh) * 100 : 0;
+                                        $projectedKwhPercent = $device->monthly_budget_kwh > 0 ? ($device->projected_kwh / $device->monthly_budget_kwh) * 100 : 0;
+                                        $kwhExceeded = $projectedKwhPercent > 100;
+                                        $kwhWarning = $projectedKwhPercent > 80 && $projectedKwhPercent <= 100;
+                                    @endphp
+                                    <div class="mb-3">
+                                        <div class="flex justify-between text-[10px] font-bold text-slate-650 mb-1">
+                                            <span>Consumption (kWh)</span>
+                                            <span>{{ number_format($device->current_month_kwh, 1, ',', '.') }} / {{ number_format($device->monthly_budget_kwh, 0, ',', '.') }} kWh</span>
+                                        </div>
+                                        <div class="w-full bg-slate-100/80 rounded-full h-1.5 overflow-hidden">
+                                            <div class="h-full rounded-full {{ $kwhExceeded ? 'bg-red-500' : ($kwhWarning ? 'bg-amber-500' : 'bg-emerald-500') }}" style="width: {{ min(100, $kwhPercent) }}%"></div>
+                                        </div>
+                                        <div class="flex justify-between text-[9px] mt-1 font-semibold">
+                                            <span class="text-slate-400">Projection: {{ number_format($device->projected_kwh, 1, ',', '.') }} kWh</span>
+                                            @if($kwhExceeded)
+                                                <span class="text-red-500 font-bold">⚠️ Over Limit (+{{ number_format($projectedKwhPercent - 100, 0) }}%)</span>
+                                            @elseif($kwhWarning)
+                                                <span class="text-amber-500 font-bold">⚠️ Warning ({{ number_format($projectedKwhPercent, 0) }}%)</span>
+                                            @else
+                                                <span class="text-emerald-500 font-bold">On Track ({{ number_format($projectedKwhPercent, 0) }}%)</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if($device->monthly_budget_cost)
+                                    @php
+                                        $costPercent = $device->monthly_budget_cost > 0 ? ($device->current_month_cost / $device->monthly_budget_cost) * 100 : 0;
+                                        $projectedCostPercent = $device->monthly_budget_cost > 0 ? ($device->projected_cost / $device->monthly_budget_cost) * 100 : 0;
+                                        $costExceeded = $projectedCostPercent > 100;
+                                        $costWarning = $projectedCostPercent > 80 && $projectedCostPercent <= 100;
+                                    @endphp
+                                    <div>
+                                        <div class="flex justify-between text-[10px] font-bold text-slate-650 mb-1">
+                                            <span>Billing Cost (IDR)</span>
+                                            <span>Rp {{ number_format($device->current_month_cost, 0, ',', '.') }} / Rp {{ number_format($device->monthly_budget_cost, 0, ',', '.') }}</span>
+                                        </div>
+                                        <div class="w-full bg-slate-100/80 rounded-full h-1.5 overflow-hidden">
+                                            <div class="h-full rounded-full {{ $costExceeded ? 'bg-red-500' : ($costWarning ? 'bg-amber-500' : 'bg-emerald-500') }}" style="width: {{ min(100, $costPercent) }}%"></div>
+                                        </div>
+                                        <div class="flex justify-between text-[9px] mt-1 font-semibold">
+                                            <span class="text-slate-400">Projection: Rp {{ number_format($device->projected_cost, 0, ',', '.') }}</span>
+                                            @if($costExceeded)
+                                                <span class="text-red-500 font-bold">⚠️ Over Limit (+{{ number_format($projectedCostPercent - 100, 0) }}%)</span>
+                                            @elseif($costWarning)
+                                                <span class="text-amber-500 font-bold">⚠️ Warning ({{ number_format($projectedCostPercent, 0) }}%)</span>
+                                            @else
+                                                <span class="text-emerald-500 font-bold">On Track ({{ number_format($projectedCostPercent, 0) }}%)</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+
                         <!-- Card Actions -->
                         @if(auth()->user()->role === 'admin')
                             <div class="flex items-center justify-between border-t border-slate-100 pt-3 mt-auto">

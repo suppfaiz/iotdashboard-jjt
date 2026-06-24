@@ -18,6 +18,17 @@ class DashboardController extends Controller
 
         $plnTariff = SystemConfig::where('key', 'pln_tariff')->value('value') ?? 1444.70;
 
+        // Fetch current month daily log sums grouped by device
+        $monthlyLogsGrouped = \Illuminate\Support\Facades\DB::table('daily_energy_logs')
+            ->selectRaw('device_id, SUM(total_kwh_harian) as monthly_sum')
+            ->where('date', '>=', now()->startOfMonth()->toDateString())
+            ->groupBy('device_id')
+            ->get()
+            ->keyBy('device_id');
+
+        $daysElapsed = max(1, now()->day);
+        $remainingDays = max(0, now()->daysInMonth - $daysElapsed);
+
         // Calculate total current accumulated energy and multi-tariff cost from cache
         $totalVolatileKwh = 0;
         $estimatedCost = 0;
@@ -33,6 +44,18 @@ class DashboardController extends Controller
                 $estimatedCost += $deviceCost;
                 
                 $device->last_seen = Cache::get("last_seen:{$device->device_id}", 0);
+
+                // Calculate per-device budget projections
+                $deviceMonthlySum = floatval($monthlyLogsGrouped->get($device->id)->monthly_sum ?? 0.0);
+                $deviceMonthlySum += $energy; // Add volatile real-time today energy
+
+                $deviceAvgDaily = $deviceMonthlySum / $daysElapsed;
+                $deviceProjectedKwh = $deviceMonthlySum + ($deviceAvgDaily * $remainingDays);
+
+                $device->current_month_kwh = $deviceMonthlySum;
+                $device->current_month_cost = $deviceMonthlySum * $plnTariff;
+                $device->projected_kwh = $deviceProjectedKwh;
+                $device->projected_cost = $deviceProjectedKwh * $plnTariff;
             }
         }
 

@@ -228,4 +228,33 @@ class AdvancedExtensionsTest extends TestCase
         // Authenticated user can access changelog page
         $this->actingAs($this->user)->get('/changelog')->assertOk();
     }
+
+    public function test_dashboard_per_device_budget_forecasting(): void
+    {
+        // 1. Create a historical log for the device in the current month
+        DailyEnergyLog::create([
+            'device_id' => $this->device->id,
+            'date' => now()->startOfMonth()->toDateString(),
+            'total_kwh_harian' => 15.00
+        ]);
+
+        // 2. Put some real-time volatile energy in cache to verify real-time delta summation
+        Cache::put("daily_energy:dev_test123", 5.00);
+
+        // 3. Access dashboard
+        $response = $this->actingAs($this->admin)->get(route('dashboard'));
+        $response->assertOk();
+
+        // 4. Assert that the device object in the view has the calculated budget projection attributes
+        $viewGroups = $response->original->getData()['groups'];
+        $deviceObj = $viewGroups->first()->devices->first();
+
+        // Current month energy should be historical (15.00) + volatile today (5.00) = 20.00 kWh
+        $this->assertEquals(20.00, $deviceObj->current_month_kwh);
+        $this->assertEquals(20.00 * 1500.00, $deviceObj->current_month_cost); // pln_tariff is 1500.00
+
+        // Check if projected_kwh and projected_cost are populated and greater than 0
+        $this->assertGreaterThan(0.0, $deviceObj->projected_kwh);
+        $this->assertGreaterThan(0.0, $deviceObj->projected_cost);
+    }
 }
