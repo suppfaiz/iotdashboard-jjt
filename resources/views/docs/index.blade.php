@@ -152,19 +152,31 @@
             <section id="scheduler" class="scroll-mt-24">
                 <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                     <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600 text-sm font-bold">5</span>
-                    Scheduler & Daily Historical Logging
+                    Scheduler & Database Historical Logging
                 </h2>
                 <p class="text-gray-600 mb-4 leading-relaxed">
-                    Rather than writing database telemetry records every second (which would overload standard SQL engines), the system tracks real-time volatile metrics in Cache memory.
+                    Rather than writing database telemetry records every second (which would overload standard SQL engines), the system tracks real-time volatile metrics in Cache memory. Two scheduled commands run automatically to save historical snapshots:
                 </p>
-                <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
-                    <h4 class="text-sm font-bold text-gray-800 mb-2">Automated Cron Job:</h4>
-                    <p class="text-sm text-gray-600 leading-relaxed mb-3">
-                        Every day, a scheduled command runs to capture the accumulated energy (kWh) reading from the cache memory, writing a single row for each active device into the persistent database table <code>daily_energy_logs</code>.
-                    </p>
-                    <div class="bg-gray-800 rounded p-4 text-xs font-mono text-white">
-                        <span class="text-gray-400 block mb-1"># Command executed by the system scheduler</span>
-                        <code>php artisan daily-energy-log:run</code>
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-4">
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 mb-1">1. Hourly energy log:</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed mb-2">
+                            Runs at the start of every hour to capture the current metrics (V, A, W, kWh) and save them to the <code>hourly_energy_logs</code> table.
+                        </p>
+                        <div class="bg-gray-800 rounded p-4 text-xs font-mono text-white">
+                            <span class="text-gray-400 block mb-1"># Run hourly log command</span>
+                            <code>php artisan energy:log-hourly</code>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 mb-1">2. Daily energy log:</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed mb-2">
+                            Runs daily at 23:59 to capture the final accumulated daily energy consumption (kWh) of each active device and save it to the <code>daily_energy_logs</code> table.
+                        </p>
+                        <div class="bg-gray-800 rounded p-4 text-xs font-mono text-white">
+                            <span class="text-gray-400 block mb-1"># Run daily log command</span>
+                            <code>php artisan energy:log-daily</code>
+                        </div>
                     </div>
                 </div>
             </section>

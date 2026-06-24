@@ -8,5 +8,5 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('energy:log-daily')->dailyAt('20:00');
+Schedule::command('energy:log-daily')->dailyAt('23:59');
 Schedule::command('energy:log-hourly')->hourly();
