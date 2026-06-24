@@ -140,4 +140,9 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('groups', 'plnTariff', 'totalVolatileKwh', 'estimatedCost', 'chartData', 'topDevices', 'projectedBilling'));
     }
+
+    public function changelog()
+    {
+        return view('changelog');
+    }
 }

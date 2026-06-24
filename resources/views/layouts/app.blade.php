@@ -114,6 +114,7 @@
                     <div class="hidden md:ml-6 md:flex md:items-center md:space-x-2">
                         <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300">Dashboard</a>
                         <a href="{{ route('devices.index') }}" class="{{ request()->routeIs('devices.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300">Devices</a>
+                        <a href="{{ route('changelog') }}" class="{{ request()->routeIs('changelog') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300">Changelog</a>
                         @if(auth()->user()->role === 'admin')
                             <a href="{{ route('logs.index') }}" class="{{ request()->routeIs('logs.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300">Historical Logs</a>
                             <a href="{{ route('reports.index') }}" class="{{ request()->routeIs('reports.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300">Reports</a>
@@ -209,6 +210,7 @@
                         <!-- Dropdown panel -->
                         <div id="user-dropdown" class="hidden absolute right-0 mt-3 w-48 rounded-2xl shadow-xl py-2 bg-white/95 backdrop-blur-2xl border border-slate-200/80 z-50">
                             <a href="{{ route('profile.edit') }}" class="block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-905 transition-colors">Your Profile</a>
+                            <a href="{{ route('changelog') }}" class="block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-905 transition-colors">Changelog</a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="w-full text-left block px-4 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50/40 transition-colors">

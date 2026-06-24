@@ -219,4 +219,13 @@ class AdvancedExtensionsTest extends TestCase
         $this->assertNotEquals(403, $response->getStatusCode());
         $this->assertNotEquals(400, $response->getStatusCode());
     }
+
+    public function test_changelog_route_is_accessible_to_any_auth_user(): void
+    {
+        // Guest gets redirected to login
+        $this->get('/changelog')->assertRedirect('/login');
+
+        // Authenticated user can access changelog page
+        $this->actingAs($this->user)->get('/changelog')->assertOk();
+    }
 }

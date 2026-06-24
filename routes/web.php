@@ -16,6 +16,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return redirect()->route('dashboard');
     });
+    Route::get('/changelog', [DashboardController::class, 'changelog'])->name('changelog');
 
     // Profile routes (Standard Breeze)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
