@@ -43,6 +43,11 @@
                 Ping Device
             </button>
             
+            <a href="{{ route('devices.export_csv', $device->id) }}" class="text-sm bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded transition-colors flex items-center shadow-sm">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                Export CSV
+            </a>
+            
             @if(auth()->user()->role === 'admin')
                 <form action="{{ route('devices.reset_energy', $device->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to reset the accumulated energy for this device?');" class="inline">
                     @csrf
@@ -72,32 +77,112 @@
         </div>
     </div>
 
+    @if(session('success'))
+        <div class="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded shadow-sm">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <!-- Device Info -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2">Device Information</h3>
-            <dl class="space-y-3 text-sm">
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Device ID</dt>
-                    <dd class="text-gray-900 font-mono bg-gray-50 px-2 py-0.5 rounded border border-gray-200">{{ $device->device_id }}</dd>
-                </div>
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Group Area</dt>
-                    <dd class="text-gray-900">{{ $device->group->name }}</dd>
-                </div>
-                <div class="flex justify-between items-start gap-4">
-                    <dt class="text-gray-500 whitespace-nowrap">MQTT Topic</dt>
-                    <dd class="text-gray-900 font-mono text-right break-all">{{ $device->mqtt_topic }}</dd>
-                </div>
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Registered</dt>
-                    <dd class="text-gray-900">{{ $device->created_at->format('M d, Y') }}</dd>
-                </div>
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">IP Address</dt>
-                    <dd class="text-gray-900 font-mono bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100" id="device-ip">{{ Cache::get("ip:{$device->device_id}", 'N/A') }}</dd>
-                </div>
-            </dl>
+        <!-- Left Column -->
+        <div class="space-y-6">
+            <!-- Device Info -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2">Device Information</h3>
+                <dl class="space-y-3 text-sm">
+                    <div class="flex justify-between">
+                        <dt class="text-gray-500">Device ID</dt>
+                        <dd class="text-gray-900 font-mono bg-gray-50 px-2 py-0.5 rounded border border-gray-200">{{ $device->device_id }}</dd>
+                    </div>
+                    <div class="flex justify-between">
+                        <dt class="text-gray-500">Group Area</dt>
+                        <dd class="text-gray-900">{{ $device->group->name }}</dd>
+                    </div>
+                    <div class="flex justify-between items-start gap-4">
+                        <dt class="text-gray-500 whitespace-nowrap">MQTT Topic</dt>
+                        <dd class="text-gray-900 font-mono text-right break-all">{{ $device->mqtt_topic }}</dd>
+                    </div>
+                    <div class="flex justify-between">
+                        <dt class="text-gray-500">Registered</dt>
+                        <dd class="text-gray-900">{{ $device->created_at->format('M d, Y') }}</dd>
+                    </div>
+                    <div class="flex justify-between">
+                        <dt class="text-gray-500">IP Address</dt>
+                        <dd class="text-gray-900 font-mono bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100" id="device-ip">{{ Cache::get("ip:{$device->device_id}", 'N/A') }}</dd>
+                    </div>
+                    <div class="flex justify-between">
+                        <dt class="text-gray-500">Voltage Multiplier</dt>
+                        <dd class="text-gray-900 font-semibold">{{ number_format($device->voltage_multiplier, 2) }}x</dd>
+                    </div>
+                    <div class="flex justify-between">
+                        <dt class="text-gray-500">Current Multiplier</dt>
+                        <dd class="text-gray-900 font-semibold">{{ number_format($device->current_multiplier, 2) }}x</dd>
+                    </div>
+                    @if($device->monthly_budget_kwh)
+                        <div class="flex justify-between">
+                            <dt class="text-gray-500">Monthly Budget (kWh)</dt>
+                            <dd class="text-blue-600 font-semibold">{{ number_format($device->monthly_budget_kwh, 2) }} kWh</dd>
+                        </div>
+                    @endif
+                    @if($device->monthly_budget_cost)
+                        <div class="flex justify-between">
+                            <dt class="text-gray-500">Monthly Budget (IDR)</dt>
+                            <dd class="text-emerald-600 font-semibold">Rp {{ number_format($device->monthly_budget_cost, 0, ',', '.') }}</dd>
+                        </div>
+                    @endif
+                </dl>
+            </div>
+
+            <!-- Edit Device Settings (Admin Only) -->
+            @if(auth()->user()->role === 'admin')
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2">Edit Device Settings</h3>
+                <form action="{{ route('devices.update', $device->id) }}" method="POST" class="space-y-4">
+                    @csrf
+                    @method('PATCH')
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase">Device Name</label>
+                        <input type="text" name="name" value="{{ $device->name }}" required class="mt-1 block w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase">Volt Multiplier</label>
+                            <input type="number" name="voltage_multiplier" step="0.01" min="0.1" max="10.0" value="{{ $device->voltage_multiplier }}" required class="mt-1 block w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase">Current Multiplier</label>
+                            <input type="number" name="current_multiplier" step="0.01" min="0.1" max="10.0" value="{{ $device->current_multiplier }}" required class="mt-1 block w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase">Budget kWh (Month)</label>
+                            <input type="number" name="monthly_budget_kwh" step="0.01" min="0" value="{{ $device->monthly_budget_kwh }}" placeholder="None" class="mt-1 block w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase">Budget IDR (Month)</label>
+                            <input type="number" name="monthly_budget_cost" step="1" min="0" value="{{ $device->monthly_budget_cost }}" placeholder="None" class="mt-1 block w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full text-center text-sm bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors shadow-sm">
+                        Save Settings
+                    </button>
+                </form>
+            </div>
+            @endif
         </div>
 
         <!-- Latest Metrics -->
@@ -210,6 +295,29 @@
                     <div class="flex justify-between items-center mt-2 text-xs text-gray-500">
                         <span id="ota-status-message" class="italic">Initiating firmware transfer...</span>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Remote Console -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M4 17h16a2 2 0 002-2V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    Interactive Remote Console
+                </h3>
+                <span class="text-xs text-gray-500 font-mono">cmd/{{ $device->device_id }}</span>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-2">Send Custom JSON Command</label>
+                    <div class="flex gap-3">
+                        <input type="text" id="console-payload" placeholder='{"cmd": "restart"}' value='{"cmd": "restart"}' class="flex-1 text-sm font-mono border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50">
+                        <button onclick="sendConsoleCommand()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded transition-colors shadow-sm">
+                            Send Command
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Make sure the payload is valid JSON (e.g., <code>{"cmd": "restart"}</code>, <code>{"cmd": "reset_energy"}</code>).</p>
                 </div>
             </div>
         </div>
@@ -417,6 +525,45 @@
         setTimeout(() => {
             window.print();
         }, 100);
+    }
+
+    window.sendConsoleCommand = function() {
+        const payloadInput = document.getElementById('console-payload');
+        const payload = payloadInput.value.trim();
+        
+        if (!payload) {
+            alert('Payload cannot be empty.');
+            return;
+        }
+
+        try {
+            JSON.parse(payload);
+        } catch (e) {
+            alert('Payload must be a valid JSON string.');
+            return;
+        }
+
+        logDebug(`<span class="text-indigo-400">Sending console command payload: ${payload}</span>`);
+
+        fetch(`{{ route('devices.console', $device->id) }}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ payload: payload })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                logDebug(`<span class="text-green-400">Console Success: ${data.message}</span>`);
+            } else {
+                logDebug(`<span class="text-red-400">Console Error: ${data.message}</span>`);
+            }
+        })
+        .catch(err => {
+            logDebug(`<span class="text-red-500">Network Error sending console command: ${err.message}</span>`);
+        });
     }
 </script>
 @endsection

@@ -1,0 +1,222 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\User;
+use App\Models\Device;
+use App\Models\Group;
+use App\Models\SystemConfig;
+use App\Models\DailyEnergyLog;
+use App\Console\Commands\MqttWorker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Tests\TestCase;
+
+class AdvancedExtensionsTest extends TestCase
+{
+    use RefreshDatabase;
+
+    private $admin;
+    private $user;
+    private $device;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Cache::flush();
+        Http::fake();
+
+        $this->admin = User::factory()->create(['role' => 'admin']);
+        $this->user = User::factory()->create(['role' => 'user']);
+        
+        $group = Group::create(['name' => 'Factory Room']);
+        $this->device = Device::create([
+            'device_id' => 'dev_test123',
+            'name' => 'Calibrated Meter',
+            'group_id' => $group->id,
+            'status' => true,
+            'mqtt_topic' => 'telemetry/factory/dev_test123',
+            'provisioning_code' => '// code',
+            'voltage_multiplier' => 1.10,
+            'current_multiplier' => 0.90,
+            'monthly_budget_kwh' => 100.00,
+            'monthly_budget_cost' => 150000.00,
+        ]);
+
+        // Default configurations
+        SystemConfig::updateOrCreate(['key' => 'pln_tariff_wbp'], ['value' => '2000.00']);
+        SystemConfig::updateOrCreate(['key' => 'pln_tariff_lwbp'], ['value' => '1000.00']);
+        SystemConfig::updateOrCreate(['key' => 'wbp_start'], ['value' => '17:00']);
+        SystemConfig::updateOrCreate(['key' => 'wbp_end'], ['value' => '22:00']);
+        SystemConfig::updateOrCreate(['key' => 'pln_tariff'], ['value' => '1500.00']);
+        SystemConfig::updateOrCreate(['key' => 'telegram_bot_token'], ['value' => 'fake_token']);
+        SystemConfig::updateOrCreate(['key' => 'telegram_chat_id'], ['value' => 'fake_chat']);
+    }
+
+    public function test_telemetry_calibration_and_multiplier_accuracy(): void
+    {
+        $this->travelTo(now()->setTime(10, 0)); // LWBP
+        $worker = new MqttWorker();
+
+        // 1. Initial message (calibration cache init)
+        $worker->processMessage("telemetry/factory/dev_test123", json_encode([
+            'voltage' => 200.0,
+            'current' => 2.0,
+            'power' => 400.0,
+            'energy' => 10.0
+        ]));
+
+        // 2. Second message (energy increases by 0.5 kWh raw)
+        $worker->processMessage("telemetry/factory/dev_test123", json_encode([
+            'voltage' => 200.0,
+            'current' => 2.0,
+            'power' => 400.0,
+            'energy' => 10.5
+        ]));
+
+        // Calibration logic:
+        // voltage: 200.0 * 1.10 = 220.0
+        // current: 2.0 * 0.90 = 1.8
+        // power: 220.0 * 1.8 = 396.0
+        // energy delta: 0.5 * 1.10 * 0.90 = 0.495
+        $this->assertEquals(220.0, Cache::get("voltage:dev_test123"));
+        $this->assertEquals(1.8, Cache::get("current:dev_test123"));
+        $this->assertEquals(396.0, Cache::get("power:dev_test123"));
+        $this->assertEquals(0.495, Cache::get("daily_energy:dev_test123"));
+
+        // Cost is 0.495 * 1000 = 495.0
+        $this->assertEquals(495.0, Cache::get("daily_cost:dev_test123"));
+
+        $this->assertDatabaseHas('daily_energy_logs', [
+            'device_id' => $this->device->id,
+            'total_kwh_harian' => 0.495
+        ]);
+    }
+
+    public function test_device_offline_heartbeats_and_recovery_telegram_alerts(): void
+    {
+        // 1. Mark device as offline (last seen 6 minutes ago)
+        Cache::put("last_seen:dev_test123", now()->subMinutes(6)->timestamp);
+
+        // Run monitor
+        $this->artisan('devices:monitor')->assertExitCode(0);
+
+        // Assert Telegram API was called for offline alert
+        Http::assertSent(function ($request) {
+            return str_contains($request->url(), 'fake_token/sendMessage') &&
+                   $request['chat_id'] === 'fake_chat' &&
+                   str_contains($request['text'], 'DEVICE OFFLINE ALERT') &&
+                   str_contains($request['text'], 'Calibrated Meter');
+        });
+
+        // 2. Clear sent requests list, now mark device as online (last seen 10 seconds ago)
+        Http::fake();
+        Cache::put("last_seen:dev_test123", now()->subSeconds(10)->timestamp);
+
+        // Run monitor again
+        $this->artisan('devices:monitor')->assertExitCode(0);
+
+        // Assert Telegram API was called for recovery alert
+        Http::assertSent(function ($request) {
+            return str_contains($request->url(), 'fake_token/sendMessage') &&
+                   $request['chat_id'] === 'fake_chat' &&
+                   str_contains($request['text'], 'DEVICE ONLINE RECOVERY');
+        });
+    }
+
+    public function test_monthly_energy_and_cost_budgeting_telegram_alerts(): void
+    {
+        // Mark device as online to avoid offline alert interference
+        Cache::put("last_seen:dev_test123", now()->timestamp);
+
+        // 1. Set daily energy log to 81 kWh (exceeds 80% of 100 kWh budget)
+        DailyEnergyLog::create([
+            'device_id' => $this->device->id,
+            'date' => now()->toDateString(),
+            'total_kwh_harian' => 81.00
+        ]);
+
+        $this->artisan('devices:monitor')->assertExitCode(0);
+
+        Http::assertSent(function ($request) {
+            return str_contains($request['text'], 'BATAS ANGGARAN ENERGI 80%') &&
+                   str_contains($request['text'], 'Calibrated Meter');
+        });
+
+        // 2. Clear sent requests, now set daily energy log to 101 kWh (exceeds 100% of 100 kWh budget)
+        Http::fake();
+        DailyEnergyLog::query()->delete();
+        DailyEnergyLog::create([
+            'device_id' => $this->device->id,
+            'date' => now()->toDateString(),
+            'total_kwh_harian' => 101.00
+        ]);
+
+        $this->artisan('devices:monitor')->assertExitCode(0);
+
+        Http::assertSent(function ($request) {
+            return str_contains($request['text'], 'BATAS ANGGARAN ENERGI 100%') &&
+                   str_contains($request['text'], 'Calibrated Meter');
+        });
+    }
+
+    public function test_csv_report_download_security_and_streaming(): void
+    {
+        // 1. Guest access should redirect to login
+        $response = $this->get("/devices/{$this->device->id}/export-csv");
+        $response->assertRedirect('/login');
+
+        // 2. Auth user access should succeed and return CSV headers
+        $response = $this->actingAs($this->user)->get("/devices/{$this->device->id}/export-csv");
+        $response->assertOk();
+        $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
+        
+        $expectedFilename = 'attachment; filename="energy_log_dev_test123_' . now()->format('Ymd') . '.csv"';
+        $response->assertHeader('Content-Disposition', $expectedFilename);
+    }
+
+    public function test_role_based_access_control_and_validation(): void
+    {
+        // 1. Standard user cannot update device configuration
+        $response = $this->actingAs($this->user)->patch("/devices/{$this->device->id}", [
+            'name' => 'New Name',
+            'group_id' => $this->device->group_id,
+            'voltage_multiplier' => 1.20,
+            'current_multiplier' => 1.20,
+        ]);
+        $response->assertStatus(403);
+
+        // 2. Admin user can update device configuration
+        $response = $this->actingAs($this->admin)->patch("/devices/{$this->device->id}", [
+            'name' => 'New Name',
+            'group_id' => $this->device->group_id,
+            'voltage_multiplier' => 1.20,
+            'current_multiplier' => 1.20,
+            'monthly_budget_kwh' => 200,
+            'monthly_budget_cost' => 300000,
+        ]);
+        $response->assertRedirect();
+        $this->device->refresh();
+        $this->assertEquals(1.20, $this->device->voltage_multiplier);
+
+        // 3. Standard user cannot send custom commands to device console
+        $response = $this->actingAs($this->user)->post("/devices/{$this->device->id}/console", [
+            'payload' => '{"restart":true}'
+        ]);
+        $response->assertStatus(403);
+
+        // 4. Admin user cannot send invalid JSON command
+        $response = $this->actingAs($this->admin)->post("/devices/{$this->device->id}/console", [
+            'payload' => 'invalid-json'
+        ]);
+        $response->assertStatus(400);
+
+        // 5. Admin user can send valid JSON command
+        $response = $this->actingAs($this->admin)->post("/devices/{$this->device->id}/console", [
+            'payload' => '{"restart":true}'
+        ]);
+        $this->assertNotEquals(403, $response->getStatusCode());
+        $this->assertNotEquals(400, $response->getStatusCode());
+    }
+}

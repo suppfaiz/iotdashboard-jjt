@@ -296,4 +296,68 @@ class DeviceController extends Controller
             return redirect()->back()->with('error', 'Failed to send restart command: ' . $e->getMessage());
         }
     }
+
+    public function update(Request $request, Device $device)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'voltage_multiplier' => 'required|numeric|min:0.1|max:10.0',
+            'current_multiplier' => 'required|numeric|min:0.1|max:10.0',
+            'monthly_budget_kwh' => 'nullable|numeric|min:0',
+            'monthly_budget_cost' => 'nullable|numeric|min:0',
+        ]);
+
+        $device->update([
+            'name' => $request->name,
+            'voltage_multiplier' => floatval($request->voltage_multiplier),
+            'current_multiplier' => floatval($request->current_multiplier),
+            'monthly_budget_kwh' => $request->filled('monthly_budget_kwh') ? floatval($request->monthly_budget_kwh) : null,
+            'monthly_budget_cost' => $request->filled('monthly_budget_cost') ? floatval($request->monthly_budget_cost) : null,
+        ]);
+
+        return redirect()->back()->with('success', 'Device settings updated successfully!');
+    }
+
+    public function sendCustomCommand(Request $request, Device $device)
+    {
+        $request->validate([
+            'payload' => 'required|string',
+        ]);
+
+        $payload = $request->payload;
+
+        // Ensure payload is valid JSON
+        json_decode($payload);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return response()->json(['status' => 'error', 'message' => 'Invalid JSON payload.'], 400);
+        }
+
+        try {
+            $server   = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value') ?? env('MQTT_HOST', 'broker.emqx.io');
+            $port     = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
+            $username = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME');
+            $password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD');
+            $clientId = env('MQTT_CLIENT_ID', 'laravel_console_' . rand(1000, 9999));
+
+            $mqtt = new \PhpMqtt\Client\MqttClient($server, $port, $clientId);
+            $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)
+                ->setKeepAliveInterval(60)
+                ->setUseTls(false);
+
+            if (!empty($username)) {
+                $connectionSettings->setUsername($username);
+            }
+            if (!empty($password)) {
+                $connectionSettings->setPassword($password);
+            }
+                
+            $mqtt->connect($connectionSettings, true);
+            $mqtt->publish("cmd/{$device->device_id}", $payload, 0);
+            $mqtt->disconnect();
+
+            return response()->json(['status' => 'success', 'message' => 'Command sent successfully via MQTT.']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'MQTT connection failed: ' . $e->getMessage()], 500);
+        }
+    }
 }

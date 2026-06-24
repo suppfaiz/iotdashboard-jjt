@@ -26,11 +26,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/devices', [DeviceController::class, 'index'])->name('devices.index');
     Route::get('/devices/{device}', [DeviceController::class, 'show'])->name('devices.show');
     Route::get('/devices/{device}/ping', [DeviceController::class, 'ping'])->name('devices.ping');
+    Route::get('/devices/{device}/export-csv', [\App\Http\Controllers\ExportController::class, 'exportCsv'])->name('devices.export_csv');
 
     // Admin-Only Routes
     Route::middleware('admin')->group(function () {
         // Device Management and Remote Controls
         Route::post('/devices', [DeviceController::class, 'store'])->name('devices.store');
+        Route::patch('/devices/{device}', [DeviceController::class, 'update'])->name('devices.update');
+        Route::post('/devices/{device}/console', [DeviceController::class, 'sendCustomCommand'])->name('devices.console');
         Route::get('/devices/{device}/provisioning', [DeviceController::class, 'provisioning'])->name('devices.provisioning');
         Route::delete('/devices/{device}', [DeviceController::class, 'destroy'])->name('devices.destroy');
         Route::post('/devices/{device}/firmware', [DeviceController::class, 'uploadFirmware'])->name('devices.upload_firmware');

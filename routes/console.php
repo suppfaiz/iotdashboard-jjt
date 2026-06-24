@@ -10,3 +10,4 @@ Artisan::command('inspire', function () {
 
 Schedule::command('energy:log-daily')->dailyAt('23:59');
 Schedule::command('energy:log-hourly')->hourly();
+Schedule::command('devices:monitor')->everyMinute();

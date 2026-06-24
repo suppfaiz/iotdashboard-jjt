@@ -92,6 +92,20 @@ class MqttWorker extends Command
                     $power = floatval($data['power'] ?? 0.0);
                     $energyVal = floatval($data['energy'] ?? 0.0);
                     
+                    // Retrieve calibration
+                    $calibration = Cache::remember("calibration:{$deviceId}", now()->addHours(1), function() use ($deviceId) {
+                        $dev = \App\Models\Device::where('device_id', $deviceId)->first();
+                        return [
+                            'voltage_multiplier' => floatval($dev->voltage_multiplier ?? 1.00),
+                            'current_multiplier' => floatval($dev->current_multiplier ?? 1.00)
+                        ];
+                    });
+
+                    // Apply calibration factors
+                    $voltage = round($voltage * $calibration['voltage_multiplier'], 2);
+                    $current = round($current * $calibration['current_multiplier'], 4);
+                    $power = round($voltage * $current, 2);
+
                     // Calculate delta energy using last_historical_energy cache
                     $lastHistEnergyKey = "last_historical_energy:{$deviceId}";
                     $lastHistEnergy = Cache::get($lastHistEnergyKey);
@@ -108,6 +122,8 @@ class MqttWorker extends Command
                             $deltaKwh = $energyVal;
                         }
                     }
+                    // Apply calibration factors to delta energy
+                    $deltaKwh = $deltaKwh * $calibration['voltage_multiplier'] * $calibration['current_multiplier'];
                     $deltaKwh = round($deltaKwh, 4);
                     Cache::put($lastHistEnergyKey, $energyVal, now()->addDays(2));
                     Cache::put("last_energy:{$deviceId}", $energyVal, now()->addDays(2));
@@ -187,6 +203,26 @@ class MqttWorker extends Command
             $deviceDbId = Cache::remember("device_db_id:{$deviceId}", now()->addHours(1), function() use ($deviceId) {
                 return \App\Models\Device::where('device_id', $deviceId)->value('id');
             });
+
+            // Get calibration multipliers (default to 1.0)
+            $calibration = Cache::remember("calibration:{$deviceId}", now()->addHours(1), function() use ($deviceId) {
+                $dev = \App\Models\Device::where('device_id', $deviceId)->first();
+                return [
+                    'voltage_multiplier' => floatval($dev->voltage_multiplier ?? 1.00),
+                    'current_multiplier' => floatval($dev->current_multiplier ?? 1.00)
+                ];
+            });
+
+            // Apply calibration multipliers to standard telemetry metrics
+            if (isset($data['voltage'])) {
+                $data['voltage'] = round(floatval($data['voltage']) * $calibration['voltage_multiplier'], 2);
+            }
+            if (isset($data['current'])) {
+                $data['current'] = round(floatval($data['current']) * $calibration['current_multiplier'], 4);
+            }
+            if (isset($data['voltage']) && isset($data['current'])) {
+                $data['power'] = round($data['voltage'] * $data['current'], 2);
+            }
             
             // Update Cache for metrics
             if (isset($data['voltage'])) Cache::put("voltage:{$deviceId}", $data['voltage'], now()->addDays(2));
@@ -211,6 +247,8 @@ class MqttWorker extends Command
                         $deltaKwh = $currentEnergy;
                     }
                 }
+                // Apply calibration factors to delta energy
+                $deltaKwh = $deltaKwh * $calibration['voltage_multiplier'] * $calibration['current_multiplier'];
                 $deltaKwh = round($deltaKwh, 4);
                 Cache::put($lastEnergyKey, $currentEnergy, now()->addDays(2));
 
@@ -364,13 +402,10 @@ class MqttWorker extends Command
     {
         try {
             $url = "https://api.telegram.org/bot{$botToken}/sendMessage";
-            $client = new \GuzzleHttp\Client();
-            $client->post($url, [
-                'json' => [
-                    'chat_id' => $chatId,
-                    'text' => $messageText,
-                    'parse_mode' => 'HTML'
-                ]
+            \Illuminate\Support\Facades\Http::post($url, [
+                'chat_id' => $chatId,
+                'text' => $messageText,
+                'parse_mode' => 'HTML'
             ]);
             $this->info("Telegram Alert Sent: " . $messageText);
         } catch (\Exception $e) {

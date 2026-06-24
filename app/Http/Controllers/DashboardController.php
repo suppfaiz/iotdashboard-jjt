@@ -103,10 +103,39 @@ class DashboardController extends Controller
             ->orderBy('label')
             ->get();
 
+        // Weekly comparison (This Week vs Last Week)
+        $rawComparisonLogs = \Illuminate\Support\Facades\DB::table('daily_energy_logs')
+            ->selectRaw('date, SUM(total_kwh_harian) as daily_sum')
+            ->where('date', '>=', now()->subDays(13)->toDateString())
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+
+        $thisWeekData = [];
+        $lastWeekData = [];
+        $comparisonLabels = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+            $thisWeekDateObj = now()->subDays($i);
+            $thisWeekDateStr = $thisWeekDateObj->toDateString();
+            $comparisonLabels[] = $thisWeekDateObj->isoFormat('dddd'); // e.g. "Monday"
+
+            $lastWeekDateStr = now()->subDays($i + 7)->toDateString();
+
+            $thisWeekData[] = floatval($rawComparisonLogs->get($thisWeekDateStr)->daily_sum ?? 0.0);
+            $lastWeekData[] = floatval($rawComparisonLogs->get($lastWeekDateStr)->daily_sum ?? 0.0);
+        }
+
         $chartData = [
             'daily' => $dailyLogs,
             'monthly' => $monthlyLogs,
             'yearly' => $yearlyLogs,
+            'comparison' => [
+                'labels' => $comparisonLabels,
+                'this_week' => $thisWeekData,
+                'last_week' => $lastWeekData,
+            ],
         ];
 
         return view('dashboard', compact('groups', 'plnTariff', 'totalVolatileKwh', 'estimatedCost', 'chartData', 'topDevices', 'projectedBilling'));

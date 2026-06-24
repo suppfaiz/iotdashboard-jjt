@@ -148,6 +148,7 @@
                     <!-- Period Selector -->
                     <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200/80 shadow-inner">
                         <button type="button" onclick="changePeriod('daily')" id="btn-chart-daily" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white text-blue-600 border border-slate-200 shadow-sm transition-all duration-300">Daily</button>
+                        <button type="button" onclick="changePeriod('weekly')" id="btn-chart-weekly" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-500 hover:text-slate-800 transition-all border border-transparent">Weekly</button>
                         <button type="button" onclick="changePeriod('monthly')" id="btn-chart-monthly" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-500 hover:text-slate-800 transition-all border border-transparent">Monthly</button>
                         <button type="button" onclick="changePeriod('yearly')" id="btn-chart-yearly" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-500 hover:text-slate-800 transition-all border border-transparent">Yearly</button>
                     </div>
@@ -547,26 +548,50 @@
             type: 'line',
             data: {
                 labels: [],
-                datasets: [{
-                    label: 'Energy Usage',
-                    data: [],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.04)',
-                    borderWidth: 3,
-                    pointBackgroundColor: '#ffffff',
-                    pointBorderColor: '#3b82f6',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    fill: true,
-                    tension: 0.35
-                }]
+                datasets: [
+                    {
+                        label: 'Energy Usage',
+                        data: [],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.04)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#3b82f6',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.35
+                    },
+                    {
+                        label: 'Last Week Usage',
+                        data: [],
+                        borderColor: '#94a3b8',
+                        backgroundColor: 'rgba(148, 163, 184, 0.02)',
+                        borderWidth: 3,
+                        borderDash: [5, 5],
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#94a3b8',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.35,
+                        hidden: true
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false },
+                    legend: {
+                        display: false,
+                        labels: {
+                            font: { family: "'Inter', sans-serif", size: 11, weight: 'bold' },
+                            color: '#475569'
+                        }
+                    },
                     tooltip: {
                         backgroundColor: 'rgba(15, 23, 42, 0.95)',
                         borderColor: 'rgba(0, 0, 0, 0.05)',
@@ -575,14 +600,15 @@
                         bodyFont: { size: 12, family: "'Inter', sans-serif" },
                         padding: 12,
                         cornerRadius: 12,
-                        displayColors: false,
+                        displayColors: true,
                         callbacks: {
                             label: function(context) {
                                 const val = context.parsed.y;
+                                const label = context.dataset.label || '';
                                 if (currentMetric === 'energy') {
-                                    return val.toLocaleString('id-ID', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' kWh';
+                                    return label + ': ' + val.toLocaleString('id-ID', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' kWh';
                                 } else {
-                                    return 'Rp ' + val.toLocaleString('id-ID', {minimumFractionDigits:0, maximumFractionDigits:0});
+                                    return label + ': Rp ' + val.toLocaleString('id-ID', {minimumFractionDigits:0, maximumFractionDigits:0});
                                 }
                             }
                         }
@@ -634,7 +660,7 @@
         const ctx = document.getElementById('energyChart').getContext('2d');
         
         // Update Period Buttons UI
-        ['daily', 'monthly', 'yearly'].forEach(p => {
+        ['daily', 'weekly', 'monthly', 'yearly'].forEach(p => {
             const btn = document.getElementById('btn-chart-' + p);
             if(btn) {
                 if (p === currentPeriod) {
@@ -663,11 +689,15 @@
         let gradientColor = 'rgba(59, 130, 246, 0.15)';
         
         if (currentMetric === 'energy') {
-            if (titleEl) titleEl.innerText = "Energy Consumption Trend";
+            if (titleEl) {
+                titleEl.innerText = currentPeriod === 'weekly' ? "Weekly Energy Comparison" : "Energy Consumption Trend";
+            }
             borderColor = '#3b82f6';
             gradientColor = 'rgba(59, 130, 246, 0.15)';
         } else {
-            if (titleEl) titleEl.innerText = "Estimated Cost Analytics";
+            if (titleEl) {
+                titleEl.innerText = currentPeriod === 'weekly' ? "Weekly Cost Comparison" : "Estimated Cost Analytics";
+            }
             borderColor = '#10b981'; // emerald
             gradientColor = 'rgba(16, 185, 129, 0.15)';
         }
@@ -676,20 +706,54 @@
         gradient.addColorStop(0, gradientColor);
         gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
-        const dataset = chartDataRaw[currentPeriod] || [];
-        const labels = dataset.map(item => item.label);
-        const data = dataset.map(item => {
-            const val = parseFloat(item.total);
-            return currentMetric === 'energy' ? val : (val * plnTariff);
-        });
-
         if (energyChartInstance) {
-            energyChartInstance.data.labels = labels;
-            energyChartInstance.data.datasets[0].data = data;
-            energyChartInstance.data.datasets[0].label = currentMetric === 'energy' ? 'Energy (kWh)' : 'Cost (Rp)';
-            energyChartInstance.data.datasets[0].borderColor = borderColor;
-            energyChartInstance.data.datasets[0].backgroundColor = gradient;
-            energyChartInstance.data.datasets[0].pointBorderColor = borderColor;
+            if (currentPeriod === 'weekly') {
+                const comparison = chartDataRaw.comparison || { labels: [], this_week: [], last_week: [] };
+                const labels = comparison.labels;
+                const thisWeekData = comparison.this_week.map(val => currentMetric === 'energy' ? val : (val * plnTariff));
+                const lastWeekData = comparison.last_week.map(val => currentMetric === 'energy' ? val : (val * plnTariff));
+
+                energyChartInstance.data.labels = labels;
+                
+                // This Week dataset
+                energyChartInstance.data.datasets[0].data = thisWeekData;
+                energyChartInstance.data.datasets[0].label = currentMetric === 'energy' ? 'This Week (kWh)' : 'This Week (Rp)';
+                energyChartInstance.data.datasets[0].borderColor = borderColor;
+                energyChartInstance.data.datasets[0].backgroundColor = gradient;
+                energyChartInstance.data.datasets[0].pointBorderColor = borderColor;
+                
+                // Last Week dataset
+                const lastWeekGradient = ctx.createLinearGradient(0, 0, 0, 300);
+                lastWeekGradient.addColorStop(0, 'rgba(148, 163, 184, 0.1)');
+                lastWeekGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                
+                energyChartInstance.data.datasets[1].data = lastWeekData;
+                energyChartInstance.data.datasets[1].label = currentMetric === 'energy' ? 'Last Week (kWh)' : 'Last Week (Rp)';
+                energyChartInstance.data.datasets[1].hidden = false;
+                energyChartInstance.data.datasets[1].backgroundColor = lastWeekGradient;
+                
+                energyChartInstance.options.plugins.legend.display = true;
+            } else {
+                const dataset = chartDataRaw[currentPeriod] || [];
+                const labels = dataset.map(item => item.label);
+                const data = dataset.map(item => {
+                    const val = parseFloat(item.total);
+                    return currentMetric === 'energy' ? val : (val * plnTariff);
+                });
+
+                energyChartInstance.data.labels = labels;
+                energyChartInstance.data.datasets[0].data = data;
+                energyChartInstance.data.datasets[0].label = currentMetric === 'energy' ? 'Energy (kWh)' : 'Cost (Rp)';
+                energyChartInstance.data.datasets[0].borderColor = borderColor;
+                energyChartInstance.data.datasets[0].backgroundColor = gradient;
+                energyChartInstance.data.datasets[0].pointBorderColor = borderColor;
+                
+                // Hide Last Week dataset
+                energyChartInstance.data.datasets[1].data = [];
+                energyChartInstance.data.datasets[1].hidden = true;
+                
+                energyChartInstance.options.plugins.legend.display = false;
+            }
             energyChartInstance.update();
         }
     }
