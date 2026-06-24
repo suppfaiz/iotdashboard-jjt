@@ -61,7 +61,15 @@ class DeviceController extends Controller
 
         $wifi_ssid = $request->wifi_ssid;
         $wifi_password = $request->wifi_password;
-        $mqtt_host = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value') ?? env('MQTT_HOST', 'broker.emqx.io');
+        $mqtt_host = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value');
+        if (empty($mqtt_host)) {
+            $envHost = env('MQTT_HOST');
+            if (empty($envHost) || $envHost === 'broker.emqx.io' || $envHost === 'mqtt') {
+                $mqtt_host = app()->runningInConsole() ? '127.0.0.1' : request()->getHost();
+            } else {
+                $mqtt_host = $envHost;
+            }
+        }
         $mqtt_port = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
         $mqtt_user = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME', '');
         $mqtt_password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD', '');
@@ -112,7 +120,15 @@ class DeviceController extends Controller
                 $wifi_password = $matchesPassword[1];
             }
 
-            $mqtt_host = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value') ?? env('MQTT_HOST', 'broker.emqx.io');
+            $mqtt_host = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value');
+            if (empty($mqtt_host)) {
+                $envHost = env('MQTT_HOST');
+                if (empty($envHost) || $envHost === 'broker.emqx.io' || $envHost === 'mqtt') {
+                    $mqtt_host = app()->runningInConsole() ? '127.0.0.1' : request()->getHost();
+                } else {
+                    $mqtt_host = $envHost;
+                }
+            }
             $mqtt_port = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
             $mqtt_user = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME', '');
             $mqtt_password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD', '');
