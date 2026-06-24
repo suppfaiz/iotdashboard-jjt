@@ -28,18 +28,18 @@
                     <tr>
                         @if($type === 'hourly')
                             <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date & Time</th>
-                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Device ID</th>
+                            <th scope="col" class="hidden md:table-cell px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Device ID</th>
                             <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Device Name</th>
-                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Group Area</th>
-                            <th scope="col" class="px-6 py-3.5 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Voltage (V)</th>
-                            <th scope="col" class="px-6 py-3.5 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Current (A)</th>
-                            <th scope="col" class="px-6 py-3.5 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Power (W)</th>
+                            <th scope="col" class="hidden sm:table-cell px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Group Area</th>
+                            <th scope="col" class="hidden lg:table-cell px-6 py-3.5 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Voltage (V)</th>
+                            <th scope="col" class="hidden lg:table-cell px-6 py-3.5 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Current (A)</th>
+                            <th scope="col" class="hidden sm:table-cell px-6 py-3.5 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Power (W)</th>
                             <th scope="col" class="px-6 py-3.5 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Daily Energy (kWh)</th>
                         @else
                             <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
-                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Device ID</th>
+                            <th scope="col" class="hidden md:table-cell px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Device ID</th>
                             <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Device Name</th>
-                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Operational Area</th>
+                            <th scope="col" class="hidden sm:table-cell px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Operational Area</th>
                             <th scope="col" class="px-6 py-3.5 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Daily Energy (kWh)</th>
                         @endif
                     </tr>
@@ -51,7 +51,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
                                     {{ \Carbon\Carbon::parse($log->logged_at)->format('M d, Y | H:i') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">
+                                <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">
                                     {{ $log->device->device_id }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -59,16 +59,16 @@
                                         {{ $log->device->name }}
                                     </a>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                     {{ $log->device->group->name ?? '-' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-mono text-gray-700">
+                                <td class="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-right font-mono text-gray-700">
                                     {{ number_format($log->voltage, 1) }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-mono text-gray-700">
+                                <td class="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-right font-mono text-gray-700">
                                     {{ number_format($log->current, 2) }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-mono text-gray-700">
+                                <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-right font-mono text-gray-700">
                                     {{ number_format($log->power, 1) }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-semibold text-blue-600 font-mono">
@@ -78,7 +78,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ \Carbon\Carbon::parse($log->date)->format('M d, Y') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">
+                                <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">
                                     {{ $log->device->device_id }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -86,7 +86,7 @@
                                         {{ $log->device->name }}
                                     </a>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                     {{ $log->device->group->name ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-bold text-blue-600 font-mono">

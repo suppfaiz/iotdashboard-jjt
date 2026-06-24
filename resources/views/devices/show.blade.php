@@ -23,17 +23,17 @@
 }
 </style>
 <div class="max-w-5xl mx-auto">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-900 flex items-center">
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 flex flex-wrap items-center gap-2">
             {{ $device->name }} 
-            <span class="ml-4 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800" id="status-badge">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800" id="status-badge">
                 <span class="w-2 h-2 mr-2 bg-green-500 rounded-full animate-pulse" id="status-dot"></span> <span id="status-text">Active</span>
             </span>
         </h1>
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
             @if(auth()->user()->role === 'admin')
                 <button onclick="printBarcode()" class="text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded transition-colors flex items-center shadow-sm">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                     Print Label
                 </button>
             @endif
@@ -73,7 +73,7 @@
                     <button type="submit" class="text-sm text-red-600 hover:text-red-700 transition-colors bg-red-50 hover:bg-red-100 border border-red-200 px-3 py-1.5 rounded">Delete</button>
                 </form>
             @endif
-            <a href="{{ route('dashboard') }}" class="text-sm text-gray-500 hover:text-gray-900 transition-colors ml-2">← Back</a>
+            <a href="{{ route('dashboard') }}" class="text-sm text-gray-500 hover:text-gray-900 transition-colors ml-auto lg:ml-2">← Back</a>
         </div>
     </div>
 
@@ -250,7 +250,7 @@
                     </div>
                     
                     <!-- Trigger OTA Form -->
-                    <div class="border-l border-gray-200 pl-6">
+                    <div class="border-t md:border-t-0 md:border-l border-gray-200 pt-6 md:pt-0 pl-0 md:pl-6">
                         <h4 class="text-sm font-medium text-gray-700 mb-3">2. Push Update to Device</h4>
                         @if($device->firmware_path)
                             <div class="mb-3 text-xs text-green-600 flex items-center">
@@ -338,7 +338,7 @@
 
         <!-- Provisioning Code -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <div class="px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <h3 class="text-lg font-medium text-gray-900">Provisioning Code (Arduino C++)</h3>
                 <button onclick="copyCode()" class="inline-flex items-center text-xs text-gray-700 hover:text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded transition-colors shadow-sm">
                     <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>

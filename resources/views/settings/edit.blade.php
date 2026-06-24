@@ -63,8 +63,8 @@
     @endphp
 
     <!-- Tabs Header -->
-    <div class="border-b border-gray-200 mb-8">
-        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+    <div class="border-b border-gray-200 mb-8 overflow-x-auto scrollbar-none">
+        <nav class="-mb-px flex space-x-8 min-w-max" aria-label="Tabs">
             <button onclick="switchTab('config')" id="tab-btn-config" 
                 class="whitespace-nowrap py-4 px-1 border-b-2 font-bold text-sm transition-all focus:outline-none 
                 {{ $activeTab === 'config' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
@@ -267,7 +267,7 @@
                             <thead class="bg-gray-50/50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Operator</th>
-                                    <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Email Address</th>
+                                    <th scope="col" class="hidden sm:table-cell px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Email Address</th>
                                     <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Access Role</th>
                                     <th scope="col" class="relative px-6 py-3.5 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
@@ -283,7 +283,7 @@
                                                 <span class="text-sm font-semibold text-gray-900">{{ $user->name }}</span>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {{ $user->email }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">

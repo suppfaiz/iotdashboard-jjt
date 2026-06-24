@@ -2,12 +2,12 @@
 
 @section('content')
 <div class="max-w-6xl mx-auto">
-    <div class="mb-6 flex justify-between items-center">
+    <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Daily PDF Reports</h1>
             <p class="text-gray-500">Download and archive daily energy consumption reports.</p>
         </div>
-        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-700 font-semibold flex items-center gap-2">
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-700 font-semibold flex items-center gap-2 self-start sm:self-auto">
             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             PLN Tariff Rate: Rp {{ number_format($plnTariff, 2, ',', '.') }} / kWh
         </div>
@@ -25,9 +25,9 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Report Date</th>
-                        <th scope="col" class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Active Devices</th>
+                        <th scope="col" class="hidden sm:table-cell px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Active Devices</th>
                         <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Total Energy</th>
-                        <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Estimated Cost</th>
+                        <th scope="col" class="hidden md:table-cell px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Estimated Cost</th>
                         <th scope="col" class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Action</th>
                     </tr>
                 </thead>
@@ -40,7 +40,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
                                 {{ \Carbon\Carbon::parse($report->date)->format('F d, Y') }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-600">
+                            <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-center text-gray-600">
                                 <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
                                     {{ $report->device_count }} Devices
                                 </span>
@@ -48,7 +48,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-teal-600">
                                 {{ number_format($report->total_kwh, 3, ',', '.') }} kWh
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-blue-600">
+                            <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-blue-600">
                                 Rp {{ number_format($estCost, 2, ',', '.') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-center">

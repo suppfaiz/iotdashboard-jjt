@@ -159,7 +159,7 @@
                     </div>
                 </div>
             </div>
-            <div class="relative h-80 w-full">
+            <div class="relative h-60 sm:h-80 w-full">
                 <canvas id="energyChart"></canvas>
             </div>
         </div>
