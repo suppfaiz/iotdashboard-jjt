@@ -55,7 +55,9 @@ class MqttWorkerTest extends TestCase
             'current' => 1.5,
             'power' => 330.0,
             'energy' => 10.0,
-            'ip' => '192.168.1.100'
+            'ip' => '192.168.1.100',
+            'rssi' => -65,
+            'heap' => 123456
         ]);
         
         $worker->processMessage("telemetry/test-group/dev_test123", $payload1);
@@ -63,6 +65,8 @@ class MqttWorkerTest extends TestCase
         // Daily energy should be 0.0 initially (since last_energy was not set, delta is 0)
         $this->assertEquals(0.0, Cache::get("daily_energy:dev_test123"));
         $this->assertEquals(0.0, Cache::get("daily_cost:dev_test123"));
+        $this->assertEquals(-65, Cache::get("rssi:dev_test123"));
+        $this->assertEquals(123456, Cache::get("heap:dev_test123"));
 
         // 2. Second Reading: Cumulative Energy increases to 10.5 kWh (+0.5 kWh consumed)
         $payload2 = json_encode([

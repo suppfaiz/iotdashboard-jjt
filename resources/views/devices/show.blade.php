@@ -120,6 +120,41 @@
                         <dd class="text-gray-900 font-mono bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100" id="device-ip">{{ Cache::get("ip:{$device->device_id}", 'N/A') }}</dd>
                     </div>
                     <div class="flex justify-between">
+                        <dt class="text-gray-500">WiFi Signal (RSSI)</dt>
+                        <dd class="text-gray-900 font-semibold" id="device-rssi">
+                            @php
+                                $rssi = Cache::get("rssi:{$device->device_id}", null);
+                            @endphp
+                            @if($rssi !== null)
+                                <span class="font-mono">{{ $rssi }} dBm</span>
+                                @if($rssi >= -60)
+                                    <span class="text-emerald-600 font-bold ml-1" title="Excellent">🟢 Excellent</span>
+                                @elseif($rssi >= -70)
+                                    <span class="text-emerald-500 font-bold ml-1" title="Good">🟢 Good</span>
+                                @elseif($rssi >= -80)
+                                    <span class="text-amber-500 font-bold ml-1" title="Fair">🟡 Fair</span>
+                                @else
+                                    <span class="text-red-500 font-bold ml-1" title="Poor">🔴 Poor</span>
+                                @endif
+                            @else
+                                <span class="text-slate-400">N/A</span>
+                            @endif
+                        </dd>
+                    </div>
+                    <div class="flex justify-between">
+                        <dt class="text-gray-500">Free Heap Memory</dt>
+                        <dd class="text-gray-900 font-mono" id="device-heap">
+                            @php
+                                $heap = Cache::get("heap:{$device->device_id}", null);
+                            @endphp
+                            @if($heap !== null)
+                                {{ number_format($heap / 1024, 1) }} KB
+                            @else
+                                <span class="text-slate-400">N/A</span>
+                            @endif
+                        </dd>
+                    </div>
+                    <div class="flex justify-between">
                         <dt class="text-gray-500">Voltage Multiplier</dt>
                         <dd class="text-gray-900 font-semibold">{{ number_format($device->voltage_multiplier, 2) }}x</dd>
                     </div>
@@ -319,6 +354,27 @@
                     </div>
                     <p class="text-xs text-gray-500 mt-1">Make sure the payload is valid JSON (e.g., <code>{"cmd": "restart"}</code>, <code>{"cmd": "reset_energy"}</code>).</p>
                 </div>
+                
+                <div class="mt-4">
+                    <span class="block text-[10px] font-extrabold text-slate-450 uppercase tracking-widest mb-2">Preset Commands</span>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;restart\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                            🔄 Reboot ESP32
+                        </button>
+                        <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;reset_energy\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                            ⚡ Reset Energy
+                        </button>
+                        <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;relay\&quot;, \&quot;state\&quot;: 1}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                            💡 Relay ON
+                        </button>
+                        <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;relay\&quot;, \&quot;state\&quot;: 0}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                            🔌 Relay OFF
+                        </button>
+                        <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;get_status\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                            📡 Get Status
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -415,6 +471,27 @@
                     if(data.ip !== undefined) {
                         const ipElem = document.getElementById('device-ip');
                         if (ipElem) ipElem.innerText = data.ip;
+                    }
+                    
+                    if(data.rssi !== undefined) {
+                        const rssiElem = document.getElementById('device-rssi');
+                        if (rssiElem) {
+                            const val = parseInt(data.rssi);
+                            let statusText = '🔴 Poor';
+                            if (val >= -60) statusText = '🟢 Excellent';
+                            else if (val >= -70) statusText = '🟢 Good';
+                            else if (val >= -80) statusText = '🟡 Fair';
+                            
+                            rssiElem.innerHTML = `<span class="font-mono">${val} dBm</span> <span class="font-bold ml-1">${statusText}</span>`;
+                        }
+                    }
+                    
+                    if(data.heap !== undefined) {
+                        const heapElem = document.getElementById('device-heap');
+                        if (heapElem) {
+                            const val = parseInt(data.heap);
+                            heapElem.innerText = (val / 1024).toFixed(1) + ' KB';
+                        }
                     }
                     
                     // Update active status
@@ -564,6 +641,11 @@
         .catch(err => {
             logDebug(`<span class="text-red-500">Network Error sending console command: ${err.message}</span>`);
         });
+    }
+
+    window.applyConsolePreset = function(jsonStr) {
+        document.getElementById('console-payload').value = jsonStr;
+        logDebug(`<span class="text-indigo-400">Loaded preset payload: ${jsonStr}</span>`);
     }
 </script>
 @endsection

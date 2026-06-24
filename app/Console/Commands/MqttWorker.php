@@ -229,6 +229,8 @@ class MqttWorker extends Command
             if (isset($data['current'])) Cache::put("current:{$deviceId}", $data['current'], now()->addDays(2));
             if (isset($data['power'])) Cache::put("power:{$deviceId}", $data['power'], now()->addDays(2));
             if (isset($data['ip'])) Cache::put("ip:{$deviceId}", $data['ip'], now()->addDays(2));
+            if (isset($data['rssi'])) Cache::put("rssi:{$deviceId}", intval($data['rssi']), now()->addDays(2));
+            if (isset($data['heap'])) Cache::put("heap:{$deviceId}", intval($data['heap']), now()->addDays(2));
             
             if (isset($data['energy'])) {
                 $currentEnergy = floatval($data['energy']);
