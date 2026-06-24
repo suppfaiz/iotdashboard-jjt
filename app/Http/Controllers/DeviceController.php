@@ -233,11 +233,26 @@ class DeviceController extends Controller
             $mqtt->disconnect();
 
             // Reset the cache for this device so it immediately goes to 0 on the dashboard
-            \Illuminate\Support\Facades\Cache::put("energy:{$device->device_id}", 0, now()->addDays(2));
+            \Illuminate\Support\Facades\Cache::put("energy:{$device->device_id}", 0.0, now()->addDays(2));
+            \Illuminate\Support\Facades\Cache::put("daily_energy:{$device->device_id}", 0.0, now()->addDays(2));
+            \Illuminate\Support\Facades\Cache::put("last_energy:{$device->device_id}", 0.0, now()->addDays(2));
+            \Illuminate\Support\Facades\Cache::put("last_historical_energy:{$device->device_id}", 0.0, now()->addDays(2));
+            
+            $todayDate = now()->toDateString();
+            \Illuminate\Support\Facades\Cache::put("daily_energy:{$device->device_id}:{$todayDate}", 0.0, now()->addDays(2));
+            \Illuminate\Support\Facades\Cache::put("daily_cost:{$device->device_id}", 0.0, now()->addDays(2));
+            \Illuminate\Support\Facades\Cache::put("daily_cost:{$device->device_id}:{$todayDate}", 0.0, now()->addDays(2));
+            \Illuminate\Support\Facades\Cache::put("daily_energy_date:{$device->device_id}", $todayDate, now()->addDays(2));
+
+            \App\Models\DailyEnergyLog::updateOrCreate(
+                ['device_id' => $device->id, 'date' => $todayDate],
+                ['total_kwh_harian' => 0.0]
+            );
             
             // Also broadcast the update so the UI updates instantly
             broadcast(new \App\Events\TelemetryUpdated($device->device_id, [
-                'energy' => 0.000
+                'energy' => 0.000,
+                'cost' => 0.00
             ]));
             
             return redirect()->back()->with('success', 'Reset energy command sent to device!');
