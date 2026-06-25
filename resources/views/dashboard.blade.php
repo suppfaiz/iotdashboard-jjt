@@ -237,7 +237,7 @@
                     @php
                         $isDeviceActive = (now()->timestamp - $device->last_seen) < 15;
                     @endphp
-                    <div class="bg-white/40 rounded-2xl border border-slate-200/60 p-5 flex flex-col justify-between hover:bg-white hover:-translate-y-0.5 hover:border-slate-350 transition-all duration-300 shadow-sm {{ $isDeviceActive ? 'device-active' : '' }}" id="device-card-{{ $device->device_id }}" data-last-seen="{{ $device->last_seen }}" data-device-id="{{ $device->device_id }}">
+                    <div class="device-card bg-white/40 rounded-2xl border border-slate-200/60 p-5 flex flex-col justify-between hover:bg-white hover:-translate-y-0.5 hover:border-slate-350 transition-all duration-300 shadow-sm {{ $isDeviceActive ? 'device-active' : '' }}" id="device-card-{{ $device->device_id }}" data-last-seen="{{ $device->last_seen }}" data-device-id="{{ $device->device_id }}">
                         
                         <!-- Card Header -->
                         <div class="flex items-start justify-between mb-5 gap-4">
@@ -461,21 +461,9 @@
 <script>
     const plnTariff = {{ $plnTariff }};
     
-    const energyRegistry = {
-        @foreach($groups as $group)
-            @foreach($group->devices as $device)
-                "{{ $device->device_id }}": {{ Cache::get("daily_energy:{$device->device_id}", 0) }},
-            @endforeach
-        @endforeach
-    };
+    const energyRegistry = {!! json_encode($groups->flatMap->devices->pluck('device_id')->mapWithKeys(fn($id) => [$id => (float)Cache::get("daily_energy:{$id}", 0)])) !!};
 
-    const costRegistry = {
-        @foreach($groups as $group)
-            @foreach($group->devices as $device)
-                "{{ $device->device_id }}": {{ Cache::get("daily_cost:{$device->device_id}", Cache::get("daily_energy:{$device->device_id}", 0) * $plnTariff) }},
-            @endforeach
-        @endforeach
-    };
+    const costRegistry = {!! json_encode($groups->flatMap->devices->pluck('device_id')->mapWithKeys(fn($id) => [$id => (float)Cache::get("daily_cost:{$id}", Cache::get("daily_energy:{$id}", 0) * $plnTariff)])) !!};
 
     function recalculateTotalEnergy() {
         let totalEnergy = 0;
@@ -547,19 +535,15 @@
         }
     }
 
-    // Initialize Laravel Echo to listen to all channels
+    // Initialize Laravel Echo to listen to the global channel
     window.addEventListener('DOMContentLoaded', () => {
         if (window.Echo) {
-            console.log('Echo initialized, subscribing to channels...');
-            @foreach($groups as $group)
-                @foreach($group->devices as $device)
-                    window.Echo.channel('telemetry.{{ $device->device_id }}')
-                        .listen('TelemetryUpdated', (e) => {
-                            console.log('Received telemetry for {{ $device->device_id }}:', e.data);
-                            updateDeviceUI("{{ $device->device_id }}", e.data);
-                        });
-                @endforeach
-            @endforeach
+            console.log('Echo initialized, subscribing to global channel...');
+            window.Echo.channel('telemetry')
+                .listen('TelemetryUpdated', (e) => {
+                    console.log('Received telemetry for ' + e.deviceId + ':', e.data);
+                    updateDeviceUI(e.deviceId, e.data);
+                });
         } else {
             console.error('Laravel Echo is not available.');
         }
@@ -567,32 +551,25 @@
         // Periodically check if devices are active/inactive (offline status check)
         setInterval(() => {
             const currentTimestamp = Math.floor(Date.now() / 1000);
-            
-            @foreach($groups as $group)
-                @foreach($group->devices as $device)
-                    (function() {
-                        const cardElem = document.getElementById('device-card-{{ $device->device_id }}');
-                        if (cardElem) {
-                            const lastSeen = parseInt(cardElem.getAttribute('data-last-seen')) || 0;
-                            const diff = currentTimestamp - lastSeen;
-                            
-                            // If last seen is older than 15 seconds, mark as Inactive
-                            if (lastSeen === 0 || diff >= 15) {
-                                cardElem.classList.remove('device-active');
-                                const badgeElem = document.getElementById('status-{{ $device->device_id }}');
-                                const dotElem = document.getElementById('status-dot-{{ $device->device_id }}');
-                                const textElem = document.getElementById('status-text-{{ $device->device_id }}');
+            document.querySelectorAll('.device-card').forEach(cardElem => {
+                const deviceId = cardElem.getAttribute('data-device-id');
+                const lastSeen = parseInt(cardElem.getAttribute('data-last-seen')) || 0;
+                const diff = currentTimestamp - lastSeen;
+                
+                // If last seen is older than 15 seconds, mark as Inactive
+                if (lastSeen === 0 || diff >= 15) {
+                    cardElem.classList.remove('device-active');
+                    const badgeElem = document.getElementById('status-' + deviceId);
+                    const dotElem = document.getElementById('status-dot-' + deviceId);
+                    const textElem = document.getElementById('status-text-' + deviceId);
 
-                                if (badgeElem && dotElem && textElem && textElem.innerText === "Active") {
-                                    badgeElem.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200";
-                                    dotElem.className = "w-1.5 h-1.5 mr-1.5 rounded-full bg-red-500";
-                                    textElem.innerText = "Inactive";
-                                }
-                            }
-                        }
-                    })();
-                @endforeach
-            @endforeach
+                    if (badgeElem && dotElem && textElem && textElem.innerText === "Active") {
+                        badgeElem.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200";
+                        dotElem.className = "w-1.5 h-1.5 mr-1.5 rounded-full bg-red-500";
+                        textElem.innerText = "Inactive";
+                    }
+                }
+            });
         }, 5000); // Check every 5 seconds
     });
 </script>
@@ -644,6 +621,7 @@
                 ]
             },
             options: {
+                animation: false, // disable animations to make it extremely lightweight for lower-end CPUs
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {

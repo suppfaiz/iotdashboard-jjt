@@ -24,7 +24,7 @@ class TelemetryUpdated implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel('telemetry.' . $this->deviceId),
+            new Channel('telemetry'),
         ];
     }
 }

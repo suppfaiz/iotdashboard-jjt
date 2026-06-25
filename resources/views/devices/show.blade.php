@@ -449,8 +449,9 @@
     document.addEventListener('DOMContentLoaded', () => {
         if(window.Echo) {
             logDebug('WebSocket connected. Subscribed to telemetry channel.');
-            window.Echo.channel('telemetry.{{ $device->device_id }}')
+            window.Echo.channel('telemetry')
                 .listen('TelemetryUpdated', (e) => {
+                    if (e.deviceId !== '{{ $device->device_id }}') return;
                     const data = e.data;
                     logDebug(`Received Telemetry: ${JSON.stringify(data)}`);
                     

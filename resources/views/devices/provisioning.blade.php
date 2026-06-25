@@ -46,8 +46,9 @@
 <script type="module">
     document.addEventListener('DOMContentLoaded', () => {
         if(window.Echo) {
-            window.Echo.channel('telemetry.{{ $device->device_id }}')
+            window.Echo.channel('telemetry')
                 .listen('TelemetryUpdated', (e) => {
+                    if (e.deviceId !== '{{ $device->device_id }}') return;
                     const statusBanner = document.getElementById('connection-status');
                     statusBanner.className = "bg-green-50 rounded-xl p-6 border border-green-200 transition-all duration-500";
                     

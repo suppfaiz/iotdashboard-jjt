@@ -184,7 +184,7 @@ class DeviceController extends Controller
     public function uploadFirmware(Request $request, Device $device)
     {
         $request->validate([
-            'firmware' => 'required|file' // usually bins might not have mime check working well
+            'firmware' => 'required|file|max:10240' // max 10MB to prevent disk exhaustion / DOS
         ]);
 
         if ($request->hasFile('firmware')) {
