@@ -92,6 +92,27 @@
 </head>
 
 <body class="antialiased relative pb-20 md:pb-0 overflow-x-hidden">
+    <!-- Modern Premium Preloader -->
+    <div id="app-preloader" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0b0f19] transition-all duration-500 ease-out">
+        <!-- Glow Background Effect -->
+        <div class="absolute w-80 h-80 bg-blue-500/10 rounded-full filter blur-[60px] animate-pulse"></div>
+        
+        <div class="relative flex flex-col items-center">
+            <!-- Logo Container with Pulse effect -->
+            <div class="relative mb-6">
+                <div class="absolute inset-0 bg-blue-500/20 rounded-2xl filter blur-md animate-ping opacity-75"></div>
+                <img src="{{ asset('logo.png') }}" alt="Jamkrida Energy" class="h-20 w-auto object-contain relative z-10 filter drop-shadow-[0_4px_12px_rgba(59,130,246,0.3)] animate-pulse">
+            </div>
+            
+            <!-- Spinner animation -->
+            <div class="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+            
+            <!-- Loading Text -->
+            <h3 class="text-sm font-semibold text-slate-200 tracking-wider uppercase font-sans animate-pulse">Loading Analytics...</h3>
+            <p class="text-[10px] text-slate-400 font-mono mt-1 tracking-widest uppercase">Connecting to IoT Grid</p>
+        </div>
+    </div>
+
     <!-- Ambient Background Orbs -->
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
@@ -575,6 +596,23 @@
             </div>
         </div>
     </div>
+
+    <!-- Preloader Script -->
+    <script>
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('app-preloader');
+            if (preloader) {
+                // Fade out & scale-up slightly to give a zoom out/in modern exit transition
+                preloader.classList.add('opacity-0', 'pointer-events-none');
+                preloader.style.transform = 'scale(1.05)';
+                
+                // Remove from DOM after transition completes (500ms)
+                setTimeout(() => {
+                    preloader.remove();
+                }, 500);
+            }
+        });
+    </script>
 </body>
 
 </html>
