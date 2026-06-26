@@ -126,23 +126,22 @@
                         </a>
 
                         @auth
-                            <div class="hidden md:ml-6 md:flex md:items-center md:space-x-2">
+                            <div class="hidden md:ml-6 md:flex md:items-center md:space-x-1.5">
                                 <a href="{{ route('dashboard') }}"
-                                    class="{{ request()->routeIs('dashboard') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300">Dashboard</a>
+                                    class="{{ request()->routeIs('dashboard') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Dashboard</a>
                                 <a href="{{ route('devices.index') }}"
-                                    class="{{ request()->routeIs('devices.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300">Devices</a>
+                                    class="{{ request()->routeIs('devices.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Devices</a>
                                 <a href="{{ route('changelog') }}"
-                                    class="{{ request()->routeIs('changelog') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300">Changelog</a>
+                                    class="{{ request()->routeIs('changelog') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Changelog</a>
                                 @if(auth()->user()->role === 'admin')
                                     <a href="{{ route('logs.index') }}"
-                                        class="{{ request()->routeIs('logs.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300">Historical
-                                        Logs</a>
+                                        class="{{ request()->routeIs('logs.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Historical Logs</a>
                                     <a href="{{ route('reports.index') }}"
-                                        class="{{ request()->routeIs('reports.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300">Reports</a>
+                                        class="{{ request()->routeIs('reports.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Reports</a>
                                     <a href="{{ route('settings.edit') }}"
-                                        class="{{ request()->routeIs('settings.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300">Settings</a>
+                                        class="{{ request()->routeIs('settings.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Settings</a>
                                     <a href="{{ route('docs.index') }}"
-                                        class="{{ request()->routeIs('docs.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300">Docs</a>
+                                        class="{{ request()->routeIs('docs.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Docs</a>
                                 @endif
                             </div>
                         @endauth
