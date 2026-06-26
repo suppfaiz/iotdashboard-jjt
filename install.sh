@@ -77,10 +77,16 @@ DEFAULT_IP=$(curl -s --max-time 3 ifconfig.me || curl -s --max-time 3 icanhazip.
 read -p "Enter your VPS Public IP Address or Domain [default: $DEFAULT_IP]: " VPS_IP
 VPS_IP=${VPS_IP:-$DEFAULT_IP}
 
-# Generate random secure credentials for DB and MQTT
-DB_PASSWORD=$(openssl rand -hex 16 2>/dev/null || echo "JamkridaSecurePass123")
-MQTT_USER="jamkrida_sensor"
-MQTT_PASSWORD=$(openssl rand -hex 16 2>/dev/null || echo "MqttSecurePass123")
+# Read existing credentials if they are set in .env to preserve them
+EXISTING_DB_USER=$(grep "^DB_USERNAME=" .env | cut -d'=' -f2- | tr -d '"' | tr -d "'" | tr -d ' ' || echo "")
+EXISTING_DB_PASS=$(grep "^DB_PASSWORD=" .env | cut -d'=' -f2- | tr -d '"' | tr -d "'" | tr -d ' ' || echo "")
+EXISTING_MQTT_USER=$(grep "^MQTT_USERNAME=" .env | cut -d'=' -f2- | tr -d '"' | tr -d "'" | tr -d ' ' || echo "")
+EXISTING_MQTT_PASS=$(grep "^MQTT_PASSWORD=" .env | cut -d'=' -f2- | tr -d '"' | tr -d "'" | tr -d ' ' || echo "")
+
+DB_USERNAME=${EXISTING_DB_USER:-"root"}
+DB_PASSWORD=${EXISTING_DB_PASS:-$(openssl rand -hex 16 2>/dev/null || echo "JamkridaSecurePass123")}
+MQTT_USER=${EXISTING_MQTT_USER:-"jamkrida_sensor"}
+MQTT_PASSWORD=${EXISTING_MQTT_PASS:-$(openssl rand -hex 16 2>/dev/null || echo "MqttSecurePass123")}
 
 # Update .env configuration
 echo "[*] Updating .env configuration..."
@@ -114,8 +120,8 @@ update_env_val "DB_CONNECTION" "mysql"
 update_env_val "DB_HOST" "mysql"
 update_env_val "DB_PORT" "3306"
 update_env_val "DB_DATABASE" "dashboard_iot_baru"
-update_env_val "DB_USERNAME" "root"
-update_env_val "DB_PASSWORD" ""
+update_env_val "DB_USERNAME" "$DB_USERNAME"
+update_env_val "DB_PASSWORD" "$DB_PASSWORD"
 
 update_env_val "REVERB_HOST" "\"$VPS_IP\""
 update_env_val "VITE_REVERB_HOST" "\"$VPS_IP\""
@@ -211,7 +217,17 @@ echo "[*] Waiting for MySQL container to start and initialize..."
 for i in {1..30}; do
     if $DOCKER_COMPOSE exec -T app php -r "
         try {
-            new PDO('mysql:host=mysql;dbname=dashboard_iot_baru', 'root', '');
+            \$pass = '';
+            if (file_exists('/var/www/.env')) {
+                \$lines = file('/var/www/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                foreach (\$lines as \$line) {
+                    if (strpos(\$line, '=') !== false && strpos(\$line, '#') !== 0) {
+                        list(\$key, \$val) = explode('=', \$line, 2);
+                        if (trim(\$key) === 'DB_PASSWORD') \$pass = trim(\$val, \"'\\\" \");
+                    }
+                }
+            }
+            new PDO('mysql:host=mysql;dbname=dashboard_iot_baru', 'root', \$pass);
             exit(0);
         } catch (Exception \$e) {
             exit(1);

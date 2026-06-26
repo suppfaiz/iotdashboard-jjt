@@ -28,8 +28,8 @@ services:
     container_name: iot_dashboard_mysql
     restart: always
     environment:
-      - MYSQL_DATABASE=dashboard_iot_baru
-      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=${DB_DATABASE:-dashboard_iot_baru}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
