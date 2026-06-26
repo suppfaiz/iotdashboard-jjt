@@ -29,31 +29,38 @@ if ! [ -x "$(command -v docker)" ]; then
     fi
 fi
 
-# Check if docker compose (v2) is installed
-DOCKER_COMPOSE="docker compose"
-if ! docker compose version &>/dev/null; then
-    echo "[!] Docker Compose v2 command not found. Trying 'docker-compose'..."
-    if ! [ -x "$(command -v docker-compose)" ]; then
-        echo "[*] Attempting to install Docker Compose..."
-        if [ -f /etc/debian_version ]; then
-            sudo apt-get update || true
-            sudo apt-get install -y docker-compose || sudo apt-get install -y docker-compose-v2 || true
-            if ! [ -x "$(command -v docker-compose)" ] && ! docker compose version &>/dev/null; then
-                echo "[-] Error: Failed to install Docker Compose. Please install it manually."
-                exit 1
-            fi
-            if docker compose version &>/dev/null; then
-                DOCKER_COMPOSE="docker compose"
-            else
-                DOCKER_COMPOSE="docker-compose"
-            fi
-        else
-            echo "[-] Error: Docker Compose is not installed."
-            exit 1
+# Check if docker compose (v2) or docker-compose (v1) is installed
+DOCKER_COMPOSE=""
+if docker compose version &>/dev/null; then
+    DOCKER_COMPOSE="docker compose"
+elif command -v docker-compose &>/dev/null; then
+    DOCKER_COMPOSE="docker-compose"
+fi
+
+if [ -z "$DOCKER_COMPOSE" ]; then
+    echo "[!] Docker Compose not found. Attempting to install..."
+    if [ -f /etc/debian_version ]; then
+        sudo apt-get update || true
+        # Try installing docker-compose-plugin (v2) or fallback to docker-compose (v1)
+        sudo apt-get install -y docker-compose-plugin || sudo apt-get install -y docker-compose || sudo apt-get install -y docker-compose-v2 || true
+        
+        # Clear shell path hash to recognize new binaries
+        hash -r 2>/dev/null || true
+        
+        if docker compose version &>/dev/null; then
+            DOCKER_COMPOSE="docker compose"
+        elif command -v docker-compose &>/dev/null || [ -x /usr/bin/docker-compose ] || [ -x /usr/local/bin/docker-compose ]; then
+            DOCKER_COMPOSE="docker-compose"
         fi
     else
-        DOCKER_COMPOSE="docker-compose"
+        echo "[-] Error: Docker Compose is not installed."
+        exit 1
     fi
+fi
+
+if [ -z "$DOCKER_COMPOSE" ]; then
+    echo "[-] Error: Failed to install Docker Compose. Please install it manually."
+    exit 1
 fi
 
 # Check and setup .env file
