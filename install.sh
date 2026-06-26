@@ -194,6 +194,39 @@ echo "[*] Compiling assets with NPM on host..."
 npm install
 npm run build
 
+# Ensure MySQL database exists on host
+echo "[*] Ensuring MySQL database exists..."
+php -r "
+try {
+    \$host = '127.0.0.1';
+    \$user = 'root';
+    \$pass = '';
+    \$dbname = 'dashboard_iot_baru';
+    
+    if (file_exists('.env')) {
+        \$lines = file('.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach (\$lines as \$line) {
+            if (strpos(\$line, '=') !== false && strpos(\$line, '#') !== 0) {
+                list(\$key, \$val) = explode('=', \$line, 2);
+                \$key = trim(\$key);
+                \$val = trim(\$val, \"'\\\" \");
+                if (\$key === 'DB_USERNAME') \$user = \$val;
+                if (\$key === 'DB_PASSWORD') \$pass = \$val;
+                if (\$key === 'DB_DATABASE') \$dbname = \$val;
+                if (\$key === 'DB_HOST') \$host = \$val;
+            }
+        }
+    }
+    
+    \$pdo = new PDO(\"mysql:host=\$host\", \$user, \$pass);
+    \$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    \$pdo->exec(\"CREATE DATABASE IF NOT EXISTS \`\$dbname\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\");
+    echo \"[+] Database '\$dbname' checked/created successfully.\n\";
+} catch (Exception \$e) {
+    echo \"[-] Warning: Could not auto-create database: \" . \$e->getMessage() . \"\n\";
+}
+"
+
 # Start services
 echo "[*] Generating Mosquitto MQTT credentials file..."
 # Generate the passwd file inside the .docker directory using the eclipse-mosquitto image tool

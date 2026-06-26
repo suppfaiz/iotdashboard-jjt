@@ -7,22 +7,15 @@ if [ ! -f .env ]; then
     cp .env.example .env
 fi
 
-# Ensure SQLite database file exists and is writable
-echo "Setting up SQLite database file..."
-mkdir -p /var/www/database
-touch /var/www/database/database.sqlite
-chmod 664 /var/www/database/database.sqlite
-chown -R www-data:www-data /var/www/database
-
 # Key generate if missing
 if [ -f .env ] && ! grep -q "APP_KEY=base" .env; then
     echo "Generating Application Key..."
-    php artisan key:generate --force
+    php artisan key:generate --force || true
 fi
 
 # Run migrations
 echo "Running database migrations..."
-php artisan migrate --force
+php artisan migrate --force || echo "[!] Warning: Database migrations failed. Please check your DB credentials."
 
 # Seed database if users table is empty
 echo "Checking if database needs seeding..."
@@ -30,7 +23,7 @@ USER_COUNT=$(php artisan tinker --execute="echo \App\Models\User::count();" 2>/d
 
 if [ "$USER_COUNT" -eq 0 ]; then
     echo "Database is empty. Seeding database..."
-    php artisan db:seed --force
+    php artisan db:seed --force || echo "[!] Warning: Database seeding failed."
 else
     echo "Database already has records. Skipping seeding."
 fi
