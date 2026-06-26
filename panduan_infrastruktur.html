@@ -356,7 +356,7 @@
       <ul>
         <li><strong>iot_dashboard_app</strong> — Laravel + Nginx + Reverb + Worker</li>
         <li><strong>iot_dashboard_mqtt</strong> — Eclipse Mosquitto Broker</li>
-        <li><strong>iot_dashboard_adminer</strong> — Database manager web</li>
+        <li><strong>iot_dashboard_phpmyadmin</strong> — phpMyAdmin (Database manager web)</li>
       </ul>
     </div>
     <div class="card">
@@ -421,7 +421,7 @@
       <tbody>
         <tr><td><strong>80</strong></td><td>TCP</td><td>HTTP / Nginx</td><td>Akses dashboard web</td></tr>
         <tr><td><strong>1883</strong></td><td>TCP</td><td>MQTT</td><td>Data dari sensor ESP32</td></tr>
-        <tr><td><strong>8082</strong></td><td>TCP</td><td>Adminer</td><td>Manajemen database (opsional)</td></tr>
+        <tr><td><strong>8082</strong></td><td>TCP</td><td>phpMyAdmin</td><td>Manajemen database (opsional)</td></tr>
         <tr><td><strong>8085</strong></td><td>TCP</td><td>Reverb WebSocket</td><td>Data real-time ke browser</td></tr>
         <tr><td><strong>22</strong></td><td>TCP</td><td>SSH</td><td>Akses server jarak jauh</td></tr>
       </tbody>
@@ -781,7 +781,7 @@
       <thead><tr><th>Layanan</th><th>URL / Endpoint</th><th>Port</th><th>Keterangan</th></tr></thead>
       <tbody>
         <tr><td><strong>Dashboard Web</strong></td><td><span class="mono">http://&lt;VPS_IP&gt;</span></td><td>80</td><td>Halaman utama dashboard</td></tr>
-        <tr><td><strong>Database Manager</strong></td><td><span class="mono">http://&lt;VPS_IP&gt;:8082</span></td><td>8082</td><td>Adminer GUI</td></tr>
+        <tr><td><strong>Database Manager</strong></td><td><span class="mono">http://&lt;VPS_IP&gt;:8082</span></td><td>8082</td><td>phpMyAdmin GUI</td></tr>
         <tr><td><strong>WebSocket Reverb</strong></td><td><span class="mono">ws://&lt;VPS_IP&gt;:8085</span></td><td>8085</td><td>Koneksi real-time browser</td></tr>
         <tr><td><strong>MQTT Broker</strong></td><td><span class="mono">mqtt://&lt;VPS_IP&gt;:1883</span></td><td>1883</td><td>Koneksi dari sensor ESP32</td></tr>
       </tbody>
@@ -1299,7 +1299,7 @@
     <ul>
       <li>🔑 Ganti password default (<span class="mono">admin@admin.com / password</span>) segera setelah deployment pertama</li>
       <li>🌐 Gunakan domain dengan <strong>HTTPS</strong> (SSL/TLS) di produksi — tambahkan reverse proxy Nginx dengan Let's Encrypt</li>
-      <li>🔒 Jangan expose port <strong>8082 (Adminer)</strong> ke internet publik — akses via SSH tunnel</li>
+      <li>🔒 Jangan expose port <strong>8082 (phpMyAdmin)</strong> ke internet publik — akses via SSH tunnel</li>
       <li>🔐 Gunakan password MQTT yang kuat dan unik — di-generate otomatis oleh <span class="mono">install.sh</span></li>
       <li>🚫 Nonaktifkan <span class="mono">APP_DEBUG=true</span> di lingkungan produksi (set ke <span class="mono">false</span>)</li>
       <li>🔄 Rotasi <span class="mono">APP_KEY</span> secara berkala dengan <span class="mono">php artisan key:generate</span></li>

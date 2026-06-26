@@ -141,11 +141,6 @@ update_env_val "MQTT_PASSWORD" "$MQTT_PASSWORD"
 
 echo "[+] Configuration updated successfully."
 
-# Setup SQLite database file on host
-echo "[*] Setting up SQLite database on host..."
-mkdir -p database
-touch database/database.sqlite
-chmod -R 777 database
 
 # Check if PHP is installed and version is at least 8.4
 PHP_VERSION=$(php -r 'echo PHP_VERSION;' 2>/dev/null || echo "0")
@@ -224,7 +219,6 @@ echo "Your IoT Dashboard has been successfully deployed."
 echo ""
 echo "Web URL:         http://$VPS_IP"
 echo "Database GUI:    http://$VPS_IP:8082 (phpMyAdmin)"
-echo "                 - Server:   host.docker.internal"
 echo "                 - Username: root"
 echo "                 - Password: (sama seperti DB_PASSWORD Anda)"
 echo "MQTT Broker:     mqtt://$VPS_IP:1883"
