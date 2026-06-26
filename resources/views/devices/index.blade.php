@@ -110,56 +110,56 @@
         <span class="hidden sm:inline-block sm:align-middle sm:min-h-screen" aria-hidden="true">&#8203;</span>
 
         <!-- Modal Panel -->
-        <div class="inline-block align-middle bg-white/95 backdrop-blur-2xl rounded-3xl text-left overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-slate-200/80">
+        <div class="inline-block align-middle bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full border border-slate-200/60">
             <form action="{{ route('devices.store') }}" method="POST">
                 @csrf
                 
                 <!-- Modal Header -->
-                <div class="px-8 py-6 border-b border-slate-100 flex items-start gap-4 bg-gradient-to-r from-slate-50/50 to-white/50">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-500/15 to-indigo-500/15 text-blue-600 flex items-center justify-center border border-blue-200/50 shadow-inner flex-shrink-0">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="px-6 py-5 border-b border-slate-100 flex items-start gap-3.5 bg-slate-50/50">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-xl font-extrabold text-slate-900 tracking-tight" id="modal-title">Register New Device</h3>
-                        <p class="text-xs text-slate-500 font-medium mt-1">Enter the details below to provision a new energy monitoring node.</p>
+                        <h3 class="text-base font-bold text-slate-900" id="modal-title">Register New Device</h3>
+                        <p class="text-xs text-slate-500 mt-0.5 font-medium">Enter details below to provision a new monitoring node.</p>
                     </div>
                 </div>
 
                 <!-- Form Fields -->
-                <div class="px-8 py-6 space-y-5">
+                <div class="px-6 py-5 space-y-4">
                     <!-- Device Name -->
                     <div class="relative group">
-                        <label for="name" class="block text-[11px] font-bold text-slate-450 uppercase tracking-widest mb-2 group-focus-within:text-blue-600 transition-colors">Device Name</label>
+                        <label for="name" class="block text-xs font-semibold text-slate-600 mb-1.5 group-focus-within:text-blue-600 transition-colors">Device Name</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
+                                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
                                 </svg>
                             </div>
                             <input type="text" name="name" id="name" required placeholder="e.g. Compressor Pump A" 
-                                class="w-full pl-11 pr-4 py-3 bg-slate-50/60 border border-slate-200 rounded-xl text-slate-900 text-sm font-medium placeholder-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 hover:border-slate-300 transition-all duration-300">
+                                class="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-250 rounded-xl text-slate-900 text-sm font-medium placeholder-slate-405 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 hover:border-slate-300 transition-all duration-200">
                         </div>
                     </div>
 
                     <!-- Group Area -->
                     <div class="relative group">
-                        <label for="group_id" class="block text-[11px] font-bold text-slate-450 uppercase tracking-widest mb-2 group-focus-within:text-blue-600 transition-colors">Group Area</label>
+                        <label for="group_id" class="block text-xs font-semibold text-slate-600 mb-1.5 group-focus-within:text-blue-600 transition-colors">Group Area</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
+                                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                                 </svg>
                             </div>
                             <select name="group_id" id="group_id" required 
-                                class="w-full pl-11 pr-10 py-3 bg-slate-50/60 border border-slate-200 rounded-xl text-slate-900 text-sm font-semibold focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 hover:border-slate-300 transition-all duration-300 appearance-none">
+                                class="w-full pl-9 pr-10 py-2.5 bg-white border border-slate-250 rounded-xl text-slate-900 text-sm font-semibold focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 hover:border-slate-300 transition-all duration-200 appearance-none">
                                 @foreach($groups as $g)
                                     <option value="{{ $g->id }}">{{ $g->name }}</option>
                                 @endforeach
                             </select>
-                            <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
-                                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                                <svg class="w-4.5 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
                                 </svg>
                             </div>
@@ -168,41 +168,41 @@
 
                     <!-- Wifi SSID -->
                     <div class="relative group">
-                        <label for="wifi_ssid" class="block text-[11px] font-bold text-slate-450 uppercase tracking-widest mb-2 group-focus-within:text-blue-600 transition-colors">Wifi SSID</label>
+                        <label for="wifi_ssid" class="block text-xs font-semibold text-slate-600 mb-1.5 group-focus-within:text-blue-600 transition-colors">Wifi SSID</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
+                                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071a9.9 9.9 0 0114.14 0M2.006 8.502a15 15 0 0121.988 0" />
                                 </svg>
                             </div>
                             <input type="text" name="wifi_ssid" id="wifi_ssid" required placeholder="SSID Wifi Name" 
-                                class="w-full pl-11 pr-4 py-3 bg-slate-50/60 border border-slate-200 rounded-xl text-slate-900 text-sm font-medium placeholder-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 hover:border-slate-300 transition-all duration-300">
+                                class="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-250 rounded-xl text-slate-900 text-sm font-medium placeholder-slate-405 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 hover:border-slate-300 transition-all duration-200">
                         </div>
                     </div>
 
                     <!-- Wifi Password -->
                     <div class="relative group">
-                        <label for="wifi_password" class="block text-[11px] font-bold text-slate-450 uppercase tracking-widest mb-2 group-focus-within:text-blue-600 transition-colors">Wifi Password</label>
+                        <label for="wifi_password" class="block text-xs font-semibold text-slate-600 mb-1.5 group-focus-within:text-blue-600 transition-colors">Wifi Password</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
+                                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                 </svg>
                             </div>
                             <input type="password" name="wifi_password" id="wifi_password" required placeholder="••••••••" 
-                                class="w-full pl-11 pr-4 py-3 bg-slate-50/60 border border-slate-200 rounded-xl text-slate-900 text-sm font-medium placeholder-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 hover:border-slate-300 transition-all duration-300">
+                                class="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-250 rounded-xl text-slate-900 text-sm font-medium placeholder-slate-405 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 hover:border-slate-300 transition-all duration-200">
                         </div>
                     </div>
                 </div>
 
                 <!-- Footer Actions -->
-                <div class="bg-slate-50/60 px-8 py-5 border-t border-slate-100 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+                <div class="bg-slate-50/60 px-6 py-4 border-t border-slate-100 flex items-center justify-end gap-2.5">
                     <button type="button" onclick="document.getElementById('add-device-modal').classList.add('hidden')" 
-                        class="w-full sm:w-auto px-5 py-3 rounded-xl border border-slate-200 bg-white text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-800 focus:outline-none transition-all duration-300">
+                        class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors duration-200">
                         Cancel
                     </button>
                     <button type="submit" 
-                        class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-sm font-bold text-white shadow-lg shadow-blue-500/20 hover:from-blue-500 hover:to-indigo-500 focus:outline-none transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
+                        class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xs font-bold text-white shadow-md shadow-blue-500/10 transition-colors duration-200">
                         Register & Get Code
                     </button>
                 </div>
