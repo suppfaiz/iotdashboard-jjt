@@ -37,19 +37,17 @@ services:
     networks:
       - iot-network
 
-  # Web-based Database Manager (Adminer)
-  adminer:
-    image: adminer:latest
-    container_name: iot_dashboard_adminer
+  # Web-based Database Manager (phpMyAdmin)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: iot_dashboard_phpmyadmin
     restart: always
     ports:
-      - "8082:8080"
+      - "8082:80"
     environment:
-      - ADMINER_PASSWORD=${ADMINER_PASSWORD:-password}
-    volumes:
-      - ./database:/var/www/html/database
-      - ./.docker/adminer-login.php:/var/www/html/index.php
-      - ./.docker/adminer-class.php:/var/www/html/adminer-class.php
+      - PMA_ARBITRARY=1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - iot-network
 

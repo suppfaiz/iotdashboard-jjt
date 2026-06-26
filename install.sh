@@ -70,11 +70,10 @@ DEFAULT_IP=$(curl -s --max-time 3 ifconfig.me || curl -s --max-time 3 icanhazip.
 read -p "Enter your VPS Public IP Address or Domain [default: $DEFAULT_IP]: " VPS_IP
 VPS_IP=${VPS_IP:-$DEFAULT_IP}
 
-# Generate random secure credentials for DB, MQTT, and Adminer
+# Generate random secure credentials for DB and MQTT
 DB_PASSWORD=$(openssl rand -hex 16 2>/dev/null || echo "JamkridaSecurePass123")
 MQTT_USER="jamkrida_sensor"
 MQTT_PASSWORD=$(openssl rand -hex 16 2>/dev/null || echo "MqttSecurePass123")
-ADMINER_PASSWORD=$(openssl rand -hex 12 2>/dev/null || echo "AdminerSecurePass123")
 
 # Update .env configuration
 echo "[*] Updating .env configuration..."
@@ -139,7 +138,6 @@ update_env_val "MQTT_HOST" "mqtt"
 update_env_val "MQTT_PORT" "1883"
 update_env_val "MQTT_USERNAME" "$MQTT_USER"
 update_env_val "MQTT_PASSWORD" "$MQTT_PASSWORD"
-update_env_val "ADMINER_PASSWORD" "$ADMINER_PASSWORD"
 
 echo "[+] Configuration updated successfully."
 
@@ -225,7 +223,10 @@ echo "========================================================="
 echo "Your IoT Dashboard has been successfully deployed."
 echo ""
 echo "Web URL:         http://$VPS_IP"
-echo "Database GUI:    http://$VPS_IP:8082 (Password: $ADMINER_PASSWORD)"
+echo "Database GUI:    http://$VPS_IP:8082 (phpMyAdmin)"
+echo "                 - Server:   host.docker.internal"
+echo "                 - Username: root"
+echo "                 - Password: (sama seperti DB_PASSWORD Anda)"
 echo "MQTT Broker:     mqtt://$VPS_IP:1883"
 echo "MQTT User:       $MQTT_USER"
 echo "MQTT Password:   $MQTT_PASSWORD"
