@@ -22,7 +22,7 @@ services:
     networks:
       - iot-network
 
-  # MySQL Database Service
+  # MySQL Database Service (No host port binding to prevent conflict with host MySQL)
   mysql:
     image: mysql:8.0
     container_name: iot_dashboard_mysql
@@ -30,8 +30,6 @@ services:
     environment:
       - MYSQL_DATABASE=dashboard_iot_baru
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-    ports:
-      - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
