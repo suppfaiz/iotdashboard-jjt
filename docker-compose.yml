@@ -4,14 +4,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      network: host
     container_name: iot_dashboard_app
     restart: always
-    ports:
-      - "80:80"
-      - "8085:8085"
+    network_mode: host
     environment:
-      - MQTT_HOST=mqtt
+      - MQTT_HOST=127.0.0.1
       - MQTT_PORT=1883
     volumes:
       - app-storage:/var/www/storage
@@ -19,8 +16,6 @@ services:
       - ./database:/var/www/database
     depends_on:
       - mqtt
-    networks:
-      - iot-network
 
   # Mosquitto MQTT Broker
   mqtt:

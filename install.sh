@@ -141,7 +141,7 @@ VAL_REVERB_APP_KEY=$(grep "^REVERB_APP_KEY=" .env | cut -d'=' -f2- | tr -d '"' |
 update_env_val "VITE_REVERB_APP_KEY" "$VAL_REVERB_APP_KEY"
 update_env_val "VITE_REVERB_SCHEME" "http"
 
-update_env_val "MQTT_HOST" "mqtt"
+update_env_val "MQTT_HOST" "127.0.0.1"
 update_env_val "MQTT_PORT" "1883"
 update_env_val "MQTT_USERNAME" "$MQTT_USER"
 update_env_val "MQTT_PASSWORD" "$MQTT_PASSWORD"
