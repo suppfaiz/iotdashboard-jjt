@@ -13,7 +13,7 @@ if ! [ -x "$(command -v docker)" ]; then
     echo "[-] Error: Docker is not installed."
     echo "[*] Attempting to install Docker..."
     if [ -f /etc/debian_version ]; then
-        sudo apt-get update
+        sudo apt-get update || true
         if ! [ -x "$(command -v curl)" ]; then
             sudo apt-get install -y curl
         fi
@@ -36,7 +36,7 @@ if ! docker compose version &>/dev/null; then
     if ! [ -x "$(command -v docker-compose)" ]; then
         echo "[*] Attempting to install Docker Compose..."
         if [ -f /etc/debian_version ]; then
-            sudo apt-get update
+            sudo apt-get update || true
             sudo apt-get install -y docker-compose || sudo apt-get install -y docker-compose-v2 || true
             if ! [ -x "$(command -v docker-compose)" ] && ! docker compose version &>/dev/null; then
                 echo "[-] Error: Failed to install Docker Compose. Please install it manually."
@@ -147,10 +147,10 @@ PHP_VERSION=$(php -r 'echo PHP_VERSION;' 2>/dev/null || echo "0")
 if [ "$(printf '%s\n' "8.4" "$PHP_VERSION" | sort -V | head -n1)" != "8.4" ]; then
     echo "[*] PHP version is lower than 8.4 (detected: $PHP_VERSION). Installing/Upgrading to PHP 8.4..."
     if [ -f /etc/debian_version ]; then
-        sudo apt-get update
+        sudo apt-get update || true
         sudo apt-get install -y software-properties-common
         sudo add-apt-repository -y ppa:ondrej/php
-        sudo apt-get update
+        sudo apt-get update || true
         sudo apt-get install -y php8.4-cli php8.4-xml php8.4-curl php8.4-mbstring php8.4-zip php8.4-gd php8.4-bcmath php8.4-sockets php8.4-mysql unzip
         sudo update-alternatives --set php /usr/bin/php8.4 || true
     else
