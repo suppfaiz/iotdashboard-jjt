@@ -104,12 +104,12 @@ comment_env_val() {
     fi
 }
 
-update_env_val "DB_CONNECTION" "sqlite"
-update_env_val "DB_DATABASE" "/var/www/database/database.sqlite"
-comment_env_val "DB_HOST"
-comment_env_val "DB_PORT"
-comment_env_val "DB_USERNAME"
-comment_env_val "DB_PASSWORD"
+update_env_val "DB_CONNECTION" "mysql"
+update_env_val "DB_HOST" "127.0.0.1"
+update_env_val "DB_PORT" "3306"
+update_env_val "DB_DATABASE" "dashboard_iot_baru"
+update_env_val "DB_USERNAME" "root"
+update_env_val "DB_PASSWORD" ""
 
 update_env_val "REVERB_HOST" "\"$VPS_IP\""
 update_env_val "VITE_REVERB_HOST" "\"$VPS_IP\""
