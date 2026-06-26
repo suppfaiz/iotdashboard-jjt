@@ -7,7 +7,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>IoT Energy Dashboard</title>
     <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
