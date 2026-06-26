@@ -214,7 +214,7 @@ $DOCKER_COMPOSE down || true
 $DOCKER_COMPOSE up -d --build
 
 echo "[*] Waiting for MySQL container to start and initialize..."
-for i in {1..30}; do
+for i in {1..90}; do
     if $DOCKER_COMPOSE exec -T app php -r "
         try {
             \$pass = '';
