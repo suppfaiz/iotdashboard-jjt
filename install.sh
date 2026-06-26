@@ -111,7 +111,7 @@ comment_env_val() {
 }
 
 update_env_val "DB_CONNECTION" "mysql"
-update_env_val "DB_HOST" "127.0.0.1"
+update_env_val "DB_HOST" "mysql"
 update_env_val "DB_PORT" "3306"
 update_env_val "DB_DATABASE" "dashboard_iot_baru"
 update_env_val "DB_USERNAME" "root"
@@ -194,38 +194,6 @@ echo "[*] Compiling assets with NPM on host..."
 npm install
 npm run build
 
-# Ensure MySQL database exists on host
-echo "[*] Ensuring MySQL database exists..."
-php -r "
-try {
-    \$host = '127.0.0.1';
-    \$user = 'root';
-    \$pass = '';
-    \$dbname = 'dashboard_iot_baru';
-    
-    if (file_exists('.env')) {
-        \$lines = file('.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        foreach (\$lines as \$line) {
-            if (strpos(\$line, '=') !== false && strpos(\$line, '#') !== 0) {
-                list(\$key, \$val) = explode('=', \$line, 2);
-                \$key = trim(\$key);
-                \$val = trim(\$val, \"'\\\" \");
-                if (\$key === 'DB_USERNAME') \$user = \$val;
-                if (\$key === 'DB_PASSWORD') \$pass = \$val;
-                if (\$key === 'DB_DATABASE') \$dbname = \$val;
-                if (\$key === 'DB_HOST') \$host = \$val;
-            }
-        }
-    }
-    
-    \$pdo = new PDO(\"mysql:host=\$host\", \$user, \$pass);
-    \$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    \$pdo->exec(\"CREATE DATABASE IF NOT EXISTS \`\$dbname\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\");
-    echo \"[+] Database '\$dbname' checked/created successfully.\n\";
-} catch (Exception \$e) {
-    echo \"[-] Warning: Could not auto-create database: \" . \$e->getMessage() . \"\n\";
-}
-"
 
 # Start services
 echo "[*] Generating Mosquitto MQTT credentials file..."
@@ -239,8 +207,23 @@ echo "[*] Building and starting docker containers..."
 $DOCKER_COMPOSE down || true
 $DOCKER_COMPOSE up -d --build
 
-echo "[*] Waiting for container services to start..."
-sleep 5
+echo "[*] Waiting for MySQL container to start and initialize..."
+for i in {1..30}; do
+    if $DOCKER_COMPOSE exec -T app php -r "
+        try {
+            new PDO('mysql:host=mysql;dbname=dashboard_iot_baru', 'root', '');
+            exit(0);
+        } catch (Exception \$e) {
+            exit(1);
+        }
+    " &>/dev/null; then
+        echo ""
+        echo "[+] MySQL is ready!"
+        break
+    fi
+    echo -n "."
+    sleep 1
+done
 
 echo "[*] Generating application encryption key inside container..."
 $DOCKER_COMPOSE exec -T app php artisan key:generate --force
