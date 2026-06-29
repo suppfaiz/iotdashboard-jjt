@@ -215,7 +215,9 @@ class DeviceController extends Controller
             return redirect()->back()->with('error', 'No firmware uploaded yet.');
         }
 
-        $url = asset('storage/' . $device->firmware_path);
+        $baseUrl = config('app.url', 'http://localhost:8080');
+        $baseUrl = rtrim($baseUrl, '/');
+        $url = $baseUrl . '/storage/' . $device->firmware_path;
         
         try {
             $payload = json_encode([
