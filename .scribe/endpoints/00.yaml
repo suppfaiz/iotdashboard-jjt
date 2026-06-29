@@ -25,14 +25,14 @@ endpoints:
         name: id
         description: 'The ID of the device.'
         required: true
-        example: 9
+        example: 11
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 9
+      id: 11
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -46,7 +46,7 @@ endpoints:
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
-          set-cookie: 'XSRF-TOKEN=eyJpdiI6IlVCeTdla0RtK21iTG84eXdQbmV4VXc9PSIsInZhbHVlIjoiMDhuYUVuUFdVbVYxdzVzdHBua1QvdUI0NG5zVDRhdWV0U1NMNDFqUlFURVhuTFhSdUVJNDFhK1VRS0J3RWRrdXpuMWN5T3dZRzdCTVp1bk5KdFJGT01kSHlhY2xkUW9WdGtyYkZ6TEZ1b0xCT0xkNjJLWjJHWEI0RjRldU1vMysiLCJtYWMiOiJmOGM1MmJlZWRiMzcxNTdmYzg3NDgwNDk3MWU0N2Q3MDRkMTNlZDA4NWE1NjQxY2VlNDNkNzk0MWJhMWVjZTk2IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:29:03 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6InVGNExwQU41RndsTGE1cXpwdmtMOGc9PSIsInZhbHVlIjoiY1BkWE1TSkVSS01BYWxJSzJBT0hROGlZOFZodUl0SU94ZFdKUFludGtOK3ZzbUxUMlQ4UnpCaVp6dkNLNmxXcklkeHFnZXQ3NFJRdk5EMnl2Z2xMM3ljKzBTVXhNT1hDNVN6Rm9zUGtrdi96bnNYTURZREhCRmtUTGVXRm0vbEYiLCJtYWMiOiJhNDMxZTJjNjQxNTk3MzEyNTIxZGM2ZDY0NWUxNjJjMjBmZDdiODY5NDY4NWM0NjE1ZjI1YzY1MDk4OTQ2MzFjIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:29:03 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6InVPK0FPWHFGRWJFczlZT3MyYnZhamc9PSIsInZhbHVlIjoiL1JJZDlDQmhkTlp4TzdhOWpCTHJjMW9lbjVvYmJnUS9WdGFzdnVhNy9EeklQVHd4aWZMT0RqZlNQRGorU0hCdVhOUW9rUDkwdTFURWhYY0ZFaUFma3dNTGt5STlVOGFmVjQrUnZtWEpQN3dVTGNZNzk1RUhLVDMwNnRHWmpxQ0IiLCJtYWMiOiJmMTQ5MDcwOThiY2UyZjBjOWQ4ZGQxN2Q0Mjk2MzdiN2YyMzViMTRiYmMwZmJmZTZiNWExOTk5N2VjZTMxMGI5IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 09:05:29 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6IjdpR2dNdllSMi9JUGp4bjFJSVhJaEE9PSIsInZhbHVlIjoicHpnWk83d0tFK1VUcmtKamQ4Szl1WWplWkRSdVhaUHVmcXI0Uy9rcCtMRWRqbTVpTi9BNWFmNTlCckhuL0FDKy85blNyTTFhSit2MG1nVEkwb3B5NUpwZXZzZnJaREU4ZVRUU0dCdC9NcC9nY25DUGQwV0dhbzAyMEU0VWNRQjAiLCJtYWMiOiI1Mjk4N2UyMTIyZjhlMzVkOGNiOGY4ODA0NzdhNTMzZGVkYmQzNzg4MDI3N2ViM2M0NjBiZDk4ZGU4M2NhMjhiIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 09:05:29 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
         description: null
     responseFields: []
     auth: []
@@ -77,14 +77,14 @@ endpoints:
         name: device_id
         description: 'The ID of the device.'
         required: true
-        example: 9
+        example: 11
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      device_id: 9
+      device_id: 11
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -98,7 +98,7 @@ endpoints:
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
-          set-cookie: 'XSRF-TOKEN=eyJpdiI6IjQxQ3ZGbjlNWDVJM1IvTmR3clVUUGc9PSIsInZhbHVlIjoiL0dZd0pmSDN2TU9XejBuemJCd0s3VVlYcm5GWTJoYzZ3YWRTY2JuTk9KNnlWcGdWeEFZOTRQbmRGMFNjUFJJZ2VhUC9OQVVGdmJVQ1J3RDdoMHU4Qjhrc0JNcXlBS1ZKZmlwYjFSbWJ3cHhLM2tUY0xDUjJiVmFHR2VyYlBjTE4iLCJtYWMiOiJhYTAyMTgyZDhjMGVkZDVlMjI2MmFhNTVkMzM1MGFmYjhlMmZiMmEzNjY5ODZjZGMyN2NmMWE2NmVlNzI4NjQ3IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:29:03 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6ImNMbkN5ZW0xZVozNDZzV3FwbC9uanc9PSIsInZhbHVlIjoiYkhDaWJuMnZLRlc5NkJyU21IVkVoZjlkbndoejdrYzVtblF3bVJWRTh5QVdjeGdtbE91UjlzOTZqQSswOXRRYWxCWVdwcWxHUU9rc0xXaWZaK2ttMDN2Z2tOY1VqN1FQNm0xS0djenlXdC9VVDY3RGFqcWRvYmFQTCtnenVkam8iLCJtYWMiOiIyY2U2MjhiMzU5NDM4ZjE4ZGVlMDVhN2QxZGVmYTU3MjIwNjZlMDFlYzI0ZGQ0NDVhM2Y2Njk2YzEyZDc1YTY0IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:29:03 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6ImV3T3oxM1R1a2hyekhqdzUrcW8wNlE9PSIsInZhbHVlIjoiZFZucGFMVnpvVzJaSjBST0FSNkM2WlR4MHZqaGVKSHFvRFR1R1BJV0xuVHJiM0p1Q29Yc3l2Q2l4cFB0S1E3VEZxcmkySUQxWHczSzJCeS81WHkwdDR3cnNpMmQ5MEFkV3ZkMmlpR1JRZFpnQ1c3RUlUdHB1bHJhbEdKc0NZMkEiLCJtYWMiOiJjOGYyODBiZmVjNTFjMGU0ZWMxNDMyMDg4Y2YzNDc4OTQzMGQ3MjhlMjYxZDczZjRlM2U0ZTNlNWNjNDU0NjIzIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 09:05:29 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6IlViMWQ5TVd0NnpteXpzNzQ0QjdjUVE9PSIsInZhbHVlIjoiYUxTaGFmSVlGNXIrWmFQbHBtQzRRaXluTXI2eDJqcjFNYVZ2c0pZQVNYbWtKcG95azdaa2lIVElVWk4zZW95cEFBU2YrYWpLSWRuWXh5SWE1alc0T05ObTBOUUQvcnhpU2VuSTFDNFhjcmJ6MTZEVUNJNGkvMzZKeGZGaEdUZ2kiLCJtYWMiOiJhY2IyNjAzNDBjZWZlZjQwNTg5YWY4ODFmNTMyYjNkN2VhZTFkZmJkN2RmYzJjNDU2MjJjNTBmMjI0YjA3NmQ3IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 09:05:29 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
         description: null
     responseFields: []
     auth: []
@@ -129,14 +129,14 @@ endpoints:
         name: device_id
         description: 'The ID of the device.'
         required: true
-        example: 9
+        example: 11
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      device_id: 9
+      device_id: 11
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -150,7 +150,7 @@ endpoints:
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
-          set-cookie: 'XSRF-TOKEN=eyJpdiI6IitQcEhyb3FITFZRSWhJTHo1UllnY1E9PSIsInZhbHVlIjoiLzUzRllKYnNCUXhnQTFYOUtETXM1cGRGdWRSODI2SVZ3dmFNUUpOakVDZjVoellmQUJsWnNEQUx5a1JPS2NqZXlVMmJ0Q3hzaVNJcGV6bFowVzFERVU3NldHZEhiVENadURwZDQ5dVRsNWgrRjVSem9zSnpFL0VQUnpDWEh6MjYiLCJtYWMiOiI2NGJmNGRiODY5MTU0MmU5YzQyYzBmNjU2NDYxZGQ0NTZhZmI2NjFjMmYxYTUwM2I5ZmUxNjk1ZjYyNzEzYmEzIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:29:03 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6Img5N3k5Tk9KRmVWbkVNNXVUdksrc1E9PSIsInZhbHVlIjoiZXk3ZXhORE1nYng1ZGc2ZG5UelZoYkRVNklGclRSMVV4RDFqRloyemt4SjZ4ZXYxTUd1K0w1Y2I2QXlsR3ovOTJRbGd6eUlJaWkxOTUwV1RoeXJoR3JrRWsydVowZVNUQ0dzYzlZTE0vaXdDaTVxdVZkaFNLN3BHN2dxbEJZb3QiLCJtYWMiOiJmYTgzODUxZGRlYWVhZDJjZTc5NmFjZjkwNjFhMzA0MGI0Y2FhYTAzY2FmODI5ODczZjhjMzdhMTEyMjZiNjJiIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:29:03 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IkU1STBqL0pZQmlETDRXMm43SzhCeXc9PSIsInZhbHVlIjoiS0MrTW5pZUF6OUh4N1h6SjZNcC96alQ4NVc5VkJPbDhRTk9lYlRCaExUZGQwN3ZRQWx6TEZtMEpER2JqclpIOFo3TDN4TUFMK0t1UGI4K213cE5hOW9ScW5RRjVuclEyN1dta1FKUUFhNXdLU0wrN0JtSnhpWlhDK1dZdGNNVDAiLCJtYWMiOiI4NTM3ODlhMjM5ZTJjN2MxNTIxNjBkZTBlNjcwOWUwYmY2NWEwZmNmZjJlMDcxOWViN2VmYjhmZjM3ODRmNzZlIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 09:05:29 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6IlRzS2xMeGNmbEZTcnRVcUNnemd1ckE9PSIsInZhbHVlIjoiSk9GTTQ0UW5TSVQ3WHkwTlc5NnE2QzZpVWNSc0JHSW1PbU0zL3JCMHhpKzdqTEhVNjUwOXVIQmtIaU9lVDdmNFhGN0Q4NzJrU3pHNDhLdHFwdWdrdmVIMzd4SlVVWGpPRUhqSTZ6RGdLQnVWQmhBNnJlK0x2b05hUkUxK0tZZ24iLCJtYWMiOiJjZGFiMmFmNDQ3ZjBjMzg3OTYzNWQ4ZmM3MTI2YjQ4OWExMzdhMGI4ODA3ZGVkZDRmYTg2ZjJhMTdlOTVhMzc5IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 09:05:29 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
         description: null
     responseFields: []
     auth: []
@@ -181,14 +181,14 @@ endpoints:
         name: id
         description: 'The ID of the device.'
         required: true
-        example: 9
+        example: 11
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 9
+      id: 11
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -284,14 +284,14 @@ endpoints:
         name: device_id
         description: 'The ID of the device.'
         required: true
-        example: 9
+        example: 11
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      device_id: 9
+      device_id: 11
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -339,14 +339,14 @@ endpoints:
         name: device_id
         description: 'The ID of the device.'
         required: true
-        example: 9
+        example: 11
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      device_id: 9
+      device_id: 11
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -360,7 +360,7 @@ endpoints:
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
-          set-cookie: 'XSRF-TOKEN=eyJpdiI6IlRKYXBOdWNKY3VuOFdXZkhrUktxakE9PSIsInZhbHVlIjoidXkxVGVtTzlaUGlmVkNYUnUyMUhrWW84VHFLK2VnaWRwYXlsV3U5M3JCdkJJWHM5ZFQ1bU9HbUNSSXZZcDhuUysvRG4yVmtSd3RwT3pQVUdVbEtyUE10SW9xRWdBT0U5aDh1UjYvNGN6cmVZODZGSUphMmVVZnV4VGw0M0ZueDgiLCJtYWMiOiIzOTY4ZmM0Njk5YTQwODU4N2I3MjRlNzMxYTk1NDQ5YjlhYTQ0ZGQxYzJlODIzZTkzYzJiYWZlMTJhZGRlMTNiIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:29:03 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6ImtRMXR1a1hiL3poQ25FNEJpQjRCS0E9PSIsInZhbHVlIjoicTc2a25CTnJ5UE1hMGxtRDdKazVEK0pWRzdXd3d1UEZzT05jamNvVmFkOWJkVFpWLzFxazZXTFo5OWI3QXdhUnVmbDlYZGM5eVUvQThqRlVTTWRXSFJzUzBGM3NIRHRpZGp6ZG5JakdRdVJiT0dPR0RYTnlEb2RtKzkvRmJvRWciLCJtYWMiOiJkYmEzZWRjNzEyY2E1OGQ1M2M3NWUyNzJkMmQ4OTdiZDY1ZmJlNzE2M2Y1YWIwNjIwNmJjYWIzYTVmZWI2ODRkIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:29:03 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6Ik1ybHcrbkZqYUlXdVUwN01kMlBLaFE9PSIsInZhbHVlIjoiNVZ1N2ErKzNyTXU2aThSZzJlZWVNRjNsOFQ4bzlNSi9vU0pTN3F2TDV4YlJ5MjVyT3N1b2dqVFZ1d0p3YnZ1Um5JUy9xUXl3dUMwWktwM0FPMWE5a0RQa2lSNTZtemNFMEx3MTFCc2h5ZGtQOTArS2RYekJqSE9qbks5cGREZzUiLCJtYWMiOiIwY2I5ZWEzZmI3MmQ0NzRlODliZjU2ZTA5YTJlMWM4ZDBkZTMwM2ZhMDAwMGNiYjkxYTkwMzA1MDE3MDBjNThjIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 09:05:29 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6IktkTE0zaEQxT2FJQS8rVU1qSWZuSXc9PSIsInZhbHVlIjoicHJ2WlpJL0dqbDI0ckVRSjF1M3RxLzBRaDhuOHRSbnZacmVWbnFEZ25xVDdKWi8rbTQwMldPLytFaVR3d0FjbzZJWkJVM29MVDNyOE94YnBVOTVEQTRlZEFkRFZJbFZ4T1VnajR6NjNwZXFjTHY4YzVXRzBTQnJ4MVdpZ2dKcFciLCJtYWMiOiI3OWVjZTU1NjFlN2MxMzFkNzBhOTExMjUxZTllNDJlZGVlNmJmM2RjMTYzMGU4ZjBiYjM0YzhlZjkxZDA3MjBkIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 09:05:29 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
         description: null
     responseFields: []
     auth: []
@@ -391,14 +391,14 @@ endpoints:
         name: id
         description: 'The ID of the device.'
         required: true
-        example: 9
+        example: 11
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 9
+      id: 11
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -434,14 +434,14 @@ endpoints:
         name: device_id
         description: 'The ID of the device.'
         required: true
-        example: 9
+        example: 11
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      device_id: 9
+      device_id: 11
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -489,14 +489,14 @@ endpoints:
         name: device_id
         description: 'The ID of the device.'
         required: true
-        example: 9
+        example: 11
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      device_id: 9
+      device_id: 11
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -532,14 +532,14 @@ endpoints:
         name: device_id
         description: 'The ID of the device.'
         required: true
-        example: 9
+        example: 11
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      device_id: 9
+      device_id: 11
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -575,14 +575,14 @@ endpoints:
         name: device_id
         description: 'The ID of the device.'
         required: true
-        example: 9
+        example: 11
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      device_id: 9
+      device_id: 11
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []

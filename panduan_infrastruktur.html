@@ -288,6 +288,7 @@
     <li class="toc-item"><div class="toc-num">15</div><span class="toc-text">Konfigurasi Sistem via UI Dashboard</span><span class="toc-page-num">19</span></li>
     <li class="toc-item"><div class="toc-num">16</div><span class="toc-text">Update Firmware OTA (Over-the-Air)</span><span class="toc-page-num">20</span></li>
     <li class="toc-item"><div class="toc-num">17</div><span class="toc-text">Keamanan &amp; Manajemen User</span><span class="toc-page-num">21</span></li>
+    <li class="toc-item"><div class="toc-num">18</div><span class="toc-text">Dokumentasi Interaktif API (Scribe)</span><span class="toc-page-num">22</span></li>
   </ul>
 </div>
 
@@ -1379,9 +1380,42 @@
     </div>
   </div>
 
+<!-- BAB 18: DOKUMENTASI INTERAKTIF API -->
+<div class="page">
+  <div class="chapter-banner">
+    <div class="chapter-icon">📚</div>
+    <div class="chapter-text">
+      <small>Bab 18</small>
+      <h2>Dokumentasi <span>Interaktif API (Scribe)</span></h2>
+    </div>
+  </div>
+  <p>Untuk mempermudah integrasi pihak ketiga dan pengembangan perangkat baru, dashboard ini dilengkapi dengan dokumentasi API interaktif menggunakan <strong>Scribe</strong> dengan tema premium <strong>Stoplight Elements</strong>.</p>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon blue">🌐</div><div><div class="card-title">Akses Dokumentasi API</div><div class="card-subtitle">Dapat diakses langsung via browser</div></div></div>
+    <p>Dokumentasi API disajikan secara statis untuk performa maksimal dan 100% bebas dari kendala routing atau database Laravel:</p>
+    <ul>
+      <li>📍 <strong>URL Akses</strong>: <span class="mono">http://&lt;IP_VPS_ATAU_LOCALHOST&gt;/api-docs/index.html</span></li>
+      <li>🔗 <strong>Integrasi UI</strong>: Tombol <strong>API Docs</strong> pada bilah navigasi (Navbar) admin.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon green">🛠️</div><div><div class="card-title">Perintah Regenerasi Dokumentasi</div><div class="card-subtitle">Gunakan saat Anda memodifikasi atau menambah API baru</div></div></div>
+    <p>Jika Anda melakukan perubahan rute atau menambahkan controller API baru, jalankan perintah berikut untuk memperbarui dokumentasi:</p>
+    <div class="cmd-block">
+      <span class="comment"># Jika berjalan secara lokal (Host PC/Mac)</span><br>
+      <span class="prompt">$</span> php artisan scribe:generate<br><br>
+      <span class="comment"># Jika berjalan di lingkungan VPS (Docker Compose)</span><br>
+      <span class="prompt">$</span> docker compose exec app php artisan scribe:generate
+    </div>
+    <p>Perintah tersebut akan otomatis men-generate file HTML statis di folder <span class="mono">public/api-docs/</span> beserta spesifikasi OpenAPI (<span class="mono">openapi.yaml</span>) dan Postman Collection (<span class="mono">collection.json</span>).</p>
+  </div>
+</div>
+
   <div class="divider"></div>
   <p style="text-align:center; color:#94a3b8; font-size:9pt; margin-top:20px;">
-    📄 Jamkrida Energy IoT Dashboard — Panduan Infrastruktur v2.0 &nbsp;|&nbsp; 17 Bab &nbsp;|&nbsp; Lengkap<br>
+    📄 Jamkrida Energy IoT Dashboard — Panduan Infrastruktur v2.1 &nbsp;|&nbsp; 18 Bab &nbsp;|&nbsp; Lengkap<br>
     Dibangun dengan ❤️ menggunakan Laravel 12, Docker, Eclipse Mosquitto &amp; ESP32
   </p>
 </div>

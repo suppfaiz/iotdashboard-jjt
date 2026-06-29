@@ -87,7 +87,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the device.'
-        example: 9
+        example: 11
         required: true
         schema:
           type: integer
@@ -118,7 +118,7 @@ paths:
         in: path
         name: device_id
         description: 'The ID of the device.'
-        example: 9
+        example: 11
         required: true
         schema:
           type: integer
@@ -149,7 +149,7 @@ paths:
         in: path
         name: device_id
         description: 'The ID of the device.'
-        example: 9
+        example: 11
         required: true
         schema:
           type: integer
@@ -181,7 +181,7 @@ paths:
         in: path
         name: device_id
         description: 'The ID of the device.'
-        example: 9
+        example: 11
         required: true
         schema:
           type: integer
@@ -212,7 +212,7 @@ paths:
         in: path
         name: device_id
         description: 'The ID of the device.'
-        example: 9
+        example: 11
         required: true
         schema:
           type: integer
@@ -244,7 +244,7 @@ paths:
         in: path
         name: device_id
         description: 'The ID of the device.'
-        example: 9
+        example: 11
         required: true
         schema:
           type: integer
@@ -263,7 +263,7 @@ paths:
         in: path
         name: device_id
         description: 'The ID of the device.'
-        example: 9
+        example: 11
         required: true
         schema:
           type: integer
@@ -282,7 +282,7 @@ paths:
         in: path
         name: device_id
         description: 'The ID of the device.'
-        example: 9
+        example: 11
         required: true
         schema:
           type: integer
@@ -301,7 +301,7 @@ paths:
         in: path
         name: device_id
         description: 'The ID of the device.'
-        example: 9
+        example: 11
         required: true
         schema:
           type: integer
