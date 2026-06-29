@@ -216,226 +216,228 @@
                         Save Settings
                     </button>
                 </form>
+             @endif
+        </div>
+
+        <!-- Right Column (2/3 width) -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Real-Time Metrics -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5" id="device-metrics-container">
+                <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-100">
+                    <h3 class="text-base font-semibold text-gray-900">Real-Time Metrics</h3>
+                    <span class="inline-flex items-center gap-1.5 text-xs text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full font-medium">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Live via WebSockets
+                    </span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3">
+
+                    <!-- Voltage -->
+                    <div class="rounded-xl border border-amber-100 bg-amber-50 p-3.5 flex items-center gap-3 hover:shadow-sm transition-shadow">
+                        <div class="flex-shrink-0 w-8.5 h-8.5 rounded-lg bg-amber-100 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-amber-600 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-semibold text-amber-700 uppercase tracking-wide leading-none mb-1">Voltage</p>
+                            <p class="text-lg font-extrabold text-gray-900 leading-none"><span id="metric-voltage">{{ $metrics['voltage'] }}</span> <span class="text-xs font-semibold text-gray-400">V</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Current -->
+                    <div class="rounded-xl border border-blue-100 bg-blue-50 p-3.5 flex items-center gap-3 hover:shadow-sm transition-shadow">
+                        <div class="flex-shrink-0 w-8.5 h-8.5 rounded-lg bg-blue-100 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-semibold text-blue-700 uppercase tracking-wide leading-none mb-1">Current</p>
+                            <p class="text-lg font-extrabold text-gray-900 leading-none"><span id="metric-current">{{ $metrics['current'] }}</span> <span class="text-xs font-semibold text-gray-400">A</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Power -->
+                    <div class="rounded-xl border border-purple-100 bg-purple-50 p-3.5 flex items-center gap-3 hover:shadow-sm transition-shadow">
+                        <div class="flex-shrink-0 w-8.5 h-8.5 rounded-lg bg-purple-100 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-semibold text-purple-700 uppercase tracking-wide leading-none mb-1">Power</p>
+                            <p class="text-lg font-extrabold text-gray-900 leading-none"><span id="metric-power">{{ $metrics['power'] }}</span> <span class="text-xs font-semibold text-gray-400">W</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Energy -->
+                    <div class="rounded-xl border border-indigo-100 bg-indigo-50 p-3.5 flex items-center gap-3 hover:shadow-sm transition-shadow">
+                        <div class="flex-shrink-0 w-8.5 h-8.5 rounded-lg bg-indigo-100 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.364l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-semibold text-indigo-700 uppercase tracking-wide leading-none mb-1">Energy</p>
+                            <p class="text-lg font-extrabold text-indigo-700 leading-none"><span id="metric-energy">{{ $metrics['energy'] }}</span> <span class="text-xs font-semibold text-indigo-400">kWh</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Estimated Cost -->
+                    <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-3.5 flex items-center gap-3 hover:shadow-sm transition-shadow col-span-2 sm:col-span-1">
+                        <div class="flex-shrink-0 w-8.5 h-8.5 rounded-lg bg-emerald-100 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-semibold text-emerald-700 uppercase tracking-wide leading-none mb-1">Est. Cost</p>
+                            <p class="text-lg font-extrabold text-emerald-700 leading-none">Rp <span id="metric-cost">{{ number_format($metrics['energy'] * $plnTariff, 0, ',', '.') }}</span></p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+
+            @if(auth()->user()->role === 'admin')
+                <!-- OTA Firmware Management -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                        <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            OTA Firmware Update
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        @if(session('success') && str_contains(session('success'), 'Firmware'))
+                            <div class="mb-4 bg-green-50 border-l-4 border-green-500 p-3 rounded">
+                                <p class="text-sm text-green-800">{{ session('success') }}</p>
+                            </div>
+                        @endif
+                        @if(session('error'))
+                            <div class="mb-4 bg-red-50 border-l-4 border-red-500 p-3 rounded">
+                                <p class="text-sm text-red-800">{{ session('error') }}</p>
+                            </div>
+                        @endif
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Upload Form -->
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-700 mb-3">1. Upload Firmware (.bin)</h4>
+                                <form action="{{ route('devices.upload_firmware', $device->id) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-3">
+                                    @csrf
+                                    <input type="file" name="firmware" accept=".bin" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+                                    <button type="submit" class="self-start text-sm bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded transition-colors shadow-sm border border-gray-700">
+                                        Upload File
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <!-- Trigger OTA Form -->
+                            <div class="border-t md:border-t-0 md:border-l border-gray-200 pt-6 md:pt-0 pl-0 md:pl-6">
+                                <h4 class="text-sm font-medium text-gray-700 mb-3">2. Push Update to Device</h4>
+                                @if($device->firmware_path)
+                                    <div class="mb-3 text-xs text-green-600 flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        Latest firmware ready: {{ basename($device->firmware_path) }}
+                                    </div>
+                                    <form action="{{ route('devices.trigger_ota', $device->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors shadow-sm flex items-center">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                            Push OTA Update
+                                        </button>
+                                    </form>
+                                @else
+                                    <div class="mb-3 text-xs text-yellow-600 flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                        No firmware uploaded yet. Please upload a .bin file first.
+                                    </div>
+                                    <button disabled class="text-sm bg-gray-100 text-gray-400 border border-gray-200 px-4 py-2 rounded cursor-not-allowed flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                        Push OTA Update
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- OTA Progress Bar -->
+                        <div id="ota-progress-container" class="mt-6 border-t border-gray-100 pt-6 hidden">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center justify-between">
+                                <span id="ota-status-label" class="flex items-center gap-2">
+                                    <svg class="animate-spin h-4 w-4 text-blue-600" id="ota-spinner" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span id="ota-status-text" class="font-bold text-gray-800">OTA Update Progress</span>
+                                </span>
+                                <span id="ota-progress-percent" class="text-blue-600 font-bold">0%</span>
+                            </h4>
+                            <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden relative shadow-inner">
+                                <div id="ota-progress-bar" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-full rounded-full transition-all duration-300 ease-out" style="width: 0%;"></div>
+                            </div>
+                            <div class="flex justify-between items-center mt-2 text-xs text-gray-500">
+                                <span id="ota-status-message" class="italic">Initiating firmware transfer...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Remote Console -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                        <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M4 17h16a2 2 0 002-2V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            Interactive Remote Console
+                        </h3>
+                        <span class="text-xs text-gray-500 font-mono">cmd/{{ $device->device_id }}</span>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-4">
+                            <label class="block text-xs font-semibold text-gray-700 uppercase mb-2">Send Custom JSON Command</label>
+                            <div class="flex gap-3">
+                                <input type="text" id="console-payload" placeholder='{"cmd": "restart"}' value='{"cmd": "restart"}' class="flex-1 text-sm font-mono border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50">
+                                <button onclick="sendConsoleCommand()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded transition-colors shadow-sm">
+                                    Send Command
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Make sure the payload is valid JSON (e.g., <code>{"cmd": "restart"}</code>, <code>{"cmd": "reset_energy"}</code>).</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <span class="block text-[10px] font-extrabold text-slate-450 uppercase tracking-widest mb-2">Preset Commands</span>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;restart\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                                    🔄 Reboot ESP32
+                                </button>
+                                <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;reset_energy\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                                    ⚡ Reset Energy
+                                </button>
+                                <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;relay\&quot;, \&quot;state\&quot;: 1}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                                    💡 Relay ON
+                                </button>
+                                <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;relay\&quot;, \&quot;state\&quot;: 0}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                                    🔌 Relay OFF
+                                </button>
+                                <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;get_status\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                                    📡 Get Status
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Connection Debugger -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden text-slate-800">
+                    <div class="px-6 py-3 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                        <h3 class="text-sm font-semibold text-gray-700 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M4 17h16a2 2 0 002-2V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            Connection Debugger
+                        </h3>
+                        <button onclick="document.getElementById('debug-log').innerHTML = ''" class="text-xs text-gray-550 hover:text-gray-900 transition-colors">Clear Log</button>
+                    </div>
+                    <div class="p-4 bg-gray-900 font-mono text-xs text-green-400 h-44 overflow-y-auto" id="debug-log">
+                        <div class="mb-1"><span class="text-gray-500">[{{ now()->format('H:i:s') }}]</span> System ready. Waiting for telemetry or ping...</div>
+                    </div>
+                </div>
             @endif
         </div>
-
     </div>
-
-    <!-- Real-Time Metrics — full width below the info cards -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-8" id="device-metrics-container">
-        <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-100">
-            <h3 class="text-base font-semibold text-gray-900">Real-Time Metrics</h3>
-            <span class="inline-flex items-center gap-1.5 text-xs text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full font-medium">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                Live via WebSockets
-            </span>
-        </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-
-            <!-- Voltage -->
-            <div class="rounded-xl border border-amber-100 bg-amber-50 p-4 flex items-center gap-3 hover:shadow-sm transition-shadow">
-                <div class="flex-shrink-0 w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center">
-                    <svg class="w-4.5 h-4.5 text-amber-600 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                </div>
-                <div>
-                    <p class="text-xs font-semibold text-amber-700 uppercase tracking-wide leading-none mb-1">Voltage</p>
-                    <p class="text-xl font-extrabold text-gray-900 leading-none"><span id="metric-voltage">{{ $metrics['voltage'] }}</span> <span class="text-xs font-semibold text-gray-400">V</span></p>
-                </div>
-            </div>
-
-            <!-- Current -->
-            <div class="rounded-xl border border-blue-100 bg-blue-50 p-4 flex items-center gap-3 hover:shadow-sm transition-shadow">
-                <div class="flex-shrink-0 w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"/></svg>
-                </div>
-                <div>
-                    <p class="text-xs font-semibold text-blue-700 uppercase tracking-wide leading-none mb-1">Current</p>
-                    <p class="text-xl font-extrabold text-gray-900 leading-none"><span id="metric-current">{{ $metrics['current'] }}</span> <span class="text-xs font-semibold text-gray-400">A</span></p>
-                </div>
-            </div>
-
-            <!-- Power -->
-            <div class="rounded-xl border border-purple-100 bg-purple-50 p-4 flex items-center gap-3 hover:shadow-sm transition-shadow">
-                <div class="flex-shrink-0 w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                </div>
-                <div>
-                    <p class="text-xs font-semibold text-purple-700 uppercase tracking-wide leading-none mb-1">Power</p>
-                    <p class="text-xl font-extrabold text-gray-900 leading-none"><span id="metric-power">{{ $metrics['power'] }}</span> <span class="text-xs font-semibold text-gray-400">W</span></p>
-                </div>
-            </div>
-
-            <!-- Energy -->
-            <div class="rounded-xl border border-indigo-100 bg-indigo-50 p-4 flex items-center gap-3 hover:shadow-sm transition-shadow">
-                <div class="flex-shrink-0 w-9 h-9 rounded-lg bg-indigo-100 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.364l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"/></svg>
-                </div>
-                <div>
-                    <p class="text-xs font-semibold text-indigo-700 uppercase tracking-wide leading-none mb-1">Energy</p>
-                    <p class="text-xl font-extrabold text-indigo-700 leading-none"><span id="metric-energy">{{ $metrics['energy'] }}</span> <span class="text-xs font-semibold text-indigo-400">kWh</span></p>
-                </div>
-            </div>
-
-            <!-- Estimated Cost -->
-            <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-4 flex items-center gap-3 hover:shadow-sm transition-shadow col-span-2 sm:col-span-1">
-                <div class="flex-shrink-0 w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </div>
-                <div>
-                    <p class="text-xs font-semibold text-emerald-700 uppercase tracking-wide leading-none mb-1">Est. Cost</p>
-                    <p class="text-xl font-extrabold text-emerald-700 leading-none">Rp <span id="metric-cost">{{ number_format($metrics['energy'] * $plnTariff, 0, ',', '.') }}</span></p>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
 
     @if(auth()->user()->role === 'admin')
-        <!-- OTA Firmware Management -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-                <h3 class="text-lg font-medium text-gray-900 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    OTA Firmware Update
-                </h3>
-            </div>
-            <div class="p-6">
-                @if(session('success') && str_contains(session('success'), 'Firmware'))
-                    <div class="mb-4 bg-green-50 border-l-4 border-green-500 p-3 rounded">
-                        <p class="text-sm text-green-800">{{ session('success') }}</p>
-                    </div>
-                @endif
-                @if(session('error'))
-                    <div class="mb-4 bg-red-50 border-l-4 border-red-500 p-3 rounded">
-                        <p class="text-sm text-red-800">{{ session('error') }}</p>
-                    </div>
-                @endif
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Upload Form -->
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-700 mb-3">1. Upload Firmware (.bin)</h4>
-                        <form action="{{ route('devices.upload_firmware', $device->id) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-3">
-                            @csrf
-                            <input type="file" name="firmware" accept=".bin" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
-                            <button type="submit" class="self-start text-sm bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded transition-colors shadow-sm border border-gray-700">
-                                Upload File
-                            </button>
-                        </form>
-                    </div>
-                    
-                    <!-- Trigger OTA Form -->
-                    <div class="border-t md:border-t-0 md:border-l border-gray-200 pt-6 md:pt-0 pl-0 md:pl-6">
-                        <h4 class="text-sm font-medium text-gray-700 mb-3">2. Push Update to Device</h4>
-                        @if($device->firmware_path)
-                            <div class="mb-3 text-xs text-green-600 flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                Latest firmware ready: {{ basename($device->firmware_path) }}
-                            </div>
-                            <form action="{{ route('devices.trigger_ota', $device->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors shadow-sm flex items-center">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                    Push OTA Update
-                                </button>
-                            </form>
-                        @else
-                            <div class="mb-3 text-xs text-yellow-600 flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                                No firmware uploaded yet. Please upload a .bin file first.
-                            </div>
-                            <button disabled class="text-sm bg-gray-100 text-gray-400 border border-gray-200 px-4 py-2 rounded cursor-not-allowed flex items-center">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                Push OTA Update
-                            </button>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- OTA Progress Bar -->
-                <div id="ota-progress-container" class="mt-6 border-t border-gray-100 pt-6 hidden">
-                    <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center justify-between">
-                        <span id="ota-status-label" class="flex items-center gap-2">
-                            <svg class="animate-spin h-4 w-4 text-blue-600" id="ota-spinner" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            <span id="ota-status-text" class="font-bold text-gray-800">OTA Update Progress</span>
-                        </span>
-                        <span id="ota-progress-percent" class="text-blue-600 font-bold">0%</span>
-                    </h4>
-                    <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden relative shadow-inner">
-                        <div id="ota-progress-bar" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-full rounded-full transition-all duration-300 ease-out" style="width: 0%;"></div>
-                    </div>
-                    <div class="flex justify-between items-center mt-2 text-xs text-gray-500">
-                        <span id="ota-status-message" class="italic">Initiating firmware transfer...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Interactive Remote Console -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-                <h3 class="text-lg font-medium text-gray-900 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M4 17h16a2 2 0 002-2V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    Interactive Remote Console
-                </h3>
-                <span class="text-xs text-gray-500 font-mono">cmd/{{ $device->device_id }}</span>
-            </div>
-            <div class="p-6">
-                <div class="mb-4">
-                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-2">Send Custom JSON Command</label>
-                    <div class="flex gap-3">
-                        <input type="text" id="console-payload" placeholder='{"cmd": "restart"}' value='{"cmd": "restart"}' class="flex-1 text-sm font-mono border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50">
-                        <button onclick="sendConsoleCommand()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded transition-colors shadow-sm">
-                            Send Command
-                        </button>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-1">Make sure the payload is valid JSON (e.g., <code>{"cmd": "restart"}</code>, <code>{"cmd": "reset_energy"}</code>).</p>
-                </div>
-                
-                <div class="mt-4">
-                    <span class="block text-[10px] font-extrabold text-slate-450 uppercase tracking-widest mb-2">Preset Commands</span>
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;restart\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
-                            🔄 Reboot ESP32
-                        </button>
-                        <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;reset_energy\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
-                            ⚡ Reset Energy
-                        </button>
-                        <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;relay\&quot;, \&quot;state\&quot;: 1}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
-                            💡 Relay ON
-                        </button>
-                        <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;relay\&quot;, \&quot;state\&quot;: 0}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
-                            🔌 Relay OFF
-                        </button>
-                        <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;get_status\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
-                            📡 Get Status
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Connection Debugger -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-            <div class="px-6 py-3 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-                <h3 class="text-sm font-medium text-gray-700 flex items-center">
-                    <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M4 17h16a2 2 0 002-2V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    Connection Debugger
-                </h3>
-                <button onclick="document.getElementById('debug-log').innerHTML = ''" class="text-xs text-gray-500 hover:text-gray-900 transition-colors">Clear Log</button>
-            </div>
-            <div class="p-4 bg-gray-900 font-mono text-xs text-green-400 h-48 overflow-y-auto" id="debug-log">
-                <div class="mb-1"><span class="text-gray-500">[{{ now()->format('H:i:s') }}]</span> System ready. Waiting for telemetry or ping...</div>
-            </div>
-        </div>
-
         <!-- Provisioning Code -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
             <div class="px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <h3 class="text-lg font-medium text-gray-900">Provisioning Code (Arduino C++)</h3>
                 <button onclick="copyCode()" class="inline-flex items-center text-xs text-gray-700 hover:text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded transition-colors shadow-sm">
