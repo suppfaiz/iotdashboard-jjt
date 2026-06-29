@@ -336,4 +336,10 @@ class AdvancedExtensionsTest extends TestCase
         $this->assertStringContainsString('espClient.setInsecure();', $this->device->provisioning_code);
         $this->assertStringContainsString('hivemq_user', $this->device->provisioning_code);
     }
+
+    public function test_api_docs_route_is_accessible(): void
+    {
+        $response = $this->get('/api-docs');
+        $response->assertOk();
+    }
 }

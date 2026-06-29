@@ -1,0 +1,720 @@
+name: Endpoints
+description: ''
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'devices/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the device.'
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 9
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6Ims4SUJsTmU1dzdQVU45SUJpTkNqcmc9PSIsInZhbHVlIjoiS21NZTNOS2RYalJRL3JzbjdPUmRjUXAybVRER0Zab0JvSERZckhYcnFCYWxmRnJhNURGU1hOT2lyUGF0R016RDdBSkhWMFJXdzRVNFRFM0JGZ1hyNmV6UlpmNkRyVHF6cFFXRVJJWXJEeUpXWVVqdmNXQmhOZ3N0TGdMMnAreGoiLCJtYWMiOiI0NWY5OWFmOGM1MzI3NTdjMjI0OWRlNTdkNThjOGEwZTAwYWY2YzYzODU1YzBjMjdlM2VhOWEzMDRhYTAzOTJhIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6IlN5S2ZMT0tPbWhJUWUvMUxJTlppaFE9PSIsInZhbHVlIjoiTHc1RFJRQU1Id1E1Ylc4cU9td25iRkRSakJrNDg5NDRiam03dEszNy9IRDBsMlFHZ1VXVVhOajBaWTZEZGdWZnlhVDJ4d3hZcjRQV05mWHRHMnBKMnVEODlGbzl1YVJDVVpqYjY1SXhvK0EwT1M4V3Y5OU02eTJnQWd1WHpjQloiLCJtYWMiOiIyM2UwZWNlYmJiMTU1YTQxMWI1YzYwMzhlZmE2YzUzZjY0MDUxY2VkOGE0OWZmODgxOGRjNTBjMmE5ODM3MGVhIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'devices/{device_id}/ping'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      device_id:
+        custom: []
+        name: device_id
+        description: 'The ID of the device.'
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      device_id: 9
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IlNvNU9UdU4rYXZsQjFEUGNFY3JSZ2c9PSIsInZhbHVlIjoialFnTXZXRC82UjV3L25rYmZXRnc2b0EweW1zR01uRVlaTmZVeVdsSW45Ny9lbU8vV2VKdUFQWWFWelp4NWJYbWNoOUphbHUrZ1VOcXl1RVNVR1VsRTU0blFPZWZTUE51V05CdWdoWlhERXZKLzJuUFNDcU51QjlsOEVaaDBPRWEiLCJtYWMiOiJhYjExYzYwYmYyZWFjN2JhNWExOTQxYmE4NDM1YjI5MzQyY2EzNWYyOThlNjlkOTVjYWMyY2RiYWE4ZmRmZTU3IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6InJ5L2VEU0lzdC8vTHlYWFpSc09Ob1E9PSIsInZhbHVlIjoialpZMkFmL1QyVDBIV2trUnYxeXY2R0FNYTNKbUNNWjZnMjNwTDA1TW5zMEdDTEswODNDbHFnZTcyN1NLMklSREgxT2U2cnplOFhYbW1yRHBzTHlTMEZjTEVmYUV1WDVYb3RBV2pRTHdtc09qQTREaUlxZmNHVmM5SjFyejZ1bDAiLCJtYWMiOiI3YzViZjE3OTZmYWM5YWYyZjI2ZjYzNzM3OWU3ZDczMTAyOTRmN2M4ZTU4NTdkOTc0YmY4OGFmN2I0MWUxMTJiIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'devices/{device_id}/export-csv'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      device_id:
+        custom: []
+        name: device_id
+        description: 'The ID of the device.'
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      device_id: 9
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IlJYcWZvZlE2c3lUbVd5TFBmSXZTQXc9PSIsInZhbHVlIjoiWXFLNHNwbk0zSm94bm5wckhkU2FzTzJhMkVvQmczcC8ya3VqQVBPbXJGcmJ4cGlJYWVPbTJpZnRaNXl5d2VBVVFCZ0l2MU1HanhUcXRVL1o5VFBWaUp0eWNHelU2anY1MWhsM0FEQkVQR1JyUm8wakhpMVlzSTJmYVZ0WDE0aEUiLCJtYWMiOiIyN2QwZmRiODNlNTRkOGY5YjNlY2ZjOTNhM2JmOGVhOGJjOWY4NmIyMzA3YWQwY2JhYmNlNWEzNDM2YzA4YWUyIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6ImlYMmFtUmRxaDRoRkdMckZMTml6Smc9PSIsInZhbHVlIjoiM1E2aGFVU1ZtQnB4WmhWRXZ4dFo2dmI4V0tldkhqbjhzcC9WYStUVHRySkVkY0pYNzYvQmc1ekdDWE9CUXRxNk9BRDVlNFBWRS9FQ0hDTG9yYU5OSVg2RXJsQ2dpZHV1QjVWK2tYMEM2djI4S05GRGo3bGtyWFhlL0ZHSDhKbisiLCJtYWMiOiIyZTI3ZDI2ZDRkNGI0NzQyZWRlYzNlNmVlZWNkODU5MTQ3ZWJjYTQ3ODI5ZWMxYWQyZjVmZTJiNTFmMzczNWI3IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PATCH
+    uri: 'devices/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the device.'
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 9
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      voltage_multiplier:
+        custom: []
+        name: voltage_multiplier
+        description: 'Must be at least 0.1. Must not be greater than 10.0.'
+        required: true
+        example: 2
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      current_multiplier:
+        custom: []
+        name: current_multiplier
+        description: 'Must be at least 0.1. Must not be greater than 10.0.'
+        required: true
+        example: 7
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      monthly_budget_kwh:
+        custom: []
+        name: monthly_budget_kwh
+        description: 'Must be at least 0.'
+        required: false
+        example: 12
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      monthly_budget_cost:
+        custom: []
+        name: monthly_budget_cost
+        description: 'Must be at least 0.'
+        required: false
+        example: 77
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: b
+      voltage_multiplier: 2
+      current_multiplier: 7
+      monthly_budget_kwh: 12
+      monthly_budget_cost: 77
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'devices/{device_id}/console'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      device_id:
+        custom: []
+        name: device_id
+        description: 'The ID of the device.'
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      device_id: 9
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      payload:
+        custom: []
+        name: payload
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      payload: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'devices/{device_id}/provisioning'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      device_id:
+        custom: []
+        name: device_id
+        description: 'The ID of the device.'
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      device_id: 9
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6ImRkWFc1UjhwbjVZSXBlMkJBNU04L1E9PSIsInZhbHVlIjoiZkpJdS9TQkEyd3JIMGVjUHNQWC9IdUlveklEVkFxb0xoVWhpMzJqSWZMODZzZG1LVm5nVnhjTFZEWjNTclNVTWJPT3RQMFdkWURQT3VNNXNDTVJuQWZ6RzQrR2cwT1J3VklYY2dWOUFmcWw2elhnd2dhdXJ4QlpoMG9WNWlaOCsiLCJtYWMiOiI2NTA4M2FjOGNmODExNzcwY2M3NzE5NzhkMTlmYTAyMDM5ZDVjZGU5Y2E1Mzc1OTAwZmM3Y2QzZDYxNmU5OTQ1IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6ImhKemFkYnVvbGNEVE1QSnhINU1zN2c9PSIsInZhbHVlIjoiT1p6NmJVVVV0TnFlSHgwMUdDNnZqWlUzenFNMkhHVUYvQXp2VU94T3poT2ExbXZGTXpiOGZxaTdEODc5Wm1LTXAxSVdYdjBSVXVYcEtqOVFKZU4rUlpXVTN1TFlTa0U4TlpicWdhd24raVpIeTlPLzNlZys0SC90R1puZkRVM2IiLCJtYWMiOiI3Njg3MzQ1ZTIwZjgwNGNiZTkxN2VmZTNjMWJlMTcxYTRiNjgxNmEwYzMxODg5NzI1Mjg4MDUwZDlmZTFiYjkxIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'devices/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the device.'
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 9
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'devices/{device_id}/firmware'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters:
+      device_id:
+        custom: []
+        name: device_id
+        description: 'The ID of the device.'
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      device_id: 9
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      firmware:
+        custom: []
+        name: firmware
+        description: 'Must be a file. Must not be greater than 10240 kilobytes.'
+        required: true
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters: []
+    fileParameters:
+      firmware: null
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'devices/{device_id}/trigger-ota'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      device_id:
+        custom: []
+        name: device_id
+        description: 'The ID of the device.'
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      device_id: 9
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'devices/{device_id}/reset-energy'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      device_id:
+        custom: []
+        name: device_id
+        description: 'The ID of the device.'
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      device_id: 9
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'devices/{device_id}/restart'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      device_id:
+        custom: []
+        name: device_id
+        description: 'The ID of the device.'
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      device_id: 9
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: settings/users
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      email:
+        custom: []
+        name: email
+        description: 'Must be a valid email address. Must not be greater than 255 characters.'
+        required: true
+        example: zbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: 'Must be at least 8 characters.'
+        required: true
+        example: '-0pBNvYgxw'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      role:
+        custom: []
+        name: role
+        description: ''
+        required: true
+        example: user
+        type: string
+        enumValues:
+          - admin
+          - user
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name: b
+      email: zbailey@example.net
+      password: '-0pBNvYgxw'
+      role: user
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'settings/users/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the user.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

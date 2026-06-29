@@ -145,6 +145,8 @@
                                         class="{{ request()->routeIs('settings.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Settings</a>
                                     <a href="{{ route('docs.index') }}"
                                         class="{{ request()->routeIs('docs.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Docs</a>
+                                    <a href="/api-docs" target="_blank"
+                                        class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">API Docs</a>
                                 @endif
                             </div>
                         @endauth
