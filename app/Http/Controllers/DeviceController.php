@@ -115,16 +115,16 @@ class DeviceController extends Controller
 
         $mqtt_host = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value');
         if (empty($mqtt_host)) {
-            $envHost = env('MQTT_HOST');
+            $envHost = config('mqtt.host');
             if (empty($envHost) || $envHost === 'broker.emqx.io' || $envHost === 'mqtt') {
                 $mqtt_host = app()->runningInConsole() ? '127.0.0.1' : request()->getHost();
             } else {
                 $mqtt_host = $envHost;
             }
         }
-        $mqtt_port = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
-        $mqtt_user = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME', '');
-        $mqtt_password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD', '');
+        $mqtt_port = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? config('mqtt.port', 1883);
+        $mqtt_user = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? config('mqtt.username', '');
+        $mqtt_password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? config('mqtt.password', '');
         $mqtt_use_tls = \App\Models\SystemConfig::where('key', 'mqtt_use_tls')->value('value') ?? '0';
 
         $oldMqttHost = '';
@@ -139,7 +139,17 @@ class DeviceController extends Controller
 
         $oldMqttUseTls = (strpos($oldCode, 'WiFiClientSecure') !== false) ? '1' : '0';
 
-        if (strpos($oldCode, 'LittleFS') === false || $oldMqttHost !== $mqtt_host || $oldMqttPort !== $mqtt_port || $oldMqttUseTls !== $mqtt_use_tls) {
+        $oldMqttUser = '';
+        if (preg_match('/const char\* mqtt_user = "(.*?)";/', $oldCode, $matchesUser)) {
+            $oldMqttUser = $matchesUser[1];
+        }
+
+        $oldMqttPassword = '';
+        if (preg_match('/const char\* mqtt_password = "(.*?)";/', $oldCode, $matchesPass)) {
+            $oldMqttPassword = $matchesPass[1];
+        }
+
+        if (strpos($oldCode, 'LittleFS') === false || $oldMqttHost !== $mqtt_host || $oldMqttPort !== $mqtt_port || $oldMqttUseTls !== $mqtt_use_tls || $oldMqttUser !== $mqtt_user || $oldMqttPassword !== $mqtt_password) {
             $wifi_ssid = 'YOUR_WIFI_SSID';
             if (preg_match('/const char\* ssid = "(.*?)";/', $oldCode, $matchesSsid)) {
                 $wifi_ssid = $matchesSsid[1];
