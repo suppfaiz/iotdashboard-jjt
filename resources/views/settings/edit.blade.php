@@ -164,7 +164,7 @@
                     <p class="text-xs text-gray-500 mt-0.5">Settings for receiving telemetry logs and managing connection with IoT devices.</p>
                 </div>
                 
-                <div class="p-6">
+                <div class="p-6 space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="mqtt_host" class="block text-sm font-semibold text-gray-700 mb-2">MQTT Host</label>
@@ -176,7 +176,27 @@
                             <input type="number" name="mqtt_port" id="mqtt_port" value="{{ old('mqtt_port', $configs['mqtt_port'] ?? '1883') }}" required class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
                         </div>
                     </div>
-                    <p class="mt-4 text-xs text-gray-500 leading-normal">Warning: Changing the broker host/port will require updating the client configurations on the microcontroller assets and restarting the MQTT daemon worker.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="mqtt_user" class="block text-sm font-semibold text-gray-700 mb-2">MQTT Username (Optional)</label>
+                            <input type="text" name="mqtt_user" id="mqtt_user" value="{{ old('mqtt_user', $configs['mqtt_user'] ?? '') }}" class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                        </div>
+                        
+                        <div>
+                            <label for="mqtt_password" class="block text-sm font-semibold text-gray-700 mb-2">MQTT Password (Optional)</label>
+                            <input type="password" name="mqtt_password" id="mqtt_password" value="{{ old('mqtt_password', $configs['mqtt_password'] ?? '') }}" class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" name="mqtt_use_tls" id="mqtt_use_tls" value="1" {{ (old('mqtt_use_tls', $configs['mqtt_use_tls'] ?? '0') === '1') ? 'checked' : '' }} class="h-4 w-4 rounded border-gray-300 text-blue-650 focus:ring-blue-500">
+                        <label for="mqtt_use_tls" class="ml-2.5 text-sm font-bold text-gray-800">
+                            Enable Secure SSL/TLS Connection (Required for HiveMQ Cloud)
+                        </label>
+                    </div>
+
+                    <p class="text-xs text-gray-500 leading-normal">Warning: Changing the broker host/port or TLS configuration will require updating the client configurations on the microcontroller assets and restarting the MQTT daemon worker.</p>
                 </div>
 
                 <!-- Section 3: Telegram Bot Notification & Alert Thresholds -->

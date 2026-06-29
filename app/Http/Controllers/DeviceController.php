@@ -125,6 +125,7 @@ class DeviceController extends Controller
         $mqtt_port = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
         $mqtt_user = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME', '');
         $mqtt_password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD', '');
+        $mqtt_use_tls = \App\Models\SystemConfig::where('key', 'mqtt_use_tls')->value('value') ?? '0';
 
         $oldMqttHost = '';
         if (preg_match('/const char\* mqtt_server = "(.*?)";/', $oldCode, $matchesHost)) {
@@ -136,7 +137,9 @@ class DeviceController extends Controller
             $oldMqttPort = intval($matchesPort[1]);
         }
 
-        if (strpos($oldCode, 'LittleFS') === false || $oldMqttHost !== $mqtt_host || $oldMqttPort !== $mqtt_port) {
+        $oldMqttUseTls = (strpos($oldCode, 'WiFiClientSecure') !== false) ? '1' : '0';
+
+        if (strpos($oldCode, 'LittleFS') === false || $oldMqttHost !== $mqtt_host || $oldMqttPort !== $mqtt_port || $oldMqttUseTls !== $mqtt_use_tls) {
             $wifi_ssid = 'YOUR_WIFI_SSID';
             if (preg_match('/const char\* ssid = "(.*?)";/', $oldCode, $matchesSsid)) {
                 $wifi_ssid = $matchesSsid[1];
@@ -154,7 +157,7 @@ class DeviceController extends Controller
                 $mqtt_password = $matchesPass[1];
             }
 
-            $code = view('devices.code_template', compact('device', 'wifi_ssid', 'wifi_password', 'mqtt_host', 'mqtt_port', 'mqtt_user', 'mqtt_password'))->render();
+            $code = view('devices.code_template', compact('device', 'wifi_ssid', 'wifi_password', 'mqtt_host', 'mqtt_port', 'mqtt_user', 'mqtt_password', 'mqtt_use_tls'))->render();
             $device->provisioning_code = $code;
             $device->save();
         }

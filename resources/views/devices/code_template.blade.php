@@ -6,6 +6,9 @@
 #include <ArduinoJson.h>
 #include <LittleFS.h>
 #include <time.h>
+#if {{ $mqtt_use_tls ?? 0 }}
+#include <WiFiClientSecure.h>
+#endif
 
 // --- Config ---
 const char* ssid = "{{ $wifi_ssid }}";
@@ -34,7 +37,11 @@ const char* device_id = "{{ $device->device_id }}";
 
 PZEM004Tv30 pzem(PZEM_SERIAL, PZEM_RX_PIN, PZEM_TX_PIN);
 
+#if {{ $mqtt_use_tls ?? 0 }}
+WiFiClientSecure espClient;
+#else
 WiFiClient espClient;
+#endif
 PubSubClient client(espClient);
 
 // For non-blocking reconnection
@@ -297,6 +304,10 @@ void setup() {
     Serial.println("LittleFS Mount Failed");
   }
   
+  #if {{ $mqtt_use_tls ?? 0 }}
+  espClient.setInsecure(); // Skip SSL certificate verification for ease of use
+  #endif
+
   setup_wifi();
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(mqttCallback);

@@ -25,6 +25,9 @@ class SystemConfigController extends Controller
             'wbp_end' => 'required|string|regex:/^\d{2}:\d{2}$/',
             'mqtt_host' => 'required|string',
             'mqtt_port' => 'required|numeric|min:1|max:65535',
+            'mqtt_user' => 'nullable|string',
+            'mqtt_password' => 'nullable|string',
+            'mqtt_use_tls' => 'nullable|in:0,1',
             'telegram_bot_token' => 'nullable|string',
             'telegram_chat_id' => 'nullable|string',
             'alert_voltage_min' => 'required|numeric|min:0',
@@ -40,6 +43,9 @@ class SystemConfigController extends Controller
             'wbp_end',
             'mqtt_host',
             'mqtt_port',
+            'mqtt_user',
+            'mqtt_password',
+            'mqtt_use_tls',
             'telegram_bot_token',
             'telegram_chat_id',
             'alert_voltage_min',
@@ -48,9 +54,13 @@ class SystemConfigController extends Controller
         ];
 
         foreach ($keys as $key) {
+            $value = $request->input($key) ?? '';
+            if ($key === 'mqtt_use_tls') {
+                $value = $request->has('mqtt_use_tls') ? '1' : '0';
+            }
             SystemConfig::updateOrCreate(
                 ['key' => $key],
-                ['value' => $request->input($key) ?? '']
+                ['value' => $value]
             );
         }
 

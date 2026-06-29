@@ -297,4 +297,43 @@ class AdvancedExtensionsTest extends TestCase
         $this->assertNotNull($voltageWarning);
         $this->assertStringContainsString('Voltase tidak stabil', $voltageWarning['message']);
     }
+
+    public function test_mqtt_tls_and_credentials_settings_and_provisioning_regeneration(): void
+    {
+        // 1. Update settings to enable TLS and configure credentials
+        $response = $this->actingAs($this->admin)->put('/settings', [
+            'pln_tariff' => 1500,
+            'pln_tariff_wbp' => 2000,
+            'pln_tariff_lwbp' => 1000,
+            'wbp_start' => '17:00',
+            'wbp_end' => '22:00',
+            'mqtt_host' => '25b7768b96d642e28fab356da906f103.s1.eu.hivemq.cloud',
+            'mqtt_port' => 8883,
+            'mqtt_user' => 'hivemq_user',
+            'mqtt_password' => 'hivemq_pass',
+            'mqtt_use_tls' => '1',
+            'alert_voltage_min' => 200,
+            'alert_voltage_max' => 240,
+            'alert_power_max' => 2200,
+        ]);
+        $response->assertRedirect();
+        
+        $this->assertDatabaseHas('system_configs', [
+            'key' => 'mqtt_use_tls',
+            'value' => '1'
+        ]);
+        $this->assertDatabaseHas('system_configs', [
+            'key' => 'mqtt_user',
+            'value' => 'hivemq_user'
+        ]);
+
+        // 2. View provisioning page for a device to verify WiFiClientSecure is compiled in code
+        $response = $this->actingAs($this->admin)->get("/devices/{$this->device->id}/provisioning");
+        $response->assertOk();
+        
+        $this->device->refresh();
+        $this->assertStringContainsString('WiFiClientSecure espClient;', $this->device->provisioning_code);
+        $this->assertStringContainsString('espClient.setInsecure();', $this->device->provisioning_code);
+        $this->assertStringContainsString('hivemq_user', $this->device->provisioning_code);
+    }
 }

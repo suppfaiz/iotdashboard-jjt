@@ -21,10 +21,12 @@ class MqttWorker extends Command
         $username = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME');
         $password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD');
         
+        $useTls = \App\Models\SystemConfig::where('key', 'mqtt_use_tls')->value('value') === '1';
+        
         $connectionSettings = (new ConnectionSettings)
             ->setKeepAliveInterval(60)
-            ->setUseTls(false)
-            ->setTlsSelfSignedAllowed(false);
+            ->setUseTls($useTls)
+            ->setTlsSelfSignedAllowed(true);
 
         if (!empty($username)) {
             $connectionSettings->setUsername($username);
