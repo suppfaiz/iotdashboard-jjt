@@ -221,32 +221,76 @@
         </div>
 
         <!-- Latest Metrics -->
-        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div class="flex justify-between items-center mb-4 border-b border-gray-200 pb-2">
-                <h3 class="text-lg font-medium text-gray-900">Real-Time Metrics</h3>
-                <span class="text-xs text-gray-500">Auto-updating via WebSockets</span>
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col">
+            <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-3 flex-shrink-0">
+                <h3 class="text-lg font-semibold text-gray-900">Real-Time Metrics</h3>
+                <span class="text-xs text-gray-500 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-200 font-medium">Auto-updating via WebSockets</span>
             </div>
             
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="device-metrics-container">
-                <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
-                    <p class="text-sm text-gray-500 mb-1">Voltage</p>
-                    <p class="text-2xl font-semibold text-gray-900"><span id="metric-voltage">{{ $metrics['voltage'] }}</span> <span class="text-sm text-gray-500">V</span></p>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 flex-grow" id="device-metrics-container">
+                <!-- Voltage Card -->
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 flex flex-col justify-between h-full shadow-sm hover:shadow transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Voltage</p>
+                        <div class="p-1 bg-amber-50 text-amber-500 rounded border border-amber-100">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-2xl font-black text-gray-900 tracking-tight"><span id="metric-voltage">{{ $metrics['voltage'] }}</span> <span class="text-xs font-semibold text-gray-400">V</span></p>
+                    </div>
                 </div>
-                <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
-                    <p class="text-sm text-gray-500 mb-1">Current</p>
-                    <p class="text-2xl font-semibold text-gray-900"><span id="metric-current">{{ $metrics['current'] }}</span> <span class="text-sm text-gray-500">A</span></p>
+
+                <!-- Current Card -->
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 flex flex-col justify-between h-full shadow-sm hover:shadow transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Current</p>
+                        <div class="p-1 bg-blue-50 text-blue-500 rounded border border-blue-100">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-2xl font-black text-gray-900 tracking-tight"><span id="metric-current">{{ $metrics['current'] }}</span> <span class="text-xs font-semibold text-gray-400">A</span></p>
+                    </div>
                 </div>
-                <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
-                    <p class="text-sm text-gray-500 mb-1">Power</p>
-                    <p class="text-2xl font-semibold text-gray-900"><span id="metric-power">{{ $metrics['power'] }}</span> <span class="text-sm text-gray-500">W</span></p>
+
+                <!-- Power Card -->
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 flex flex-col justify-between h-full shadow-sm hover:shadow transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Power</p>
+                        <div class="p-1 bg-purple-50 text-purple-500 rounded border border-purple-100">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-2xl font-black text-gray-900 tracking-tight"><span id="metric-power">{{ $metrics['power'] }}</span> <span class="text-xs font-semibold text-gray-400">W</span></p>
+                    </div>
                 </div>
-                <div class="bg-blue-50 rounded-lg p-4 border border-blue-200 relative overflow-hidden">
-                    <p class="text-sm text-blue-600 mb-1">Energy</p>
-                    <p class="text-2xl font-semibold text-blue-700"><span id="metric-energy">{{ $metrics['energy'] }}</span> <span class="text-sm text-blue-500">kWh</span></p>
+
+                <!-- Energy Card -->
+                <div class="bg-blue-50 rounded-xl p-4 border border-blue-200 flex flex-col justify-between h-full shadow-sm hover:shadow transition-shadow relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <p class="text-xs font-bold text-blue-600 uppercase tracking-wider">Energy</p>
+                        <div class="p-1 bg-blue-100 text-blue-700 rounded border border-blue-200">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.364l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-2xl font-black text-blue-700 tracking-tight"><span id="metric-energy">{{ $metrics['energy'] }}</span> <span class="text-xs font-semibold text-blue-555">kWh</span></p>
+                    </div>
                 </div>
-                <div class="bg-emerald-50 rounded-lg p-4 border border-emerald-200 col-span-2 md:col-span-1 relative overflow-hidden">
-                    <p class="text-sm text-emerald-600 mb-1">Estimated Cost</p>
-                    <p class="text-2xl font-semibold text-emerald-700">Rp <span id="metric-cost">{{ number_format($metrics['energy'] * $plnTariff, 0, ',', '.') }}</span></p>
+
+                <!-- Estimated Cost Card -->
+                <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-200 flex flex-col justify-between h-full shadow-sm hover:shadow transition-shadow relative overflow-hidden col-span-2 md:col-span-1">
+                    <div class="flex justify-between items-start">
+                        <p class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Est. Cost</p>
+                        <div class="p-1 bg-emerald-100 text-emerald-700 rounded border border-emerald-200">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-2xl font-black text-emerald-700 tracking-tight">Rp <span id="metric-cost">{{ number_format($metrics['energy'] * $plnTariff, 0, ',', '.') }}</span></p>
+                    </div>
                 </div>
             </div>
         </div>
