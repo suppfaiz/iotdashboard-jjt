@@ -190,7 +190,7 @@ fetch(url, {
             </summary>
             <pre><code class="language-http">cache-control: no-cache, private
 content-type: application/json
-set-cookie: XSRF-TOKEN=eyJpdiI6Ims4SUJsTmU1dzdQVU45SUJpTkNqcmc9PSIsInZhbHVlIjoiS21NZTNOS2RYalJRL3JzbjdPUmRjUXAybVRER0Zab0JvSERZckhYcnFCYWxmRnJhNURGU1hOT2lyUGF0R016RDdBSkhWMFJXdzRVNFRFM0JGZ1hyNmV6UlpmNkRyVHF6cFFXRVJJWXJEeUpXWVVqdmNXQmhOZ3N0TGdMMnAreGoiLCJtYWMiOiI0NWY5OWFmOGM1MzI3NTdjMjI0OWRlNTdkNThjOGEwZTAwYWY2YzYzODU1YzBjMjdlM2VhOWEzMDRhYTAzOTJhIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6IlN5S2ZMT0tPbWhJUWUvMUxJTlppaFE9PSIsInZhbHVlIjoiTHc1RFJRQU1Id1E1Ylc4cU9td25iRkRSakJrNDg5NDRiam03dEszNy9IRDBsMlFHZ1VXVVhOajBaWTZEZGdWZnlhVDJ4d3hZcjRQV05mWHRHMnBKMnVEODlGbzl1YVJDVVpqYjY1SXhvK0EwT1M4V3Y5OU02eTJnQWd1WHpjQloiLCJtYWMiOiIyM2UwZWNlYmJiMTU1YTQxMWI1YzYwMzhlZmE2YzUzZjY0MDUxY2VkOGE0OWZmODgxOGRjNTBjMmE5ODM3MGVhIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; httponly; samesite=lax
+set-cookie: XSRF-TOKEN=eyJpdiI6IjBxRVgzZkordXZWcTRUWUtiNjU0VkE9PSIsInZhbHVlIjoiT3ovRHMrWVE1aWlBNDdkb0dPQ2cvR2R0MUo3Z1RQN3g3L1VCQTlJcnRIZnlwRjVCTkZpZUlFNGRPWjBud0MvQkxaOU9YaDI4R1p6cU5sckhHUm1sZkZlVHpSckkvMVRiTElKK1pxU0VhN0NSRFpQNWF2Wk8xTTNNRTJoV3ZUUlIiLCJtYWMiOiJjOTA1YTNiZTg0MGNhYTllM2JkMjgxZmViMDdmOGY4NjdlZTUxMTNiMGU0NjUxYzE4ZWYzMzJlYzkyODRmZTU2IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:07:21 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6ImozbUcrQVNzRmMwUkF2ZWJSZmo2MGc9PSIsInZhbHVlIjoiUG90M0ExbG9PUWY2QnRieHM1eFljSFluZkNWYklJOGtOK2pWS1pTZ0h3ZEtqTTYxRTFQZ2N2MklCMjg5MXVwcFpJUHltVFl6R08xSzlDcitUeVhPRVJuRWM4b0F4TEJ3WCtKMXdaRzZFMUtWYnRkdFFrbW56MzVxNWNWWVpGeVIiLCJtYWMiOiIyZjRmMmIzZTlkNTRjNjhkZmY0Y2NmNTljMzFhZjA2NGUwMzA4MzFiNWMyNGJiOTE2OTlmZDYzMzcxYWQ1NGQzIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:07:21 GMT; Max-Age=7200; path=/; httponly; samesite=lax
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
@@ -330,7 +330,7 @@ fetch(url, {
             </summary>
             <pre><code class="language-http">cache-control: no-cache, private
 content-type: application/json
-set-cookie: XSRF-TOKEN=eyJpdiI6IlNvNU9UdU4rYXZsQjFEUGNFY3JSZ2c9PSIsInZhbHVlIjoialFnTXZXRC82UjV3L25rYmZXRnc2b0EweW1zR01uRVlaTmZVeVdsSW45Ny9lbU8vV2VKdUFQWWFWelp4NWJYbWNoOUphbHUrZ1VOcXl1RVNVR1VsRTU0blFPZWZTUE51V05CdWdoWlhERXZKLzJuUFNDcU51QjlsOEVaaDBPRWEiLCJtYWMiOiJhYjExYzYwYmYyZWFjN2JhNWExOTQxYmE4NDM1YjI5MzQyY2EzNWYyOThlNjlkOTVjYWMyY2RiYWE4ZmRmZTU3IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6InJ5L2VEU0lzdC8vTHlYWFpSc09Ob1E9PSIsInZhbHVlIjoialpZMkFmL1QyVDBIV2trUnYxeXY2R0FNYTNKbUNNWjZnMjNwTDA1TW5zMEdDTEswODNDbHFnZTcyN1NLMklSREgxT2U2cnplOFhYbW1yRHBzTHlTMEZjTEVmYUV1WDVYb3RBV2pRTHdtc09qQTREaUlxZmNHVmM5SjFyejZ1bDAiLCJtYWMiOiI3YzViZjE3OTZmYWM5YWYyZjI2ZjYzNzM3OWU3ZDczMTAyOTRmN2M4ZTU4NTdkOTc0YmY4OGFmN2I0MWUxMTJiIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; httponly; samesite=lax
+set-cookie: XSRF-TOKEN=eyJpdiI6Ino2elJBbU9rV3hNdmc0dDVkTldscWc9PSIsInZhbHVlIjoiSXdDR0N0Rm9ESWRUK3JuUGdPQjRTa2RiRURlbVVQVXJucVEzNS9odmJNV3hsRU9rbWZoVnEvdFhaYjFDaTZsNXJ3clcwR3g5R3ZnSlFMblFuN3c3cCtwWjZLSi9Zem5VZ2lRbGgrNEp6UEZCQUdXREI0c0FmMGFMUmtCbkxERnAiLCJtYWMiOiI0OTRjNzIwODcwOTg3YjZjOGU4NzU2YThjOGVjY2I0YjJiMjc2OTEyNWEyMDBmM2I0ZjJiY2MwYWNhOTM5MDMwIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:07:21 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6IkNObHBBaTl3OERuNFRabGlNYlBNcUE9PSIsInZhbHVlIjoiVGlLR2o4NjNDamZ1UmdNK1JMR1lqelN2K2Z6bENTeGMycTI3Q0NFSFlUZkE5c01udVc5VVpLVGhodHhGaGp6WUF0bVYwQzMwelpSak43QzJmazlENEcrUVIvUUdJVk5va05LaE4waWVkbFZ6SmFQM2k1cWdNL3Q5eWFXa0t2dHYiLCJtYWMiOiJkNDBjMDkwMjJiOWQ1ZjY4NGJhZDdkMjg3OGE5YWExNjM2NTUyNzlmZjhmMjJkNTE5YWNiYTVkMTU3ODg1ZDQ5IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:07:21 GMT; Max-Age=7200; path=/; httponly; samesite=lax
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
@@ -470,7 +470,7 @@ fetch(url, {
             </summary>
             <pre><code class="language-http">cache-control: no-cache, private
 content-type: application/json
-set-cookie: XSRF-TOKEN=eyJpdiI6IlJYcWZvZlE2c3lUbVd5TFBmSXZTQXc9PSIsInZhbHVlIjoiWXFLNHNwbk0zSm94bm5wckhkU2FzTzJhMkVvQmczcC8ya3VqQVBPbXJGcmJ4cGlJYWVPbTJpZnRaNXl5d2VBVVFCZ0l2MU1HanhUcXRVL1o5VFBWaUp0eWNHelU2anY1MWhsM0FEQkVQR1JyUm8wakhpMVlzSTJmYVZ0WDE0aEUiLCJtYWMiOiIyN2QwZmRiODNlNTRkOGY5YjNlY2ZjOTNhM2JmOGVhOGJjOWY4NmIyMzA3YWQwY2JhYmNlNWEzNDM2YzA4YWUyIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6ImlYMmFtUmRxaDRoRkdMckZMTml6Smc9PSIsInZhbHVlIjoiM1E2aGFVU1ZtQnB4WmhWRXZ4dFo2dmI4V0tldkhqbjhzcC9WYStUVHRySkVkY0pYNzYvQmc1ekdDWE9CUXRxNk9BRDVlNFBWRS9FQ0hDTG9yYU5OSVg2RXJsQ2dpZHV1QjVWK2tYMEM2djI4S05GRGo3bGtyWFhlL0ZHSDhKbisiLCJtYWMiOiIyZTI3ZDI2ZDRkNGI0NzQyZWRlYzNlNmVlZWNkODU5MTQ3ZWJjYTQ3ODI5ZWMxYWQyZjVmZTJiNTFmMzczNWI3IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; httponly; samesite=lax
+set-cookie: XSRF-TOKEN=eyJpdiI6IlYxMk93UGhrMzBnZDMvVTd0V0hGUkE9PSIsInZhbHVlIjoiMlpMNXl5T3RqUUdTb3oveHluTnNyOHJJaGtURnNCdDJwcU5WYTNmK3QzRlEzaUlrUnNZMWE0YWhSdm93L2tuV1JIbDdPZnZHRVNEc1V6ZFcvdUwzL3A4ZUN6MjlrSUxGY0tkUFVZdEEyNk1OZXp2aldLOGVtbzZxSU1IV2MwTDgiLCJtYWMiOiIzNTdlYjUyOWI5MmI3OGNhYTJkY2Q5YmQ1M2UxNTNiZTU5MjgzODc0ZTk5OWFkM2Y5M2FkNzg0YWQ2NTIzNjZkIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:07:21 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6IjB1d1B3ZHJDc3BsbXcwU0FSS2Fkcnc9PSIsInZhbHVlIjoiSVRVUFRUM1BpcFFBb3J0UnpMcWxVTXVDK3dtN1d4dnZ6T3dYZ3NUSy9wWXc3cWVSK1VDVkZQK09iN2x0dlNGMFg2TDVNT3NkNk5EaEJWZEFvM3dLMFVGZFo1QVh4amFZS3o3QUVocFZEV082RkZaYzUxdWhNUnN3T0E3VCtuQUgiLCJtYWMiOiI4MmMwMGVjMjQ2NDdhZjkxMjk1ZGExOGEwZjE5ZTMwYWU4MDAxNDZkZTcxYTEwYTIxMGJjMTc2NDU3YzgwMzNhIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:07:21 GMT; Max-Age=7200; path=/; httponly; samesite=lax
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
@@ -956,7 +956,7 @@ fetch(url, {
             </summary>
             <pre><code class="language-http">cache-control: no-cache, private
 content-type: application/json
-set-cookie: XSRF-TOKEN=eyJpdiI6ImRkWFc1UjhwbjVZSXBlMkJBNU04L1E9PSIsInZhbHVlIjoiZkpJdS9TQkEyd3JIMGVjUHNQWC9IdUlveklEVkFxb0xoVWhpMzJqSWZMODZzZG1LVm5nVnhjTFZEWjNTclNVTWJPT3RQMFdkWURQT3VNNXNDTVJuQWZ6RzQrR2cwT1J3VklYY2dWOUFmcWw2elhnd2dhdXJ4QlpoMG9WNWlaOCsiLCJtYWMiOiI2NTA4M2FjOGNmODExNzcwY2M3NzE5NzhkMTlmYTAyMDM5ZDVjZGU5Y2E1Mzc1OTAwZmM3Y2QzZDYxNmU5OTQ1IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6ImhKemFkYnVvbGNEVE1QSnhINU1zN2c9PSIsInZhbHVlIjoiT1p6NmJVVVV0TnFlSHgwMUdDNnZqWlUzenFNMkhHVUYvQXp2VU94T3poT2ExbXZGTXpiOGZxaTdEODc5Wm1LTXAxSVdYdjBSVXVYcEtqOVFKZU4rUlpXVTN1TFlTa0U4TlpicWdhd24raVpIeTlPLzNlZys0SC90R1puZkRVM2IiLCJtYWMiOiI3Njg3MzQ1ZTIwZjgwNGNiZTkxN2VmZTNjMWJlMTcxYTRiNjgxNmEwYzMxODg5NzI1Mjg4MDUwZDlmZTFiYjkxIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:04:54 GMT; Max-Age=7200; path=/; httponly; samesite=lax
+set-cookie: XSRF-TOKEN=eyJpdiI6ImYvTittaG1IWlBMVGV2eFZTNjkwU3c9PSIsInZhbHVlIjoiYm0zNkloNU1kK0VKN0gzUFNIK2tPWmVYVkhVNW5IVG81Q2ZHS280WmhnVzRwZG83UW5VSFYzbCtWVE1rK1hDdStDVm9aZDJDTHlPNUJMc3F4Y0QwWERURk9xSGt5OTFEWmZ0YytDNjZNZzY2M0V2dVZFN1RvY0RQVDhWQXpBRC8iLCJtYWMiOiJhNGM3ODMxZTMwYzZmZTU1NDgzMjRjNGIyNGZjMzI4ODk1YzlkYTQ0OTNjOTJjMjlhNTEwYjZmMTY1MjY0NmMxIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:07:21 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6InR6d1F3RUpjWlJwV3Y2TDZDSE84QVE9PSIsInZhbHVlIjoiZHF3M2psTUNmNHpJdm9nempZQjNhcHdvS3VFLzJhamt3RlhBMGtRU2lvaFFTNVM3VGhKdWRTY2FkN3BJV2o4eDBrVEtuM3pFQmFhR3RHVWtUYmU2VFQ2bmMyZ1h2SEN6ckR6UEgvQnhuK3BSejU2M1IvbG1yckVQSzVING5SMnEiLCJtYWMiOiJjNDM1ZjhlZGQ2ZTNlM2U4ZjQ4M2IyZDE4NjhkZGE0MDlmYWI4YTI2MTcwOGVjN2M0MWUzZTg0ZDdiOTQ4NjRjIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:07:21 GMT; Max-Age=7200; path=/; httponly; samesite=lax
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
@@ -1190,7 +1190,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     "http://localhost/devices/9/firmware" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "firmware=@/private/var/folders/h9/j9k7h14s6p179f8w8700wlw80000gn/T/phpnpg1jo0psd2484GQcTY" </code></pre></div>
+    --form "firmware=@/private/var/folders/h9/j9k7h14s6p179f8w8700wlw80000gn/T/phpeol9k3c69491bcTDMkM" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -1311,7 +1311,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be a file. Must not be greater than 10240 kilobytes. Example: <code>/private/var/folders/h9/j9k7h14s6p179f8w8700wlw80000gn/T/phpnpg1jo0psd2484GQcTY</code></p>
+<p>Must be a file. Must not be greater than 10240 kilobytes. Example: <code>/private/var/folders/h9/j9k7h14s6p179f8w8700wlw80000gn/T/phpeol9k3c69491bcTDMkM</code></p>
         </div>
         </form>
 
@@ -1707,7 +1707,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"name\": \"b\",
     \"email\": \"zbailey@example.net\",
     \"password\": \"-0pBNvYgxw\",
-    \"role\": \"user\"
+    \"role\": \"admin\"
 }"
 </code></pre></div>
 
@@ -1726,7 +1726,7 @@ let body = {
     "name": "b",
     "email": "zbailey@example.net",
     "password": "-0pBNvYgxw",
-    "role": "user"
+    "role": "admin"
 };
 
 fetch(url, {
@@ -1854,10 +1854,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="role"                data-endpoint="POSTsettings-users"
-               value="user"
+               value="admin"
                data-component="body">
     <br>
-<p>Example: <code>user</code></p>
+<p>Example: <code>admin</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>admin</code></li> <li><code>user</code></li></ul>
         </div>
