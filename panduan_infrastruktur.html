@@ -312,7 +312,7 @@
       <thead><tr><th>Komponen</th><th>Teknologi</th><th>Keterangan</th></tr></thead>
       <tbody>
         <tr><td><strong>Backend Framework</strong></td><td><span class="badge blue">Laravel 12</span></td><td>API, bisnis logika, ORM</td></tr>
-        <tr><td><strong>Database</strong></td><td><span class="badge gray">SQLite</span></td><td>Penyimpanan data perangkat &amp; user</td></tr>
+        <tr><td><strong>Database</strong></td><td><span class="badge blue">MySQL (Docker)</span></td><td>Penyimpanan data perangkat &amp; user</td></tr>
         <tr><td><strong>Real-time</strong></td><td><span class="badge purple">Laravel Reverb</span></td><td>WebSocket server (port 8085)</td></tr>
         <tr><td><strong>MQTT Broker</strong></td><td><span class="badge orange">Eclipse Mosquitto</span></td><td>Terima data dari sensor IoT</td></tr>
         <tr><td><strong>Frontend</strong></td><td><span class="badge blue">Blade + Vite</span></td><td>UI dashboard interaktif</td></tr>
@@ -532,9 +532,13 @@
       <span class="keyword">APP_ENV</span>=<span class="string">production</span><br>
       <span class="keyword">APP_DEBUG</span>=<span class="string">false</span><br>
       <span class="keyword">APP_URL</span>=<span class="string">http://&lt;IP_VPS&gt;</span><br><br>
-      <span class="comment"># Database (SQLite)</span><br>
-      <span class="keyword">DB_CONNECTION</span>=<span class="string">sqlite</span><br>
-      <span class="keyword">DB_DATABASE</span>=<span class="string">/var/www/database/database.sqlite</span>
+      <span class="comment"># Database (MySQL)</span><br>
+      <span class="keyword">DB_CONNECTION</span>=<span class="string">mysql</span><br>
+      <span class="keyword">DB_HOST</span>=<span class="string">mysql</span><br>
+      <span class="keyword">DB_PORT</span>=<span class="string">3306</span><br>
+      <span class="keyword">DB_DATABASE</span>=<span class="string">dashboard_iot_baru</span><br>
+      <span class="keyword">DB_USERNAME</span>=<span class="string">root</span><br>
+      <span class="keyword">DB_PASSWORD</span>=<span class="string">&lt;password_database_anda&gt;</span>
     </div>
   </div>
   <div class="card">
@@ -918,7 +922,7 @@
       <h2>Skema <span>Database</span></h2>
     </div>
   </div>
-  <p>Sistem menggunakan <strong>SQLite</strong> sebagai database utama (dapat diganti MySQL). Berikut tabel-tabel yang digunakan beserta relasi dan kegunaannya.</p>
+  <p>Sistem menggunakan <strong>MySQL</strong> sebagai database utama di dalam Docker container. Berikut tabel-tabel yang digunakan beserta relasi dan kegunaannya.</p>
 
   <div class="card">
     <div class="card-header"><div class="card-icon blue">👥</div><div><div class="card-title">Tabel: users</div><div class="card-subtitle">Autentikasi dan otorisasi pengguna</div></div></div>
@@ -1305,6 +1309,27 @@
       <li>🔄 Rotasi <span class="mono">APP_KEY</span> secara berkala dengan <span class="mono">php artisan key:generate</span></li>
       <li>📋 Aktifkan logging dan pantau <span class="mono">storage/logs/laravel.log</span> secara rutin</li>
     </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon blue">🔑</div><div><div class="card-title">Mengubah Password Database MySQL</div><div class="card-subtitle">Panduan memperbarui kata sandi MySQL Docker</div></div></div>
+    <div class="cmd-block">
+      <span class="comment"># OPSI 1: Jika database kosong / ingin dimulai dari awal (Hapus Volume)</span><br>
+      <span class="comment"># 1. Edit file .env dan ubah nilai DB_PASSWORD</span><br>
+      <span class="prompt">$</span> nano .env<br>
+      <span class="comment"># 2. Hentikan container dan bersihkan volume lama</span><br>
+      <span class="prompt">$</span> docker compose down -v<br>
+      <span class="comment"># 3. Jalankan kembali script installer</span><br>
+      <span class="prompt">$</span> ./install.sh<br><br>
+
+      <span class="comment"># OPSI 2: Jika ingin mempertahankan data yang sudah ada (Tanpa Hapus Data)</span><br>
+      <span class="comment"># 1. Jalankan perintah ALTER USER di kontainer MySQL</span><br>
+      <span class="prompt">$</span> docker exec -it iot_dashboard_mysql mysql -u root -p -e "ALTER USER 'root'@'%' IDENTIFIED BY 'PasswordBaruAnda';"<br>
+      <span class="comment"># 2. Edit file .env dan sesuaikan nilai DB_PASSWORD Anda</span><br>
+      <span class="prompt">$</span> nano .env<br>
+      <span class="comment"># 3. Restart kontainer aplikasi agar memuat konfigurasi baru</span><br>
+      <span class="prompt">$</span> docker compose restart app phpmyadmin
+    </div>
   </div>
 
   <div class="card">
