@@ -1158,16 +1158,50 @@
     <table>
       <thead><tr><th>Pengaturan</th><th>Keterangan</th></tr></thead>
       <tbody>
-        <tr><td><strong>MQTT Host</strong></td><td>IP atau domain broker. Isi dengan IP VPS untuk broker lokal, atau alamat broker cloud</td></tr>
-        <tr><td><strong>MQTT Port</strong></td><td>Port broker (default: 1883). Gunakan 8883 untuk MQTT over TLS</td></tr>
-        <tr><td><strong>MQTT User / Password</strong></td><td>Kredensial autentikasi broker</td></tr>
+        <tr><td><strong>MQTT Host</strong></td><td>Alamat IP atau domain dari broker MQTT aktif yang ingin dituju.</td></tr>
+        <tr><td><strong>MQTT Port</strong></td><td>Port koneksi broker (standard non-TLS: 1883, secure TLS: 8883).</td></tr>
+        <tr><td><strong>MQTT Username</strong></td><td>Nama pengguna autentikasi broker (kosongkan jika tanpa autentikasi).</td></tr>
+        <tr><td><strong>MQTT Password</strong></td><td>Kata sandi autentikasi broker (kosongkan jika tanpa autentikasi).</td></tr>
+        <tr><td><strong>Enable SSL/TLS Connection</strong></td><td>Centang untuk mengaktifkan enkripsi SSL/TLS (wajib untuk HiveMQ Cloud).</td></tr>
       </tbody>
     </table>
-    <div class="alert warning">
+
+    <h5 style="margin-top: 20px; font-weight: bold; color: #1e3a8a;">Panduan Pemilihan & Cara Mengganti Broker MQTT</h5>
+    
+    <h6 style="font-weight: bold; margin-top: 10px; color: #374151;">Pilihan 1: Broker MQTT Lokal (Docker Compose Mosquitto)</h6>
+    <p>Gunakan opsi ini jika ingin data telemetri disimpan dalam jaringan lokal yang sama dengan VPS/Server tanpa bergantung koneksi internet luar.</p>
+    <ul>
+      <li><strong>MQTT Host</strong>: <span class="mono">mqtt</span> (jika Laravel berjalan di dalam Docker Compose yang sama) atau IP Publik VPS Anda.</li>
+      <li><strong>MQTT Port</strong>: <span class="mono">1883</span></li>
+      <li><strong>MQTT Username &amp; Password</strong>: Masukkan kredensial lokal yang dibuat oleh <span class="mono">install.sh</span> (dapat dilihat di file host <span class="mono">.env</span>).</li>
+      <li><strong>SSL/TLS Connection</strong>: Jangan centang (Disabled).</li>
+    </ul>
+
+    <h6 style="font-weight: bold; margin-top: 10px; color: #374151;">Pilihan 2: Broker Cloud (HiveMQ Cloud)</h6>
+    <p>Gunakan opsi ini jika server berada di cloud terdistribusi dengan enkripsi tinggi tanpa membebani performa VPS lokal.</p>
+    <ul>
+      <li><strong>MQTT Host</strong>: Alamat host HiveMQ Anda (contoh: <span class="mono">25b7768b96d642e28fab356da906f103.s1.eu.hivemq.cloud</span>).</li>
+      <li><strong>MQTT Port</strong>: <span class="mono">8883</span> (wajib TLS).</li>
+      <li><strong>MQTT Username &amp; Password</strong>: Kredensial cluster yang Anda daftarkan di dashboard HiveMQ Cloud Anda.</li>
+      <li><strong>SSL/TLS Connection</strong>: Centang (Enabled).</li>
+    </ul>
+
+    <h6 style="font-weight: bold; margin-top: 10px; color: #374151;">Pilihan 3: Enterprise Broker (EMQX Cluster)</h6>
+    <p>Gunakan jika sistem Anda menskalakan hingga jutaan perangkat dan membutuhkan clustering failover performa tinggi.</p>
+    <ul>
+      <li><strong>MQTT Host</strong>: Domain atau IP Server EMQX Cluster Anda.</li>
+      <li><strong>MQTT Port</strong>: <span class="mono">1883</span> (Non-TLS) atau <span class="mono">8883</span> (TLS).</li>
+      <li><strong>MQTT Username &amp; Password</strong>: Kredensial klien EMQX Anda.</li>
+      <li><strong>SSL/TLS Connection</strong>: Sesuaikan dengan konfigurasi listener SSL/TLS di EMQX Dashboard.</li>
+    </ul>
+
+    <div class="alert warning" style="margin-top: 15px;">
       <div class="alert-icon">⚠️</div>
       <div class="alert-content">
-        <h5>Kode Provisioning Diperbarui Otomatis</h5>
-        <p>Saat MQTT Host berubah via UI, sistem otomatis memperbarui kode Arduino semua perangkat yang terdaftar sehingga ESP32 selalu terhubung ke broker yang benar.</p>
+        <h5>Langkah Penting Setelah Mengganti Broker</h5>
+        <p>1. <strong>Simpan Pengaturan</strong>: Klik tombol <em>Save Settings</em>.<br>
+        2. <strong>Upload Ulang ESP32</strong>: Kode Arduino ESP32 pada menu <strong>Devices -> Provisioning</strong> akan ter-generate ulang secara otomatis. Copy dan upload ulang kode tersebut ke microcontroller Anda.<br>
+        3. <strong>Restart Worker</strong>: Di VPS, jalankan <span class="mono">docker compose restart app</span> agar background worker Laravel mendengarkan di broker yang baru.</p>
       </div>
     </div>
   </div>
