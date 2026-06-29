@@ -8,12 +8,16 @@
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(0, 0, 0, 0.06);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         color: #0f172a;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        will-change: transform, box-shadow;
     }
     .glass-card:hover {
         background: rgba(255, 255, 255, 0.7);
         border-color: rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px) translateZ(0);
     }
     
     /* Neon glow card variations for light theme */

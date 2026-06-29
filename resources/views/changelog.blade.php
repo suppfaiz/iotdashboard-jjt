@@ -7,13 +7,16 @@
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(0, 0, 0, 0.06);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        will-change: transform, box-shadow;
     }
     .changelog-card:hover {
         background: rgba(255, 255, 255, 0.75);
         border-color: rgba(59, 130, 246, 0.2);
         box-shadow: 0 10px 30px rgba(59, 130, 246, 0.05);
-        transform: translateY(-2px);
+        transform: translateY(-2px) translateZ(0);
     }
     .timeline-dot {
         position: relative;

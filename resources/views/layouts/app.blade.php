@@ -28,6 +28,9 @@
             /* Render in front of body background but behind z-10 content wrapper */
             animation: float 25s infinite ease-in-out;
             pointer-events: none;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
         }
 
         .orb-1 {
@@ -61,11 +64,11 @@
 
             0%,
             100% {
-                transform: translateY(0) scale(1) rotate(0deg);
+                transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
             }
 
             50% {
-                transform: translateY(-40px) scale(1.15) rotate(180deg);
+                transform: translate3d(0, -40px, 0) scale(1.15) rotate(180deg);
             }
         }
 
