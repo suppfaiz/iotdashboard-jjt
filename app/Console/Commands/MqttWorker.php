@@ -24,18 +24,22 @@ class MqttWorker extends Command
         $useTls = \App\Models\SystemConfig::where('key', 'mqtt_use_tls')->value('value') === '1';
         
         $connectionSettings = (new ConnectionSettings)
-            ->setKeepAliveInterval(60)
-            ->setUseTls($useTls)
-            ->setTlsSelfSignedAllowed(true);
+            ->setKeepAliveInterval(60);
+        
+        if ($useTls) {
+            $connectionSettings = $connectionSettings->setUseTls(true)
+                ->setTlsSelfSignedAllowed(true);
+        }
  
         if (!empty($username)) {
-            $connectionSettings->setUsername($username);
+            $connectionSettings = $connectionSettings->setUsername($username);
         }
         if (!empty($password)) {
-            $connectionSettings->setPassword($password);
+            $connectionSettings = $connectionSettings->setPassword($password);
         }
  
         $this->info("Starting MQTT listener daemon...");
+        $this->info("Connecting to MQTT broker {$server}:{$port} as user '{$username}' with password '{$password}'...");
  
         while (true) {
             $clientId = config('mqtt.client_id', 'laravel_worker') . '_' . rand(1000, 9999);
@@ -106,7 +110,9 @@ class MqttWorker extends Command
                     // Apply calibration factors
                     $voltage = round($voltage * $calibration['voltage_multiplier'], 2);
                     $current = round($current * $calibration['current_multiplier'], 4);
-                    $power = round($voltage * $current, 2);
+                    $power = isset($data['power']) 
+                        ? round(floatval($data['power']) * $calibration['voltage_multiplier'] * $calibration['current_multiplier'], 2)
+                        : round($voltage * $current, 2);
 
                     // Calculate delta energy using last_historical_energy cache
                     $lastHistEnergyKey = "last_historical_energy:{$deviceId}";
@@ -222,7 +228,9 @@ class MqttWorker extends Command
             if (isset($data['current'])) {
                 $data['current'] = round(floatval($data['current']) * $calibration['current_multiplier'], 4);
             }
-            if (isset($data['voltage']) && isset($data['current'])) {
+            if (isset($data['power'])) {
+                $data['power'] = round(floatval($data['power']) * $calibration['voltage_multiplier'] * $calibration['current_multiplier'], 2);
+            } elseif (isset($data['voltage']) && isset($data['current'])) {
                 $data['power'] = round($data['voltage'] * $data['current'], 2);
             }
             
