@@ -216,7 +216,8 @@
                         Save Settings
                     </button>
                 </form>
-             @endif
+            </div>
+            @endif
         </div>
 
         <!-- Right Column (2/3 width) -->
