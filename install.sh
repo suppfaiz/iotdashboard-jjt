@@ -195,6 +195,12 @@ fi
 echo "[*] Running 'composer install' on host..."
 composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
+# Generate application key on host if not set
+if ! grep -q "^APP_KEY=base64:" .env || [ -z "$(grep "^APP_KEY=" .env | cut -d'=' -f2-)" ]; then
+    echo "[*] Generating application encryption key on host..."
+    php artisan key:generate --force
+fi
+
 # Run NPM install and build on Host
 echo "[*] Compiling assets with NPM on host..."
 npm install
@@ -241,8 +247,6 @@ for i in {1..90}; do
     sleep 1
 done
 
-echo "[*] Generating application encryption key inside container..."
-$DOCKER_COMPOSE exec -u www-data -T app php artisan key:generate --force
 
 echo "[*] Running database migrations inside container..."
 $DOCKER_COMPOSE exec -u www-data -T app php artisan migrate --force
