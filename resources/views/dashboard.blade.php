@@ -288,25 +288,25 @@
                         <div class="grid grid-cols-2 gap-3 mb-5">
                             <div class="bg-white rounded-xl p-3 border border-slate-100 shadow-sm">
                                 <span class="text-[9px] uppercase font-extrabold text-slate-450 block tracking-widest mb-0.5">Voltage</span>
-                                <span class="text-base font-bold text-slate-800"><span id="voltage-{{ $device->device_id }}">{{ number_format(Cache::get("voltage:{$device->device_id}", 0), 1) }}</span> <span class="text-xs text-slate-400 font-normal">V</span></span>
+                                <span class="text-base font-bold text-slate-800"><span id="voltage-{{ $device->device_id }}">{{ number_format($device->voltage, 1) }}</span> <span class="text-xs text-slate-400 font-normal">V</span></span>
                             </div>
                             <div class="bg-white rounded-xl p-3 border border-slate-100 shadow-sm">
                                 <span class="text-[9px] uppercase font-extrabold text-slate-450 block tracking-widest mb-0.5">Current</span>
-                                <span class="text-base font-bold text-slate-800"><span id="current-{{ $device->device_id }}">{{ number_format(Cache::get("current:{$device->device_id}", 0), 2) }}</span> <span class="text-xs text-slate-400 font-normal">A</span></span>
+                                <span class="text-base font-bold text-slate-800"><span id="current-{{ $device->device_id }}">{{ number_format($device->current, 2) }}</span> <span class="text-xs text-slate-400 font-normal">A</span></span>
                             </div>
                             <div class="bg-white rounded-xl p-3 border border-slate-100 shadow-sm">
                                 <span class="text-[9px] uppercase font-extrabold text-slate-450 block tracking-widest mb-0.5">Power</span>
-                                <span class="text-base font-bold text-slate-800"><span id="power-{{ $device->device_id }}">{{ number_format(Cache::get("power:{$device->device_id}", 0), 1) }}</span> <span class="text-xs text-slate-400 font-normal">W</span></span>
+                                <span class="text-base font-bold text-slate-800"><span id="power-{{ $device->device_id }}">{{ number_format($device->power, 1) }}</span> <span class="text-xs text-slate-400 font-normal">W</span></span>
                             </div>
                             <div class="bg-blue-50 rounded-xl p-3 border border-blue-100 shadow-sm">
                                 <span class="text-[9px] uppercase font-extrabold text-blue-500 block tracking-widest mb-0.5">Energy</span>
-                                <span class="text-base font-bold text-blue-700"><span id="energy-{{ $device->device_id }}">{{ number_format(Cache::get("daily_energy:{$device->device_id}", 0), 3) }}</span> <span class="text-xs text-blue-500 font-normal">kWh</span></span>
+                                <span class="text-base font-bold text-blue-700"><span id="energy-{{ $device->device_id }}">{{ number_format($device->energy, 3) }}</span> <span class="text-xs text-blue-500 font-normal">kWh</span></span>
                             </div>
                             <div class="bg-emerald-50 rounded-xl p-3 border border-emerald-100 shadow-sm col-span-2 flex items-center justify-between">
                                 <div>
                                     <span class="text-[9px] uppercase font-extrabold text-emerald-600 block tracking-widest mb-0.5">Estimated Cost</span>
                                     <span class="text-base font-extrabold text-emerald-700">
-                                        Rp <span id="cost-{{ $device->device_id }}">{{ number_format(Cache::get("daily_energy:{$device->device_id}", 0) * $plnTariff, 0, ',', '.') }}</span>
+                                        Rp <span id="cost-{{ $device->device_id }}">{{ number_format($device->energy * $plnTariff, 0, ',', '.') }}</span>
                                     </span>
                                 </div>
                                 <div class="p-2 bg-emerald-100 border border-emerald-200 rounded-lg text-emerald-600">

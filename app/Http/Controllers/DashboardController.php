@@ -34,7 +34,29 @@ class DashboardController extends Controller
         $estimatedCost = 0;
         foreach ($groups as $group) {
             foreach ($group->devices as $device) {
-                $energy = Cache::get("daily_energy:{$device->device_id}", 0);
+                $energy = Cache::get("daily_energy:{$device->device_id}");
+                $voltage = Cache::get("voltage:{$device->device_id}");
+                $current = Cache::get("current:{$device->device_id}");
+                $power = Cache::get("power:{$device->device_id}");
+
+                if ($energy === null || $voltage === null || $current === null || $power === null) {
+                    $lastLog = \App\Models\HourlyEnergyLog::where('device_id', $device->id)
+                        ->orderBy('logged_at', 'desc')
+                        ->first();
+                    if ($lastLog) {
+                        $energy = $energy ?? $lastLog->energy;
+                        $voltage = $voltage ?? $lastLog->voltage;
+                        $current = $current ?? $lastLog->current;
+                        $power = $power ?? $lastLog->power;
+                    }
+                }
+
+                $energy = floatval($energy ?? 0.0);
+                $device->voltage = floatval($voltage ?? 0.0);
+                $device->current = floatval($current ?? 0.0);
+                $device->power = floatval($power ?? 0.0);
+                $device->energy = $energy;
+
                 $totalVolatileKwh += $energy;
                 
                 $deviceCost = Cache::get("daily_cost:{$device->device_id}");
