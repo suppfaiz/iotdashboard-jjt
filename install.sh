@@ -242,13 +242,13 @@ for i in {1..90}; do
 done
 
 echo "[*] Generating application encryption key inside container..."
-$DOCKER_COMPOSE exec -T app php artisan key:generate --force
+$DOCKER_COMPOSE exec -u www-data -T app php artisan key:generate --force
 
 echo "[*] Running database migrations inside container..."
-$DOCKER_COMPOSE exec -T app php artisan migrate --force
+$DOCKER_COMPOSE exec -u www-data -T app php artisan migrate --force
 
 echo "[*] Seeding database with default users and operational groups..."
-$DOCKER_COMPOSE exec -T app php artisan db:seed --force
+$DOCKER_COMPOSE exec -u www-data -T app php artisan db:seed --force
 
 echo ""
 echo "========================================================="

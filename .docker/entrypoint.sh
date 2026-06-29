@@ -36,6 +36,11 @@ php artisan route:cache
 php artisan view:cache
 php artisan storage:link --force
 
+# Ensure storage and bootstrap directories have the correct permissions
+echo "Setting storage and bootstrap directory permissions..."
+chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
 # Start supervisor
 echo "Starting Supervisor..."
 mkdir -p /var/log/supervisor
