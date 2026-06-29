@@ -278,4 +278,23 @@ class AdvancedExtensionsTest extends TestCase
         $this->assertGreaterThan(0.0, $deviceObj->projected_kwh);
         $this->assertGreaterThan(0.0, $deviceObj->projected_cost);
     }
+
+    public function test_dashboard_active_warnings_detection(): void
+    {
+        // 1. Set a device as online and set an unstable voltage alert in cache
+        Cache::put("last_seen:dev_test123", now()->timestamp);
+        Cache::put("voltage:dev_test123", 190.00); // lower than 200V limit
+
+        // 2. Access dashboard
+        $response = $this->actingAs($this->admin)->get(route('dashboard'));
+        $response->assertOk();
+
+        // 3. Assert warnings are passed to the view
+        $warnings = $response->original->getData()['activeWarnings'];
+        $this->assertNotEmpty($warnings);
+        
+        $voltageWarning = collect($warnings)->firstWhere('type', 'voltage');
+        $this->assertNotNull($voltageWarning);
+        $this->assertStringContainsString('Voltase tidak stabil', $voltageWarning['message']);
+    }
 }

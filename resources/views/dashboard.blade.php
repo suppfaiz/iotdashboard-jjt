@@ -75,6 +75,33 @@
     </div>
 </div>
 
+<!-- System Alerts & Status Banner -->
+<div id="active-alerts-container" class="mb-10 {{ count($activeWarnings) > 0 ? '' : 'hidden' }} space-y-3">
+    <div class="bg-rose-50/60 border border-rose-150 rounded-3xl p-5 shadow-sm backdrop-blur-md">
+        <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2 text-rose-800 font-extrabold text-sm tracking-tight">
+                <svg class="w-5 h-5 text-rose-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                Real-time System Alerts & Warnings
+            </div>
+            <span id="alerts-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-200 text-rose-800">
+                {{ count($activeWarnings) }} Warnings
+            </span>
+        </div>
+        <div id="alerts-list" class="space-y-2">
+            @foreach($activeWarnings as $warning)
+                <div class="flex items-start justify-between p-3 rounded-2xl bg-white/70 border border-rose-100 text-slate-800 text-xs font-semibold shadow-sm gap-4" id="alert-item-{{ $warning['device_id'] }}-{{ $warning['type'] }}">
+                    <div class="flex items-center gap-2">
+                        <span class="flex-shrink-0 w-2 h-2 rounded-full {{ $warning['severity'] === 'danger' ? 'bg-rose-500 animate-ping' : 'bg-amber-500' }}"></span>
+                        <span><strong>{{ $warning['device_name'] }}</strong>: {{ $warning['message'] }}</span>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+
 <!-- Executive Summary Cards -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
     <!-- PLN Tariff -->
@@ -510,10 +537,52 @@
 <!-- Real-time WebSocket Listeners and Timeout Checks -->
 <script>
     const plnTariff = {{ $plnTariff }};
-    
-    const energyRegistry = {!! json_encode($groups->flatMap->devices->pluck('device_id')->mapWithKeys(fn($id) => [$id => (float)Cache::get("daily_energy:{$id}", 0)])) !!};
+    const vMin = {{ $vMin }};
+    const vMax = {{ $vMax }};
+    const pMax = {{ $pMax }};
 
+    const energyRegistry = {!! json_encode($groups->flatMap->devices->pluck('device_id')->mapWithKeys(fn($id) => [$id => (float)Cache::get("daily_energy:{$id}", 0)])) !!};
     const costRegistry = {!! json_encode($groups->flatMap->devices->pluck('device_id')->mapWithKeys(fn($id) => [$id => (float)Cache::get("daily_cost:{$id}", Cache::get("daily_energy:{$id}", 0) * $plnTariff)])) !!};
+
+    // Warnings state management
+    const activeWarningsState = {!! json_encode(collect($activeWarnings)->mapWithKeys(fn($w) => [
+        ($w['device_id'] . '_' . $w['type']) => $w
+    ])->all()) !!};
+
+    function renderWarningsUI() {
+        const container = document.getElementById('active-alerts-container');
+        const list = document.getElementById('alerts-list');
+        const badge = document.getElementById('alerts-count-badge');
+        
+        if (!container || !list || !badge) return;
+
+        const warningKeys = Object.keys(activeWarningsState);
+        const count = warningKeys.length;
+
+        if (count === 0) {
+            container.classList.add('hidden');
+            return;
+        }
+
+        container.classList.remove('hidden');
+        badge.innerText = count + ' Warnings';
+
+        // Clear and rebuild list
+        list.innerHTML = '';
+        warningKeys.forEach(key => {
+            const warning = activeWarningsState[key];
+            const pingBg = warning.severity === 'danger' ? 'bg-rose-500 animate-ping' : 'bg-amber-500';
+            const html = `
+                <div class="flex items-start justify-between p-3 rounded-2xl bg-white/70 border border-rose-100 text-slate-800 text-xs font-semibold shadow-sm gap-4" id="alert-item-${warning.device_id}-${warning.type}">
+                    <div class="flex items-center gap-2">
+                        <span class="flex-shrink-0 w-2.5 h-2.5 rounded-full ${pingBg}"></span>
+                        <span><strong>${warning.device_name}</strong>: ${warning.message}</span>
+                    </div>
+                </div>
+            `;
+            list.insertAdjacentHTML('beforeend', html);
+        });
+    }
 
     function recalculateTotalEnergy() {
         let totalEnergy = 0;
@@ -534,6 +603,7 @@
     function updateDeviceUI(deviceId, data) {
         // Find card
         const cardElem = document.getElementById('device-card-' + deviceId);
+        const cardName = cardElem ? cardElem.querySelector('h3').innerText : deviceId;
         
         // Apply flash animation to indicate live WebSocket push in light theme
         if(cardElem) {
@@ -544,10 +614,31 @@
             cardElem.setAttribute('data-last-seen', Math.floor(Date.now() / 1000));
         }
 
+        // Live connection means offline alert is removed
+        if (activeWarningsState[deviceId + '_offline']) {
+            delete activeWarningsState[deviceId + '_offline'];
+            renderWarningsUI();
+        }
+
         // Update PZEM values
         if(data.voltage !== undefined) {
             const vElem = document.getElementById('voltage-' + deviceId);
             if(vElem) vElem.innerText = parseFloat(data.voltage).toFixed(1);
+
+            // Voltage threshold check
+            const vVal = parseFloat(data.voltage);
+            if(vVal > 0 && (vVal < vMin || vVal > vMax)) {
+                activeWarningsState[deviceId + '_voltage'] = {
+                    device_id: deviceId,
+                    device_name: cardName,
+                    type: 'voltage',
+                    message: `Voltase tidak stabil: ${vVal} V (Batas aman: ${vMin} - ${vMax} V)`,
+                    severity: 'warning'
+                };
+            } else {
+                delete activeWarningsState[deviceId + '_voltage'];
+            }
+            renderWarningsUI();
         }
         if(data.current !== undefined) {
             const cElem = document.getElementById('current-' + deviceId);
@@ -556,6 +647,21 @@
         if(data.power !== undefined) {
             const pElem = document.getElementById('power-' + deviceId);
             if(pElem) pElem.innerText = parseFloat(data.power).toFixed(1);
+
+            // Power threshold check
+            const pVal = parseFloat(data.power);
+            if(pVal > pMax) {
+                activeWarningsState[deviceId + '_power'] = {
+                    device_id: deviceId,
+                    device_name: cardName,
+                    type: 'power',
+                    message: `Konsumsi daya melebihi batas beban maksimum: ${pVal} W (Batas aman: maks ${pMax} W)`,
+                    severity: 'warning'
+                };
+            } else {
+                delete activeWarningsState[deviceId + '_power'];
+            }
+            renderWarningsUI();
         }
         if(data.energy !== undefined) {
             const eElem = document.getElementById('energy-' + deviceId);
@@ -587,6 +693,9 @@
 
     // Initialize Laravel Echo to listen to the global channel
     window.addEventListener('DOMContentLoaded', () => {
+        // Initial warnings render
+        renderWarningsUI();
+
         if (window.Echo) {
             console.log('Echo initialized, subscribing to global channel...');
             window.Echo.channel('telemetry')
@@ -601,12 +710,14 @@
         // Periodically check if devices are active/inactive (offline status check)
         setInterval(() => {
             const currentTimestamp = Math.floor(Date.now() / 1000);
+            let stateChanged = false;
+
             document.querySelectorAll('.device-card').forEach(cardElem => {
                 const deviceId = cardElem.getAttribute('data-device-id');
                 const lastSeen = parseInt(cardElem.getAttribute('data-last-seen')) || 0;
                 const diff = currentTimestamp - lastSeen;
                 
-                // If last seen is older than 15 seconds, mark as Inactive
+                // 1. Check card status state (Active/Inactive)
                 if (lastSeen === 0 || diff >= 15) {
                     cardElem.classList.remove('device-active');
                     const badgeElem = document.getElementById('status-' + deviceId);
@@ -619,7 +730,37 @@
                         textElem.innerText = "Inactive";
                     }
                 }
+
+                // 2. Check 5 minutes offline threshold for Alerts Banner
+                if (lastSeen === 0 || diff >= 300) {
+                    const cardName = cardElem.querySelector('h3').innerText;
+                    const key = deviceId + '_offline';
+                    const message = `Perangkat offline. Terakhir terlihat: ${lastSeen > 0 ? Math.floor(diff / 60) + ' menit yang lalu' : 'Belum pernah online'}`;
+                    
+                    if (!activeWarningsState[key] || activeWarningsState[key].message !== message) {
+                        activeWarningsState[key] = {
+                            device_id: deviceId,
+                            device_name: cardName,
+                            type: 'offline',
+                            message: message,
+                            severity: 'danger'
+                        };
+                        // Clear voltage/power alerts since device is offline
+                        delete activeWarningsState[deviceId + '_voltage'];
+                        delete activeWarningsState[deviceId + '_power'];
+                        stateChanged = true;
+                    }
+                } else {
+                    if (activeWarningsState[deviceId + '_offline']) {
+                        delete activeWarningsState[deviceId + '_offline'];
+                        stateChanged = true;
+                    }
+                }
             });
+
+            if (stateChanged) {
+                renderWarningsUI();
+            }
         }, 5000); // Check every 5 seconds
     });
 </script>

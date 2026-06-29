@@ -101,6 +101,75 @@ class DashboardController extends Controller
         }
         $topDevices = $deviceEnergyList->sortByDesc('energy')->take(3);
 
+        // Compute active warnings dynamically on page load
+        $activeWarnings = [];
+        $vMin = floatval(SystemConfig::where('key', 'alert_voltage_min')->value('value') ?? 200.00);
+        $vMax = floatval(SystemConfig::where('key', 'alert_voltage_max')->value('value') ?? 240.00);
+        $pMax = floatval(SystemConfig::where('key', 'alert_power_max')->value('value') ?? 2200.00);
+
+        foreach ($groups as $group) {
+            foreach ($group->devices as $device) {
+                // 1. Heartbeat check (offline/inactive)
+                $lastSeen = Cache::get("last_seen:{$device->device_id}", 0);
+                $isOffline = ($lastSeen === 0 || (now()->timestamp - $lastSeen) > 300); // 5 minutes
+                if ($isOffline) {
+                    $activeWarnings[] = [
+                        'device_id' => $device->device_id,
+                        'device_name' => $device->name,
+                        'type' => 'offline',
+                        'message' => "Perangkat offline. Terakhir terlihat: " . ($lastSeen > 0 ? \Carbon\Carbon::createFromTimestamp($lastSeen)->diffForHumans() : 'Belum pernah online'),
+                        'severity' => 'danger'
+                    ];
+                } else {
+                    // 2. Voltage check
+                    $voltage = floatval(Cache::get("voltage:{$device->device_id}", 0));
+                    if ($voltage > 0 && ($voltage < $vMin || $voltage > $vMax)) {
+                        $activeWarnings[] = [
+                            'device_id' => $device->device_id,
+                            'device_name' => $device->name,
+                            'type' => 'voltage',
+                            'message' => "Voltase tidak stabil: {$voltage} V (Batas aman: {$vMin} - {$vMax} V)",
+                            'severity' => 'warning'
+                        ];
+                    }
+
+                    // 3. Power check
+                    $power = floatval(Cache::get("power:{$device->device_id}", 0));
+                    if ($power > $pMax) {
+                        $activeWarnings[] = [
+                            'device_id' => $device->device_id,
+                            'device_name' => $device->name,
+                            'type' => 'power',
+                            'message' => "Konsumsi daya melebihi batas beban maksimum: {$power} W (Batas aman: maks {$pMax} W)",
+                            'severity' => 'warning'
+                        ];
+                    }
+                }
+
+                // 4. Budget check
+                if ($device->monthly_budget_kwh) {
+                    $kwhPercent = $device->monthly_budget_kwh > 0 ? ($device->current_month_kwh / $device->monthly_budget_kwh) * 100 : 0;
+                    if ($kwhPercent >= 100) {
+                        $activeWarnings[] = [
+                            'device_id' => $device->device_id,
+                            'device_name' => $device->name,
+                            'type' => 'budget',
+                            'message' => "Anggaran energi bulanan terlampaui 100% (" . number_format($device->current_month_kwh, 2) . " / " . number_format($device->monthly_budget_kwh, 0) . " kWh)",
+                            'severity' => 'danger'
+                        ];
+                    } elseif ($kwhPercent >= 80) {
+                        $activeWarnings[] = [
+                            'device_id' => $device->device_id,
+                            'device_name' => $device->name,
+                            'type' => 'budget',
+                            'message' => "Anggaran energi bulanan terlampaui 80% (" . number_format($device->current_month_kwh, 2) . " / " . number_format($device->monthly_budget_kwh, 0) . " kWh)",
+                            'severity' => 'warning'
+                        ];
+                    }
+                }
+            }
+        }
+
         // Fetch Graph Data (Daily, Monthly, Yearly)
         $dailyLogs = \Illuminate\Support\Facades\DB::table('daily_energy_logs')
             ->selectRaw('date as label, SUM(total_kwh_harian) as total')
@@ -161,7 +230,7 @@ class DashboardController extends Controller
             ],
         ];
 
-        return view('dashboard', compact('groups', 'plnTariff', 'totalVolatileKwh', 'estimatedCost', 'chartData', 'topDevices', 'projectedBilling'));
+        return view('dashboard', compact('groups', 'plnTariff', 'totalVolatileKwh', 'estimatedCost', 'chartData', 'topDevices', 'projectedBilling', 'activeWarnings', 'vMin', 'vMax', 'pMax'));
     }
 
     public function changelog()
