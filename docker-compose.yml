@@ -7,7 +7,7 @@ services:
     container_name: iot_dashboard_app
     restart: always
     ports:
-      - "80:80"
+      - "${APP_PORT:-80}:80"
       - "8085:8085"
     environment:
       - MQTT_HOST=mqtt
