@@ -17,7 +17,7 @@ Platform pemantauan energi listrik real-time berbasis IoT yang dirancang khusus 
 - **Generator Kode ESP32 Dinamis (Provisioning)**: Menghasilkan template script C++ Arduino IDE secara otomatis berdasarkan kredensial WiFi dan broker MQTT (mendukung SSL/TLS `setInsecure()` untuk HiveMQ Cloud).
 - **Update Firmware Over-The-Air (OTA)**: Mengunggah file biner firmware (.bin) dari dashboard dan mengirimkan perintah update ke mikrokontroler target via MQTT dengan pelacakan progress real-time.
 - **Sistem Kalibrasi & Anggaran**: Pengaturan faktor kalibrasi tegangan, batas maksimal beban, target harian, dan budget bulanan per perangkat langsung dari antarmuka Web.
-- **Dokumentasi API Interaktif**: Dokumentasi API modern berbasis OpenAPI yang interaktif di `/api-docs/index.html` menggunakan tema premium **Stoplight Elements**.
+- **Dokumentasi API Interaktif**: Dokumentasi API modern berbasis OpenAPI menggunakan tema premium **Stoplight Elements** yang dapat digenerate secara lokal.
 - **Multi-Server & Broker Autocrossover**: Mendukung MQTT Lokal (Mosquitto), Cloud Broker (HiveMQ Cloud), hingga Enterprise Broker (EMQX).
 - **Keamanan Berbasis Peran (RBAC)**: Pembatasan ketat fungsionalitas sistem berdasarkan peran pengguna (**Admin** dan **User Biasa**).
 
@@ -104,14 +104,6 @@ docker compose exec app php artisan scribe:generate
 
 ---
 
-## 📑 Struktur URL & Endpoint Penting
-
-- 🏠 **Dashboard Utama**: `http://localhost:8000/` atau `http://&lt;IP_VPS&gt;/`
-- 📚 **Dokumentasi API (Stoplight Elements)**: `http://localhost:8000/api-docs/index.html`
-- 📖 **Panduan Infrastruktur HTML**: `http://localhost:8000/docs` (atau berkas `panduan_infrastruktur.html`)
-- 🔧 **Manajemen Database (phpMyAdmin)**: `http://localhost:8082/` (Kredensial sesuai file `.env`)
-
----
-
 ## 📜 Lisensi
 Proyek ini dilisensikan di bawah Lisensi MIT. Hak Cipta © 2025 Jamkrida Energy.
+
