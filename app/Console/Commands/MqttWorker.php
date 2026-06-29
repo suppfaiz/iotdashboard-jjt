@@ -16,10 +16,10 @@ class MqttWorker extends Command
 {
     public function handle()
     {
-        $server   = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value') ?? env('MQTT_HOST', 'broker.emqx.io');
-        $port     = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
-        $username = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME');
-        $password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD');
+        $server   = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value') ?? config('mqtt.host', 'broker.emqx.io');
+        $port     = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? config('mqtt.port', 1883);
+        $username = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? config('mqtt.username');
+        $password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? config('mqtt.password');
         
         $useTls = \App\Models\SystemConfig::where('key', 'mqtt_use_tls')->value('value') === '1';
         
@@ -27,18 +27,18 @@ class MqttWorker extends Command
             ->setKeepAliveInterval(60)
             ->setUseTls($useTls)
             ->setTlsSelfSignedAllowed(true);
-
+ 
         if (!empty($username)) {
             $connectionSettings->setUsername($username);
         }
         if (!empty($password)) {
             $connectionSettings->setPassword($password);
         }
-
+ 
         $this->info("Starting MQTT listener daemon...");
-
+ 
         while (true) {
-            $clientId = env('MQTT_CLIENT_ID', 'laravel_worker_' . rand(1000, 9999));
+            $clientId = config('mqtt.client_id', 'laravel_worker') . '_' . rand(1000, 9999);
             $mqtt = new MqttClient($server, $port, $clientId);
 
             try {
