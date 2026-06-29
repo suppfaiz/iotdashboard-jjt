@@ -1,58 +1,117 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ⚡ Jamkrida Energy IoT Dashboard v2.1
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel 12](https://img.shields.io/badge/Laravel-12.x-red.svg)](https://laravel.com)
+[![Docker](https://img.shields.io/badge/Docker-Production--Ready-blue.svg)](https://www.docker.com)
+[![MQTT](https://img.shields.io/badge/MQTT-EMQX%20%7C%20Mosquitto%20%7C%20HiveMQ-orange.svg)](https://mqtt.org)
+[![PHP Version](https://img.shields.io/badge/PHP-%3E%3D%208.2-blue.svg)](https://php.net)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-## About Laravel
+Platform pemantauan energi listrik real-time berbasis IoT yang dirancang khusus untuk memonitor parameter kelistrikan dari sensor PZEM-004T / ESP32. Dilengkapi dengan sistem alert anomali, monitoring budget bulanan, manajemen Over-the-Air (OTA) firmware, dan arsitektur backend yang kokoh berbasis Laravel 12 dan Docker.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Pemantauan Energi Real-Time**: Visualisasi data voltase (V), arus (A), daya aktif (W), faktor daya (PF), frekuensi (Hz), akumulasi energi (kWh), serta estimasi biaya listrik dalam Rupiah (IDR).
+- **Notifikasi Alert & Deteksi Anomali**: Sistem peringatan instan (glassmorphism banner) pada dashboard jika terjadi kegagalan heartbeat (>5 menit), voltase tidak stabil, beban listrik puncak terlampaui, atau budget bulanan terlampaui.
+- **Generator Kode ESP32 Dinamis (Provisioning)**: Menghasilkan template script C++ Arduino IDE secara otomatis berdasarkan kredensial WiFi dan broker MQTT (mendukung SSL/TLS `setInsecure()` untuk HiveMQ Cloud).
+- **Update Firmware Over-The-Air (OTA)**: Mengunggah file biner firmware (.bin) dari dashboard dan mengirimkan perintah update ke mikrokontroler target via MQTT dengan pelacakan progress real-time.
+- **Sistem Kalibrasi & Anggaran**: Pengaturan faktor kalibrasi tegangan, batas maksimal beban, target harian, dan budget bulanan per perangkat langsung dari antarmuka Web.
+- **Dokumentasi API Interaktif**: Dokumentasi API modern berbasis OpenAPI yang interaktif di `/api-docs/index.html` menggunakan tema premium **Stoplight Elements**.
+- **Multi-Server & Broker Autocrossover**: Mendukung MQTT Lokal (Mosquitto), Cloud Broker (HiveMQ Cloud), hingga Enterprise Broker (EMQX).
+- **Keamanan Berbasis Peran (RBAC)**: Pembatasan ketat fungsionalitas sistem berdasarkan peran pengguna (**Admin** dan **User Biasa**).
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🛠️ Stack Teknologi
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Backend**: Laravel 12 (PHP 8.2+), Laravel Reverb (WebSockets), php-mqtt
+- **Frontend**: Blade Templating, Vanilla CSS (Glassmorphism UI), Chart.js (Grafik Interaktif), AlpineJS, TailwindCSS, Laravel Echo
+- **Database & Queue**: MySQL 8.0, Database Queue Driver
+- **Infrastruktur & Broker**: Docker Compose, Eclipse Mosquitto, Nginx Reverse Proxy
+- **Perangkat IoT (Hardware)**: ESP32 DevKit V1, PZEM-004T (V3.0) AC Energy Meter
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## 🖥️ Panduan Jalankan di Lokal (Development)
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Untuk pengembangan lokal tanpa Docker, pastikan Anda telah menginstal PHP 8.2+, Composer, Node.js (NPM), dan MySQL lokal terlebih dahulu.
 
+### 1. Kloning & Persiapan Awal
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/suppfaiz/iotdashboard-jjt.git
+cd iotdashboard-jjt
+composer install
+npm install
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Konfigurasi Environment
+Salin file `.env` dan generates kunci aplikasi:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+*Sesuaikan konfigurasi database (`DB_*`), Reverb (`REVERB_*`), dan broker MQTT (`MQTT_*`) di dalam file `.env` Anda.*
 
-## Contributing
+### 3. Migrasi & Seed Database
+```bash
+php artisan migrate --seed
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 4. Jalankan Layanan di Terminal Terpisah
+Jalankan perintah-perintah berikut di terminal yang berbeda dari direktori root:
 
-## Code of Conduct
+- **Laravel App Server**:
+  ```bash
+  php artisan serve
+  ```
+- **Vite Asset Compiler**:
+  ```bash
+  npm run dev
+  ```
+- **WebSocket Server (Reverb)**:
+  ```bash
+  php artisan reverb:start
+  ```
+- **MQTT Listener Daemon**:
+  ```bash
+  php artisan mqtt:listen
+  ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🐳 Panduan Deployment VPS (Docker - Production)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Deployment produksi sangat disederhanakan menggunakan installer script otomatis yang membundel Laravel, MySQL, phpMyAdmin, dan Eclipse Mosquitto MQTT Broker.
 
-## License
+### 1. Jalankan Script Installer
+```bash
+chmod +x install.sh
+./install.sh
+```
+*Script ini akan otomatis membuat jaringan docker, men-generate kredensial database & MQTT unik di `.env`, serta menyusun kontainer.*
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 2. Jalankan Kontainer di Latar Belakang
+```bash
+docker compose up -d --build
+```
+
+### 3. Generate Dokumentasi API (Opsional)
+Untuk men-generate file dokumentasi API interaktif Stoplight Elements di dalam kontainer:
+```bash
+docker compose exec app php artisan scribe:generate
+```
+
+---
+
+## 📑 Struktur URL & Endpoint Penting
+
+- 🏠 **Dashboard Utama**: `http://localhost:8000/` atau `http://&lt;IP_VPS&gt;/`
+- 📚 **Dokumentasi API (Stoplight Elements)**: `http://localhost:8000/api-docs/index.html`
+- 📖 **Panduan Infrastruktur HTML**: `http://localhost:8000/docs` (atau berkas `panduan_infrastruktur.html`)
+- 🔧 **Manajemen Database (phpMyAdmin)**: `http://localhost:8082/` (Kredensial sesuai file `.env`)
+
+---
+
+## 📜 Lisensi
+Proyek ini dilisensikan di bawah Lisensi MIT. Hak Cipta © 2025 Jamkrida Energy.
