@@ -46,7 +46,7 @@ endpoints:
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
-          set-cookie: 'XSRF-TOKEN=eyJpdiI6InB5N0lMNEYxc1lvL1ZzdElKVVE0MkE9PSIsInZhbHVlIjoiVlFHOEdYTjFzR2tzZmpMTWxCUU5TZHMyT1JIbzBZNmV2NGRGcUh1U0Zzck5CVUdGeWw4S1NLRk14aXRtOGNVWDE5TnFYcitENkRsVEdmNDNMR2wyaEx5YjIwUWRtdHNMb3Urekc4MTZrZUhURDUyczhXRjRLNXpRSmFKU2w1WUEiLCJtYWMiOiI4MjVhMTZmYzRmM2M4ODY0NjBkYmY1YmI5ODVjMTk4OGEyZmI2YWFhMjRlNDhlMDU3NzRjZDA2NzQ4NmVhODkyIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:09:42 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6Ii92Z05rNnZ2a3gvbWtMeXgvanl5cXc9PSIsInZhbHVlIjoiMFZubExVdmhJSTM3cDljOUprOEExMGw2c05CZ2sxb3lBS0F3bU92NW9kOU1tZzlOV3hoZzZCd2VUMGRWUFdvREE3YWxINHJObkhIallDQXZMUnRGZy9Iek14eXNxVkxoV1Jma1paenFyOU9SeGlaMnV1cytsalQ5eGpCV01ldDgiLCJtYWMiOiJmZjZkNThiZDA3ZTIwODRkZDMwZTU4MDllYjJiNWIzMmFhMjcxZTg0ZjRmZTBkYWY5MTZhYjE5ZjEyYzcxOWZlIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:09:42 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6ImVFWVJmRU93cVJCTjlOQUN4NGJ0NWc9PSIsInZhbHVlIjoiVk1uN2RZWHZYS0NWTTFZaXpYMlpVQmN1ZjFVc0NSQjlGR1dUa09sQVg4dFBDdW0ydGZUYUhyNkRyZjNZVlZJc2kyS1FEa1FKNGpwTkg0bVpsWUtMaGFhb0thdS9uT3lmSTBOR2I3NS90cUFJK21VbGVjUlNmWHRKQTFEWXQ1bEUiLCJtYWMiOiJmYjhkYTE2YjZjZDdlNWIzYzU2Y2VlNWRhNjc4ODA4ZDgzMTEzZjI5NTk1MTgyODcxZDMzMDYwMzA2NGMwYjcyIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6InZZanduQ0ZaNG5aUStadzk5cGhCbEE9PSIsInZhbHVlIjoianFwdFo2c25VZGVUcmhIY2FnYTdFK3YyQ0tZZEhQNGdCNnQ3bms0cUJlZ2JFZit4MkNVZUprWDE3cUtiMkNjZkNoNkVhT0tuUzJJblBmczI3VnNGWlpvQTBQY0xYVHk5Ry9VWHVYazlRV2FoUEtmQ2sxdDd3MFkzRkNwMGpKdkciLCJtYWMiOiJlMmY2MDU0OTMxZDg3YjY5N2ZmY2Y0ZjIxMzNkM2ZiMmFmZjcxMWFlNTExMzJiZDJhOTAwOWM1MmY3YTMwOTUyIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
         description: null
     responseFields: []
     auth: []
@@ -98,7 +98,7 @@ endpoints:
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
-          set-cookie: 'XSRF-TOKEN=eyJpdiI6IndZUHhxRFhVbytLWFo0eTZSWnkyYmc9PSIsInZhbHVlIjoiT0xERTN0OVpJckhyN21wSUF1dmNIbjBNZWJRd0taTFJzR1RkUUludVE0c1dOczVUT3RlczRNUmVOclYxa0dhcmxCR1hvSldkUnVRM283bU9iVUJ0SmJDdTBwVFh4REZQTW1mZXZFaklRdHFtRHR0WUxDcEtXVUF3aDBXc3BDbWYiLCJtYWMiOiIyYjgzY2ZjYzVmYTBhNTU5MjJhNTQwNjk3ZGI1Y2Q4OGZkMzQ2MjM3YjMzNGUyYmI2YWU2ZjRmOTBkNTg1ZTU1IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:09:42 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6Ikhhd1Y5bzZtcXh2THdZVUxFanJyUkE9PSIsInZhbHVlIjoib2czNkdab1MyUTVnWTFVbTRhUjJKRHRndk9ZQ2ZZRFhGd045NlRld0dveGlnNit5MEJFbis0R1hDZHdJNDlrL2xNZ3I5YWZqNjZSUkU1aWVPOXJXQzBrendKTHpsUyt2K2RobDVVdWVMMlFtbDhsbkZNcXZUU2lvNkg1WEdXblciLCJtYWMiOiJkNjA3NGUxYmI5Y2NkYWQwNzBkNDg0MTQwYjExNjY3MzAxZGZhM2ZlNTZiYzI1MDI3Y2RmYzEyZDM3OWJkMmU4IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:09:42 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6InRLemRLZlJ3aWZqb3lmUU53bHZ6OVE9PSIsInZhbHVlIjoiSzVSdW1pd0V1QXVDKzhWWjQxWTdiK3luMHEwRWJPSlBRWUMwTXRqL3lHMm1iTGFFcHY0Rkhsek9MMkZibDZMbTJhamhXUktjNTRHR1lYdHgxeUpqNWJ6cFN4MTNNNGpOQkQ2NzY0WkZXVnd5N3Jpd05aa2lZdEl3YnlvaFBVZ2YiLCJtYWMiOiIwOGFlMGEwMTk1MWNiODk4NjJkYjA3ZjMwY2FmN2FkOWVlMjllMGIwMmQzYWE3NTc5OGJhMGU1YjNhM2Q4MzkxIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6IlJXQ0loZWpCcy9MYkpZUzlNNFExR3c9PSIsInZhbHVlIjoieUkxSjRCN3VqcHBrM0xHM1JnZlp1SUY3Qi8rUlBhckRSczJZUzVHdFpvcHJVU3NqQUgyckU2SjgyaU9jS2Q3SWNiempMd0tNalJ6bC8rOUtxK2RZV1VId082NEVUNmc0N3JjaFJLQUlQam5mTm5ZUENraCt4V3FaaGZyZlNDOWQiLCJtYWMiOiJmYzg1MjkxMDNjODAzMmNmNWVhMTYwOGQzMTc2YmNhNDIwZjdmYThkZjM5ZTdhMTBhOTkxZDIxOGIzNjg5NjdjIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
         description: null
     responseFields: []
     auth: []
@@ -150,7 +150,7 @@ endpoints:
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
-          set-cookie: 'XSRF-TOKEN=eyJpdiI6ImpwbnpLTDBoQ2t5MUtSR2wwZzV5VlE9PSIsInZhbHVlIjoiWWxjcDcrNmNkYXZPZzFwb3lkc3FtR3ZNZ2dtT2VNc1hCTWw4SFZwak1UQ3hiRjNCd3o1akNsalVGTUlXa3crQnVUN2RBUjJwWjN1c1h5c2lrN2VaeXpJMWRmZmZnMkxHMFMrNmZtemQxMnVJT3pIcEp3dG9vaFNZbEhaK1U4Y3QiLCJtYWMiOiI3NDgwYWNhZWRhY2M4YTMzY2U2MTk5YmVjOTQwY2ExMDNkNWNjZWI1NmQyMmE3MDkwMWQ3MjE0YmYyMDY1MzEzIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:09:42 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6InFEZ0pNVTVXZG1XSWhHQ2ZVcHJTTFE9PSIsInZhbHVlIjoiKzBiV2toSGFCK2hIczV3SkE2NGF2OVRRSFVGNjNtY29wMVZWUjY3OGtPZXRyVUpka0txNndKenpKTW04QUlxbGtUUmk2ZVI1MmhDMlRtRlJHczdMeTRzeUZmVzYvb3h6Vmg0ZFk4aXE3WGhsTVhJOUFnVEgrZWRiaEdwWVpPL3kiLCJtYWMiOiIwNGU1MjI0OTUxMGNlYTlkYjk0MzRhZDk1ZjMwZDIwZDQ0MGE1MDVhNjkwMWE5ZDMyYTEzOWQ1YTU2MjZjMDMyIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:09:42 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IlNzeW15dGJnRm1sQlVFTnBLaHFVWXc9PSIsInZhbHVlIjoic2QraVBFTFRWSEthOGE4enZkUS9UT3J1YW53Z2lQZk01WnBQK1FvV1gzWkFtTzd5Z1RuWk5FYlVzMHJDekk0YUpUS0I5OEE1RE1YeHN5Withd3hpbzdPcGRRZFpPYmNDb280MERQUFZsSEdQeW0zdGVFRWRLZ3hBOXorb1YwcGwiLCJtYWMiOiI0MDA0OWJlODJhODUxMzM3NWU0MWQ1NTZjY2MzMmExZmM3YTMwMTNkODk4ZGExMjQzY2RkZmJmNmU3NmZkNzQzIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6InduY3JwVVJpdTkrYzA3dkJFdXpZL0E9PSIsInZhbHVlIjoiZmxlS09qOUpQK2xsdDhvV2UxUUFtQTc5SWNCTHp3WTF2WEt6cVBqOTlRQUZvQUFpSWkrak5rZm11RGlwandkcWoweWo4eUVLMXVMUUhGa09haDVrUEovbXBxWmpITHZqZERCYjM4Nk1QOFpCSWVwblp2UXhKbnZNWFovdXVTS2wiLCJtYWMiOiIwOTMxY2NjMDFiZjIwY2ZiNDFlMTcxYmJhZjlmYzExNGQ1YjYwYjc5Yjk1ODUyYjYxMzQ2ZGI4NDhmZDIyYjkwIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
         description: null
     responseFields: []
     auth: []
@@ -360,7 +360,7 @@ endpoints:
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
-          set-cookie: 'XSRF-TOKEN=eyJpdiI6InVkelIzRkFvb3R3cUU5YjNXT2MwQ1E9PSIsInZhbHVlIjoiVDYwNzI2d2FPSFRKVFlPbkJ1TS82WGFjdTV5VFUyZUg2UkgyU1ZIMDE0WGx4dnVHTWZqRjk0eklOR2xqOVJkRks3Z3BXMUg4MXZtT09XSjNqdHlzbGlNZHNZRkRnbUpFVjNFV3ZZKzVOT1lyaFl3VWpTMmQvY1ZDT2Q4TURvbWYiLCJtYWMiOiI5OTYyNjNkNjQ4YTgxOTVhOGY3MmViZTMwYTkxY2UwZDQ2YjFjMzc2MGFhNjhmZGYyOThkOTY2MjIyMGQwMzk1IiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:09:42 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6Ijh0R1AzQWl2SCtLMVhpdWNrTXNYVUE9PSIsInZhbHVlIjoiY3dQQ1ZYMUF5QlhwYnZaRW1mRWo2aHRTQ2MyTlI4Q25VeGJnREpwSTNLNDBWWGZabGc4ZDVGNDhuVmtqeDhCcElvWkNPVGVJZU8yYlV0bk42Z1ljc2RXVi9xNnZidnBSWDgxU0tRWmVjWUNXTmhlR3ZlZHpINkI3M2xQSE43NUciLCJtYWMiOiJiM2M1MmQ1OGY0YzM5MzAxMDYxODU1YmNlOWY3OTAxNmJiNzZkMGY1ZWRhMzczMGExNzE3MTk1NjRiN2MxOThhIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:09:42 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IjU2TlpuMFk3VlBzeVIzeU90TkMyOXc9PSIsInZhbHVlIjoiczBtaTZKbkFJNkNHVzR0SU5icCsxb2ZKc2lyZHo4MGY5UVF6Zlp6Tkx5aTFpd1dXKzNqWnhFVHVqY1ZZcE5MOStvZUVsMTRVQm5GQmVHODRtYkRsUlpkR1l0VkVnNFlPREVoTDZSeVNCemZPM3Vya3pWVTBBbmVHNmQrNlRGN0wiLCJtYWMiOiI5NGZlOGQzYzYyNmE0YmJhNjI1YzVjYjU3YzcwNjM1Mzk4YTBmOTZiMWM3NTRiYzQ3NjY5NzAyNjNhNmFjYzZkIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=/; samesite=lax; laravel-session=eyJpdiI6IjNTZXp5Z1UxT3NaVHF6SUFsY3ErTUE9PSIsInZhbHVlIjoiZ2V4a0V1dWVudnRFMUhycW52c2VXS1h0WUcrR1JMVEwzbjlYTGx1Q3E0Z0hCRzFEQ2EyU1ZCSHJmYURvOC9pQzNxQmFGdTZ5ano0VG05ZkpVRVowV0RoM3lWTlRZQVRCcHVJVE5admZ0aUxyUTdwQWJWb3hFMWhRdDZxTlppRzUiLCJtYWMiOiI1MDY4ZjRkOWU0YzM1ZmZkYzJlMjc1YmZhMGI3Njc0ZDQxOTA4Yzk5YzQwZmE5NGRkMmI4M2NhMjNlYjY0NzVlIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
         description: null
     responseFields: []
     auth: []
@@ -655,7 +655,7 @@ endpoints:
         name: role
         description: ''
         required: true
-        example: user
+        example: admin
         type: string
         enumValues:
           - admin
@@ -667,7 +667,7 @@ endpoints:
       name: b
       email: zbailey@example.net
       password: '-0pBNvYgxw'
-      role: user
+      role: admin
     fileParameters: []
     responses: []
     responseFields: []

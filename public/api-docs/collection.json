@@ -1,0 +1,586 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/localhost"
+        }
+    ],
+    "info": {
+        "name": "Laravel API Documentation",
+        "_postman_id": "67c88250-b585-4037-8f60-39c8d63cecb1",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Endpoints",
+            "description": "",
+            "item": [
+                {
+                    "name": "GET devices\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "devices\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/devices\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 9,
+                                    "description": "The ID of the device."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "set-cookie",
+                                    "value": "XSRF-TOKEN=eyJpdiI6ImVFWVJmRU93cVJCTjlOQUN4NGJ0NWc9PSIsInZhbHVlIjoiVk1uN2RZWHZYS0NWTTFZaXpYMlpVQmN1ZjFVc0NSQjlGR1dUa09sQVg4dFBDdW0ydGZUYUhyNkRyZjNZVlZJc2kyS1FEa1FKNGpwTkg0bVpsWUtMaGFhb0thdS9uT3lmSTBOR2I3NS90cUFJK21VbGVjUlNmWHRKQTFEWXQ1bEUiLCJtYWMiOiJmYjhkYTE2YjZjZDdlNWIzYzU2Y2VlNWRhNjc4ODA4ZDgzMTEzZjI5NTk1MTgyODcxZDMzMDYwMzA2NGMwYjcyIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=\/; samesite=lax; laravel-session=eyJpdiI6InZZanduQ0ZaNG5aUStadzk5cGhCbEE9PSIsInZhbHVlIjoianFwdFo2c25VZGVUcmhIY2FnYTdFK3YyQ0tZZEhQNGdCNnQ3bms0cUJlZ2JFZit4MkNVZUprWDE3cUtiMkNjZkNoNkVhT0tuUzJJblBmczI3VnNGWlpvQTBQY0xYVHk5Ry9VWHVYazlRV2FoUEtmQ2sxdDd3MFkzRkNwMGpKdkciLCJtYWMiOiJlMmY2MDU0OTMxZDg3YjY5N2ZmY2Y0ZjIxMzNkM2ZiMmFmZjcxMWFlNTExMzJiZDJhOTAwOWM1MmY3YTMwOTUyIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=\/; httponly; samesite=lax"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET devices\/{device_id}\/ping",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "devices\/:device_id\/ping",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/devices\/:device_id\/ping",
+                            "variable": [
+                                {
+                                    "id": "device_id",
+                                    "key": "device_id",
+                                    "value": 9,
+                                    "description": "The ID of the device."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "set-cookie",
+                                    "value": "XSRF-TOKEN=eyJpdiI6InRLemRLZlJ3aWZqb3lmUU53bHZ6OVE9PSIsInZhbHVlIjoiSzVSdW1pd0V1QXVDKzhWWjQxWTdiK3luMHEwRWJPSlBRWUMwTXRqL3lHMm1iTGFFcHY0Rkhsek9MMkZibDZMbTJhamhXUktjNTRHR1lYdHgxeUpqNWJ6cFN4MTNNNGpOQkQ2NzY0WkZXVnd5N3Jpd05aa2lZdEl3YnlvaFBVZ2YiLCJtYWMiOiIwOGFlMGEwMTk1MWNiODk4NjJkYjA3ZjMwY2FmN2FkOWVlMjllMGIwMmQzYWE3NTc5OGJhMGU1YjNhM2Q4MzkxIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=\/; samesite=lax; laravel-session=eyJpdiI6IlJXQ0loZWpCcy9MYkpZUzlNNFExR3c9PSIsInZhbHVlIjoieUkxSjRCN3VqcHBrM0xHM1JnZlp1SUY3Qi8rUlBhckRSczJZUzVHdFpvcHJVU3NqQUgyckU2SjgyaU9jS2Q3SWNiempMd0tNalJ6bC8rOUtxK2RZV1VId082NEVUNmc0N3JjaFJLQUlQam5mTm5ZUENraCt4V3FaaGZyZlNDOWQiLCJtYWMiOiJmYzg1MjkxMDNjODAzMmNmNWVhMTYwOGQzMTc2YmNhNDIwZjdmYThkZjM5ZTdhMTBhOTkxZDIxOGIzNjg5NjdjIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=\/; httponly; samesite=lax"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET devices\/{device_id}\/export-csv",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "devices\/:device_id\/export-csv",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/devices\/:device_id\/export-csv",
+                            "variable": [
+                                {
+                                    "id": "device_id",
+                                    "key": "device_id",
+                                    "value": 9,
+                                    "description": "The ID of the device."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "set-cookie",
+                                    "value": "XSRF-TOKEN=eyJpdiI6IlNzeW15dGJnRm1sQlVFTnBLaHFVWXc9PSIsInZhbHVlIjoic2QraVBFTFRWSEthOGE4enZkUS9UT3J1YW53Z2lQZk01WnBQK1FvV1gzWkFtTzd5Z1RuWk5FYlVzMHJDekk0YUpUS0I5OEE1RE1YeHN5Withd3hpbzdPcGRRZFpPYmNDb280MERQUFZsSEdQeW0zdGVFRWRLZ3hBOXorb1YwcGwiLCJtYWMiOiI0MDA0OWJlODJhODUxMzM3NWU0MWQ1NTZjY2MzMmExZmM3YTMwMTNkODk4ZGExMjQzY2RkZmJmNmU3NmZkNzQzIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=\/; samesite=lax; laravel-session=eyJpdiI6InduY3JwVVJpdTkrYzA3dkJFdXpZL0E9PSIsInZhbHVlIjoiZmxlS09qOUpQK2xsdDhvV2UxUUFtQTc5SWNCTHp3WTF2WEt6cVBqOTlRQUZvQUFpSWkrak5rZm11RGlwandkcWoweWo4eUVLMXVMUUhGa09haDVrUEovbXBxWmpITHZqZERCYjM4Nk1QOFpCSWVwblp2UXhKbnZNWFovdXVTS2wiLCJtYWMiOiIwOTMxY2NjMDFiZjIwY2ZiNDFlMTcxYmJhZjlmYzExNGQ1YjYwYjc5Yjk1ODUyYjYxMzQ2ZGI4NDhmZDIyYjkwIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=\/; httponly; samesite=lax"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "PATCH devices\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "devices\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/devices\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 9,
+                                    "description": "The ID of the device."
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"voltage_multiplier\":2,\"current_multiplier\":7,\"monthly_budget_kwh\":12,\"monthly_budget_cost\":77}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST devices\/{device_id}\/console",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "devices\/:device_id\/console",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/devices\/:device_id\/console",
+                            "variable": [
+                                {
+                                    "id": "device_id",
+                                    "key": "device_id",
+                                    "value": 9,
+                                    "description": "The ID of the device."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"payload\":\"architecto\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "GET devices\/{device_id}\/provisioning",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "devices\/:device_id\/provisioning",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/devices\/:device_id\/provisioning",
+                            "variable": [
+                                {
+                                    "id": "device_id",
+                                    "key": "device_id",
+                                    "value": 9,
+                                    "description": "The ID of the device."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "set-cookie",
+                                    "value": "XSRF-TOKEN=eyJpdiI6IjU2TlpuMFk3VlBzeVIzeU90TkMyOXc9PSIsInZhbHVlIjoiczBtaTZKbkFJNkNHVzR0SU5icCsxb2ZKc2lyZHo4MGY5UVF6Zlp6Tkx5aTFpd1dXKzNqWnhFVHVqY1ZZcE5MOStvZUVsMTRVQm5GQmVHODRtYkRsUlpkR1l0VkVnNFlPREVoTDZSeVNCemZPM3Vya3pWVTBBbmVHNmQrNlRGN0wiLCJtYWMiOiI5NGZlOGQzYzYyNmE0YmJhNjI1YzVjYjU3YzcwNjM1Mzk4YTBmOTZiMWM3NTRiYzQ3NjY5NzAyNjNhNmFjYzZkIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=\/; samesite=lax; laravel-session=eyJpdiI6IjNTZXp5Z1UxT3NaVHF6SUFsY3ErTUE9PSIsInZhbHVlIjoiZ2V4a0V1dWVudnRFMUhycW52c2VXS1h0WUcrR1JMVEwzbjlYTGx1Q3E0Z0hCRzFEQ2EyU1ZCSHJmYURvOC9pQzNxQmFGdTZ5ano0VG05ZkpVRVowV0RoM3lWTlRZQVRCcHVJVE5admZ0aUxyUTdwQWJWb3hFMWhRdDZxTlppRzUiLCJtYWMiOiI1MDY4ZjRkOWU0YzM1ZmZkYzJlMjc1YmZhMGI3Njc0ZDQxOTA4Yzk5YzQwZmE5NGRkMmI4M2NhMjNlYjY0NzVlIiwidGFnIjoiIn0%3D; expires=Mon, 29 Jun 2026 08:22:18 GMT; Max-Age=7200; path=\/; httponly; samesite=lax"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "DELETE devices\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "devices\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/devices\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 9,
+                                    "description": "The ID of the device."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST devices\/{device_id}\/firmware",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "devices\/:device_id\/firmware",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/devices\/:device_id\/firmware",
+                            "variable": [
+                                {
+                                    "id": "device_id",
+                                    "key": "device_id",
+                                    "value": 9,
+                                    "description": "The ID of the device."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "firmware",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST devices\/{device_id}\/trigger-ota",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "devices\/:device_id\/trigger-ota",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/devices\/:device_id\/trigger-ota",
+                            "variable": [
+                                {
+                                    "id": "device_id",
+                                    "key": "device_id",
+                                    "value": 9,
+                                    "description": "The ID of the device."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST devices\/{device_id}\/reset-energy",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "devices\/:device_id\/reset-energy",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/devices\/:device_id\/reset-energy",
+                            "variable": [
+                                {
+                                    "id": "device_id",
+                                    "key": "device_id",
+                                    "value": 9,
+                                    "description": "The ID of the device."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST devices\/{device_id}\/restart",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "devices\/:device_id\/restart",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/devices\/:device_id\/restart",
+                            "variable": [
+                                {
+                                    "id": "device_id",
+                                    "key": "device_id",
+                                    "value": 9,
+                                    "description": "The ID of the device."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST settings\/users",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "settings\/users",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/settings\/users"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"password\":\"-0pBNvYgxw\",\"role\":\"admin\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "DELETE settings\/users\/{id}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "settings\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/settings\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": 1,
+                                    "description": "The ID of the user."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "noauth"
+    }
+}

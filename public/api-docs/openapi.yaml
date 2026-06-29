@@ -1,0 +1,367 @@
+openapi: 3.0.3
+info:
+  title: 'Laravel API Documentation'
+  description: ''
+  version: 1.0.0
+servers:
+  - url: 'http://localhost'
+tags:
+  - name: Endpoints
+    description: ''
+paths:
+  '/devices/{id}':
+    get:
+      summary: ''
+      operationId: getDevicesId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    patch:
+      summary: ''
+      operationId: patchDevicesId
+      description: ''
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                voltage_multiplier:
+                  type: number
+                  description: 'Must be at least 0.1. Must not be greater than 10.0.'
+                  example: 2
+                current_multiplier:
+                  type: number
+                  description: 'Must be at least 0.1. Must not be greater than 10.0.'
+                  example: 7
+                monthly_budget_kwh:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 12
+                  nullable: true
+                monthly_budget_cost:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 77
+                  nullable: true
+              required:
+                - name
+                - voltage_multiplier
+                - current_multiplier
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteDevicesId
+      description: ''
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the device.'
+        example: 9
+        required: true
+        schema:
+          type: integer
+  '/devices/{device_id}/ping':
+    get:
+      summary: ''
+      operationId: getDevicesDevice_idPing
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: device_id
+        description: 'The ID of the device.'
+        example: 9
+        required: true
+        schema:
+          type: integer
+  '/devices/{device_id}/export-csv':
+    get:
+      summary: ''
+      operationId: getDevicesDevice_idExportCsv
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: device_id
+        description: 'The ID of the device.'
+        example: 9
+        required: true
+        schema:
+          type: integer
+  '/devices/{device_id}/console':
+    post:
+      summary: ''
+      operationId: postDevicesDevice_idConsole
+      description: ''
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+                  description: ''
+                  example: architecto
+              required:
+                - payload
+      security: []
+    parameters:
+      -
+        in: path
+        name: device_id
+        description: 'The ID of the device.'
+        example: 9
+        required: true
+        schema:
+          type: integer
+  '/devices/{device_id}/provisioning':
+    get:
+      summary: ''
+      operationId: getDevicesDevice_idProvisioning
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: device_id
+        description: 'The ID of the device.'
+        example: 9
+        required: true
+        schema:
+          type: integer
+  '/devices/{device_id}/firmware':
+    post:
+      summary: ''
+      operationId: postDevicesDevice_idFirmware
+      description: ''
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                firmware:
+                  type: string
+                  format: binary
+                  description: 'Must be a file. Must not be greater than 10240 kilobytes.'
+              required:
+                - firmware
+      security: []
+    parameters:
+      -
+        in: path
+        name: device_id
+        description: 'The ID of the device.'
+        example: 9
+        required: true
+        schema:
+          type: integer
+  '/devices/{device_id}/trigger-ota':
+    post:
+      summary: ''
+      operationId: postDevicesDevice_idTriggerOta
+      description: ''
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: device_id
+        description: 'The ID of the device.'
+        example: 9
+        required: true
+        schema:
+          type: integer
+  '/devices/{device_id}/reset-energy':
+    post:
+      summary: ''
+      operationId: postDevicesDevice_idResetEnergy
+      description: ''
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: device_id
+        description: 'The ID of the device.'
+        example: 9
+        required: true
+        schema:
+          type: integer
+  '/devices/{device_id}/restart':
+    post:
+      summary: ''
+      operationId: postDevicesDevice_idRestart
+      description: ''
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: device_id
+        description: 'The ID of the device.'
+        example: 9
+        required: true
+        schema:
+          type: integer
+  /settings/users:
+    post:
+      summary: ''
+      operationId: postSettingsUsers
+      description: ''
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: b
+                email:
+                  type: string
+                  description: 'Must be a valid email address. Must not be greater than 255 characters.'
+                  example: zbailey@example.net
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: '-0pBNvYgxw'
+                role:
+                  type: string
+                  description: ''
+                  example: admin
+                  enum:
+                    - admin
+                    - user
+              required:
+                - name
+                - email
+                - password
+                - role
+      security: []
+  '/settings/users/{id}':
+    delete:
+      summary: ''
+      operationId: deleteSettingsUsersId
+      description: ''
+      parameters: []
+      responses: {}
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user.'
+        example: 1
+        required: true
+        schema:
+          type: integer
