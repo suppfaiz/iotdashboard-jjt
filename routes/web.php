@@ -59,6 +59,8 @@ Route::middleware('auth')->group(function () {
         // Reports
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
         Route::get('/reports/download/{date}', [ReportController::class, 'download'])->name('reports.download');
+        Route::get('/reports/monthly/{month}', [ReportController::class, 'downloadMonthly'])->name('reports.download_monthly');
+        Route::get('/reports/monthly/{month}/export-csv', [\App\Http\Controllers\ExportController::class, 'exportMonthlyCsv'])->name('reports.export_monthly_csv');
     });
 });
 

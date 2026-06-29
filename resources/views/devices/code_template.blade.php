@@ -157,6 +157,9 @@ void setup_wifi() {
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
+  
+  WiFi.mode(WIFI_STA);
+  WiFi.setAutoReconnect(true); // Enable native ESP32 auto-reconnect
   WiFi.begin(ssid, password);
   
   // Non-blocking connect with timeout on boot
@@ -242,9 +245,21 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
 bool reconnect() {
   if (WiFi.status() != WL_CONNECTED) {
     static unsigned long lastWiFiAttempt = 0;
-    if (millis() - lastWiFiAttempt > 10000) {
+    static int wifiRetryCount = 0;
+    if (millis() - lastWiFiAttempt > 15000) {
       lastWiFiAttempt = millis();
-      Serial.println("WiFi disconnected. Reconnecting...");
+      wifiRetryCount++;
+      Serial.printf("WiFi disconnected (Attempt %d). Reconnecting...\n", wifiRetryCount);
+      
+      // Reset WiFi driver or reboot if failed consistently for ~5 minutes (20 attempts)
+      if (wifiRetryCount >= 20) {
+        Serial.println("WiFi connection failed persistently. Restarting ESP32 as ultimate fail-safe...");
+        delay(1000);
+        ESP.restart();
+      }
+      
+      WiFi.disconnect();
+      delay(100);
       WiFi.begin(ssid, password);
     }
     return false;

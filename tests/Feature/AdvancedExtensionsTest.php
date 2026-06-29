@@ -176,6 +176,27 @@ class AdvancedExtensionsTest extends TestCase
         $response->assertHeader('Content-Disposition', $expectedFilename);
     }
 
+    public function test_monthly_pdf_and_csv_reports_generation(): void
+    {
+        // Create a log in June 2026
+        DailyEnergyLog::create([
+            'device_id' => $this->device->id,
+            'date' => '2026-06-15',
+            'total_kwh_harian' => 12.34
+        ]);
+
+        // 1. Admin can access monthly PDF download
+        $response = $this->actingAs($this->admin)->get('/reports/monthly/2026-06');
+        $response->assertOk();
+        $response->assertHeader('Content-Type', 'application/pdf');
+
+        // 2. Admin can access monthly CSV export
+        $response = $this->actingAs($this->admin)->get('/reports/monthly/2026-06/export-csv');
+        $response->assertOk();
+        $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
+        $response->assertHeader('Content-Disposition', 'attachment; filename="monthly_energy_report_2026-06.csv"');
+    }
+
     public function test_role_based_access_control_and_validation(): void
     {
         // 1. Standard user cannot update device configuration
