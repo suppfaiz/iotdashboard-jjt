@@ -4,12 +4,12 @@ import Pusher from 'pusher-js';
 window.Pusher = Pusher;
 
 const reverbHost = import.meta.env.VITE_REVERB_HOST;
-const isLocalHostServe = (window.location.port === '8000'); // php artisan serve default
+const useConfiguredEnv = (reverbHost && reverbHost !== 'localhost');
 
-const wsHost = isLocalHostServe ? (reverbHost || '127.0.0.1') : window.location.hostname;
-const wsPort = isLocalHostServe ? (import.meta.env.VITE_REVERB_PORT ?? 8085) : (window.location.port || 80);
-const wssPort = isLocalHostServe ? (import.meta.env.VITE_REVERB_PORT ?? 8085) : (window.location.port || 443);
-const forceTLS = isLocalHostServe ? ((import.meta.env.VITE_REVERB_SCHEME ?? 'http') === 'https') : (window.location.protocol === 'https:');
+const wsHost = useConfiguredEnv ? reverbHost : window.location.hostname;
+const wsPort = useConfiguredEnv ? (import.meta.env.VITE_REVERB_PORT ?? 8085) : (window.location.port || 80);
+const wssPort = useConfiguredEnv ? (import.meta.env.VITE_REVERB_PORT ?? 8085) : (window.location.port || 443);
+const forceTLS = useConfiguredEnv ? ((import.meta.env.VITE_REVERB_SCHEME ?? 'http') === 'https') : (window.location.protocol === 'https:');
 
 window.Echo = new Echo({
     broadcaster: 'reverb',
