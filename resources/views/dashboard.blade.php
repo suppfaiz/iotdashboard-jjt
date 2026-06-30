@@ -250,6 +250,139 @@
     </div>
 </div>
 
+<!-- Live Electrical Grid Flow Diagram -->
+<div class="glass-card rounded-3xl p-6 shadow-sm border border-slate-200/80 mb-10 overflow-hidden relative">
+    <div class="absolute inset-0 opacity-[0.015] bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h2 class="text-xl font-bold text-slate-900 tracking-tight">Live Electrical Grid Flow</h2>
+            <p class="text-xs text-slate-500 font-medium mt-1">Real-time vector flow visualization of electricity distribution from PLN to area panels</p>
+        </div>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-green-200">
+            <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            Live Monitoring
+        </span>
+    </div>
+
+    <!-- SVG Container -->
+    <div class="w-full overflow-x-auto">
+        <div class="min-w-[800px] p-2">
+            <svg viewBox="0 0 800 300" class="w-full h-auto select-none" style="background: rgba(248, 250, 252, 0.35); border-radius: 20px; border: 1px solid rgba(226, 232, 240, 0.8);">
+                <style>
+                    .grid-flow-line {
+                        stroke-dasharray: 8, 8;
+                        stroke-dashoffset: 0;
+                        animation: grid-flow-anim 1.5s linear infinite;
+                    }
+                    @keyframes grid-flow-anim {
+                        to {
+                            stroke-dashoffset: -16;
+                        }
+                    }
+                    .grid-pulse {
+                        transform-origin: center;
+                        animation: grid-pulse-anim 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                    }
+                    @keyframes grid-pulse-anim {
+                        0%, 100% {
+                            transform: scale(1);
+                            opacity: 0.6;
+                        }
+                        50% {
+                            transform: scale(1.15);
+                            opacity: 0.15;
+                        }
+                    }
+                    .grid-node circle {
+                        transition: stroke-width 0.3s ease, stroke 0.3s ease, fill 0.3s ease;
+                    }
+                </style>
+                <!-- Definitions for markers and glow filters -->
+                <defs>
+                    <!-- Grid pattern inside the SVG for engineering style -->
+                    <pattern id="grid-pattern" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(226, 232, 240, 0.6)" stroke-width="1"/>
+                    </pattern>
+                </defs>
+
+                <!-- Apply grid background pattern -->
+                <rect width="100%" height="100%" fill="url(#grid-pattern)" />
+
+                <!-- Connecting Flow Line: PLN to MDP -->
+                <path d="M 120,150 L 260,150" fill="none" stroke="#e2e8f0" stroke-width="3.5" stroke-linecap="round" />
+                <path id="flow-line-pln-mdp-active" d="M 120,150 L 260,150" fill="none" stroke="#10b981" stroke-width="3.5" stroke-linecap="round" class="grid-flow-line" />
+
+                <!-- Dynamic Flow Lines: MDP to Groups -->
+                @php
+                    $numGroups = count($groups);
+                    $groupFlowData = [];
+                @endphp
+                @foreach($groups as $index => $group)
+                    @php
+                        // Calculate Y coordinate based on group count
+                        if ($numGroups <= 1) {
+                            $y = 150;
+                        } else {
+                            $y = 50 + ($index * 200 / ($numGroups - 1));
+                        }
+                        $groupFlowData[$group->id] = [
+                            'name' => $group->name,
+                            'y' => $y
+                        ];
+                    @endphp
+                    <!-- Backing line (inactive grey) -->
+                    <path d="M 280,150 C 400,150 400,{{ $y }} 560,{{ $y }}" fill="none" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round" />
+                    <!-- Animated overlay line (active green) -->
+                    <path id="flow-line-{{ $group->id }}" d="M 280,150 C 400,150 400,{{ $y }} 560,{{ $y }}" fill="none" stroke="#10b981" stroke-width="3.5" stroke-linecap="round" class="grid-flow-line" style="animation-duration: 2s;" />
+                @endforeach
+
+                <!-- 1. PLN Main Supply Node -->
+                <g class="grid-node" transform="translate(80, 150)">
+                    <circle r="36" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" />
+                    <circle r="30" fill="rgba(59, 130, 246, 0.08)" stroke="#3b82f6" stroke-width="2.5" />
+                    <!-- Lightning Bolt Icon -->
+                    <path d="M -6,-12 L 8,-3 L -2,2 L 8,13 L -8,3 L 1,-2 Z" fill="#3b82f6" />
+                    <text y="50" text-anchor="middle" class="text-[11px] font-black fill-slate-800">PLN SUPPLY</text>
+                    <text y="64" text-anchor="middle" class="text-[9px] font-bold fill-blue-600 tracking-wider">220V SOURCE</text>
+                </g>
+
+                <!-- 2. MDP (Main Distribution Panel) Node -->
+                <g class="grid-node" transform="translate(280, 150)">
+                    <circle r="34" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" />
+                    <circle r="28" fill="rgba(79, 70, 229, 0.06)" stroke="#4f46e5" stroke-width="2" />
+                    <!-- Box/Grid Icon -->
+                    <rect x="-10" y="-10" width="20" height="20" rx="3" fill="none" stroke="#4f46e5" stroke-width="2" />
+                    <line x1="-10" y1="0" x2="10" y2="0" stroke="#4f46e5" stroke-width="1.5" />
+                    <line x1="0" y1="-10" x2="0" y2="10" stroke="#4f46e5" stroke-width="1.5" />
+                    <text y="48" text-anchor="middle" class="text-[10px] font-extrabold fill-slate-850">MAIN MDP</text>
+                    <text y="60" text-anchor="middle" id="total-grid-power" class="text-[9px] font-bold fill-slate-500">0.0 W</text>
+                </g>
+
+                <!-- 3. Dynamic Group Nodes -->
+                @foreach($groups as $index => $group)
+                    @php
+                        $y = $groupFlowData[$group->id]['y'];
+                    @endphp
+                    <g id="flow-node-{{ $group->id }}" class="grid-node" transform="translate(560, {{ $y }})">
+                        <!-- Background glow effect ring -->
+                        <circle r="30" fill="rgba(16, 185, 129, 0.04)" stroke="rgba(16, 185, 129, 0.2)" stroke-width="3" class="grid-pulse" />
+                        <circle r="24" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+                        <circle r="20" fill="rgba(16, 185, 129, 0.08)" stroke="#10b981" stroke-width="2" id="node-circle-{{ $group->id }}" />
+                        
+                        <!-- Panel Icon inside node -->
+                        <path d="M -6,-6 L 6,-6 L 6,6 L -6,6 Z M -6,0 L 6,0 M 0,-6 L 0,6" fill="none" stroke="#10b981" stroke-width="1.5" id="node-icon-{{ $group->id }}" />
+                        
+                        <!-- Group details on the right -->
+                        <text x="35" y="-5" class="text-[12px] font-black fill-slate-900" text-anchor="start">{{ $group->name }}</text>
+                        <text x="35" y="10" id="flow-group-power-{{ $group->id }}" class="text-[11px] font-extrabold fill-emerald-600" text-anchor="start">0.0 W</text>
+                        <text x="35" y="22" id="flow-group-status-{{ $group->id }}" class="text-[8px] font-bold uppercase tracking-wider fill-emerald-500" text-anchor="start">Active</text>
+                    </g>
+                @endforeach
+            </svg>
+        </div>
+    </div>
+</div>
+
 <!-- Group Areas and Devices -->
 <div class="space-y-10">
     @forelse($groups as $group)
@@ -557,6 +690,96 @@
     const vMax = {{ $vMax }};
     const pMax = {{ $pMax }};
 
+    const deviceToGroupMap = {!! json_encode($groups->flatMap(function($g) {
+        return $g->devices->pluck('device_id')->mapWithKeys(fn($id) => [$id => $g->id]);
+    })) !!};
+
+    const devicePowerRegistry = {!! json_encode($groups->flatMap->devices->pluck('device_id')->mapWithKeys(fn($id) => [$id => (float)Cache::get("power:{$id}", 0)])) !!};
+
+    const groupDevicesMap = {!! json_encode($groups->mapWithKeys(fn($g) => [$g->id => $g->devices->pluck('device_id')->all()])) !!};
+
+    function updateElectricalFlowUI() {
+        let totalSystemPower = 0;
+        
+        for (const groupId in groupDevicesMap) {
+            const deviceIds = groupDevicesMap[groupId];
+            let groupPowerSum = 0;
+            
+            deviceIds.forEach(id => {
+                groupPowerSum += (devicePowerRegistry[id] || 0);
+            });
+            
+            totalSystemPower += groupPowerSum;
+            
+            // Update power label
+            const powerText = document.getElementById('flow-group-power-' + groupId);
+            const statusText = document.getElementById('flow-group-status-' + groupId);
+            const flowLine = document.getElementById('flow-line-' + groupId);
+            const nodeCircle = document.getElementById('node-circle-' + groupId);
+            const nodePulseRing = document.querySelector('#flow-node-' + groupId + ' .grid-pulse');
+            
+            if (powerText) {
+                powerText.textContent = groupPowerSum.toFixed(1) + ' W';
+            }
+            
+            if (groupPowerSum > 0) {
+                if (statusText) {
+                    statusText.textContent = 'Active';
+                    statusText.setAttribute('fill', '#10b981'); // emerald-500
+                }
+                if (flowLine) {
+                    flowLine.setAttribute('stroke', '#10b981');
+                    flowLine.style.animationPlayState = 'running';
+                    // Speed up flow animation based on consumption!
+                    // 2200W corresponds to very fast (0.35s), 0W corresponds to slow (2s)
+                    const speed = Math.max(0.35, 2 - (groupPowerSum / 2200) * 1.65);
+                    flowLine.style.animationDuration = speed + 's';
+                }
+                if (nodeCircle) {
+                    nodeCircle.setAttribute('stroke', '#10b981');
+                    nodeCircle.setAttribute('fill', 'rgba(16, 185, 129, 0.08)');
+                }
+                if (nodePulseRing) {
+                    nodePulseRing.style.display = 'block';
+                }
+            } else {
+                if (statusText) {
+                    statusText.textContent = 'Inactive';
+                    statusText.setAttribute('fill', '#94a3b8'); // slate-400
+                }
+                if (flowLine) {
+                    flowLine.setAttribute('stroke', '#cbd5e1'); // slate-300
+                    flowLine.style.animationPlayState = 'paused';
+                }
+                if (nodeCircle) {
+                    nodeCircle.setAttribute('stroke', '#cbd5e1');
+                    nodeCircle.setAttribute('fill', 'rgba(148, 163, 184, 0.05)');
+                }
+                if (nodePulseRing) {
+                    nodePulseRing.style.display = 'none';
+                }
+            }
+        }
+        
+        // Update main MDP power text
+        const mdpPowerText = document.getElementById('total-grid-power');
+        if (mdpPowerText) {
+            mdpPowerText.textContent = totalSystemPower.toFixed(1) + ' W';
+        }
+        
+        // Update PLN line
+        const plnLineActive = document.getElementById('flow-line-pln-mdp-active');
+        if (plnLineActive) {
+            if (totalSystemPower > 0) {
+                plnLineActive.style.display = 'block';
+                const plnSpeed = Math.max(0.35, 2 - (totalSystemPower / 4400) * 1.65);
+                plnLineActive.style.animationDuration = plnSpeed + 's';
+            } else {
+                plnLineActive.style.display = 'none';
+            }
+        }
+    }
+
     const energyRegistry = {!! json_encode($groups->flatMap->devices->pluck('device_id')->mapWithKeys(fn($id) => [$id => (float)Cache::get("daily_energy:{$id}", 0)])) !!};
     const costRegistry = {!! json_encode($groups->flatMap->devices->pluck('device_id')->mapWithKeys(fn($id) => [$id => (float)Cache::get("daily_cost:{$id}", Cache::get("daily_energy:{$id}", 0) * $plnTariff)])) !!};
 
@@ -672,6 +895,9 @@
             const pElem = document.getElementById('power-' + deviceId);
             if(pElem) pElem.innerText = parseFloat(data.power).toFixed(1);
 
+            devicePowerRegistry[deviceId] = parseFloat(data.power);
+            updateElectricalFlowUI();
+
             // Power threshold check
             const pVal = parseFloat(data.power);
             if(pVal > pMax) {
@@ -718,6 +944,7 @@
     const initDashboardEcho = () => {
         // Initial warnings render
         renderWarningsUI();
+        updateElectricalFlowUI();
 
         if (window.Echo) {
             console.log('Echo initialized, subscribing to global channel...');
@@ -755,6 +982,11 @@
                     }
                     if (wifiContainer) {
                         wifiContainer.classList.add('hidden');
+                    }
+
+                    if (devicePowerRegistry[deviceId] !== 0) {
+                        devicePowerRegistry[deviceId] = 0;
+                        updateElectricalFlowUI();
                     }
                 }
 
