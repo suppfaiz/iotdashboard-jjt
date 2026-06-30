@@ -439,82 +439,194 @@
     <div class="chapter-icon">🚀</div>
     <div class="chapter-text">
       <small>Bab 4</small>
-      <h2>Panduan Deployment <span>VPS (Docker)</span></h2>
+      <h2>Panduan Deployment <span>VPS (Docker & SSL)</span></h2>
     </div>
   </div>
   <div class="alert warning">
     <div class="alert-icon">⚠️</div>
     <div class="alert-content">
       <h5>Sebelum Memulai</h5>
-      <p>Pastikan VPS sudah memiliki akses internet dan Anda login sebagai user dengan hak <span class="mono">sudo</span>. Semua prasyarat (Docker, PHP, Composer, Node.js) akan dipasang <em>otomatis</em> oleh skrip.</p>
+      <p>Pastikan VPS Anda menggunakan sistem operasi berbasis Linux (seperti Ubuntu atau Debian) dengan akses internet aktif, dan Anda masuk sebagai user dengan hak <span class="mono">sudo</span>.</p>
     </div>
   </div>
+
   <ul class="steps">
     <li class="step-item">
       <div class="step-num">1</div>
       <div class="step-content">
-        <h4>Clone Repositori Project</h4>
+        <h4>Persiapan Server & Clone Repositori</h4>
+        <p>Jalankan perintah berikut untuk memperbarui paket sistem, memasang prasyarat (Git, Curl, Node.js, dan NPM), serta menginstal Docker Engine di VPS Host:</p>
         <div class="cmd-block">
-          <span class="prompt">$</span> git clone https://github.com/&lt;username&gt;/DashboardIOTbaru.git<br>
-          <span class="prompt">$</span> cd DashboardIOTbaru
+          <span class="comment"># Update sistem dan install paket dasar</span><br>
+          <span class="prompt">$</span> sudo apt update && sudo apt upgrade -y<br>
+          <span class="prompt">$</span> sudo apt install -y git curl nodejs npm<br><br>
+          <span class="comment"># Pasang Docker & Docker Compose secara resmi</span><br>
+          <span class="prompt">$</span> curl -fsSL https://get.docker.com -o get-docker.sh<br>
+          <span class="prompt">$</span> sudo sh get-docker.sh<br><br>
+          <span class="comment"># Clone source code aplikasi ke VPS</span><br>
+          <span class="prompt">$</span> git clone https://github.com/suppfaiz/iotdashboard-jjt.git<br>
+          <span class="prompt">$</span> cd iotdashboard-jjt
         </div>
       </div>
     </li>
+
     <li class="step-item">
       <div class="step-num">2</div>
       <div class="step-content">
-        <h4>Jalankan Script Installer</h4>
-        <p>Script otomatis: deteksi IP publik, install dependencies, compile aset, build container, migrasi database.</p>
+        <h4>Konfigurasi Berkas Lingkungan (.env)</h4>
+        <p>Salin file template <span class="mono">.env.example</span> menjadi berkas konfigurasi aktif <span class="mono">.env</span>, lalu edit untuk menyesuaikan konfigurasi produksi:</p>
         <div class="cmd-block">
-          <span class="prompt">$</span> chmod +x install.sh<br>
-          <span class="prompt">$</span> ./install.sh
+          <span class="prompt">$</span> cp .env.example .env<br>
+          <span class="prompt">$</span> nano .env
         </div>
+        <p>Sesuaikan nilai variabel lingkungan berikut demi keamanan dan fungsi real-time di VPS:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Variabel .env</th>
+              <th>Nilai Produksi / VPS</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>APP_ENV</strong></td>
+              <td><span class="mono">production</span></td>
+              <td>Menandakan aplikasi berjalan di lingkungan produksi.</td>
+            </tr>
+            <tr>
+              <td><strong>APP_DEBUG</strong></td>
+              <td><span class="mono">false</span></td>
+              <td>Menonaktifkan pesan error detail demi keamanan.</td>
+            </tr>
+            <tr>
+              <td><strong>APP_URL</strong></td>
+              <td><span class="mono">https://domain-vps-anda.com</span></td>
+              <td>URL domain utama VPS Anda (wajib gunakan HTTPS).</td>
+            </tr>
+            <tr>
+              <td><strong>VITE_REVERB_SCHEME</strong></td>
+              <td><span class="mono">https</span></td>
+              <td>Memaksa koneksi WebSocket menggunakan enkripsi TLS (<span class="mono">wss://</span>).</td>
+            </tr>
+            <tr>
+              <td><strong>VITE_REVERB_PORT</strong></td>
+              <td><span class="mono">443</span></td>
+              <td>Koneksi WebSocket diarahkan melalui port HTTPS standar.</td>
+            </tr>
+            <tr>
+              <td><strong>DB_PASSWORD</strong></td>
+              <td><span class="mono">PasswordAmanSatu23!</span></td>
+              <td>Ganti dengan password database yang acak dan kuat.</td>
+            </tr>
+            <tr>
+              <td><strong>MQTT_PASSWORD</strong></td>
+              <td><span class="mono">PasswordBrokerAman456!</span></td>
+              <td>Ganti dengan credential broker MQTT yang kuat.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </li>
+
     <li class="step-item">
       <div class="step-num">3</div>
       <div class="step-content">
-        <h4>Masukkan IP / Domain VPS</h4>
-        <p>Script akan mendeteksi IP publik secara otomatis. Tekan <strong>Enter</strong> untuk menerima, atau ketik IP/domain kustom.</p>
+        <h4>Kompilasi Aset Frontend (Host)</h4>
+        <p>Sebelum membangun container Docker, aset frontend (CSS, Javascript, Echo Client) harus dikompilasi terlebih dahulu agar memuat variabel Reverb yang dinamis:</p>
         <div class="cmd-block">
-          <span class="string">Enter your VPS Public IP Address or Domain [default: 123.45.67.89]: </span>
+          <span class="comment"># Install dependencies npm</span><br>
+          <span class="prompt">$</span> npm install<br><br>
+          <span class="comment"># Jalankan kompilasi produksi</span><br>
+          <span class="prompt">$</span> npm run build
         </div>
       </div>
     </li>
+
     <li class="step-item">
       <div class="step-num">4</div>
       <div class="step-content">
-        <h4>Tunggu Proses Selesai (3-10 menit)</h4>
+        <h4>Jalankan Container Docker</h4>
+        <p>Bangun dan aktifkan seluruh stack aplikasi (PHP Laravel App, MySQL, Mosquitto MQTT Broker, phpMyAdmin) dalam mode daemon (background):</p>
         <div class="cmd-block">
-          <span class="comment">=========================================================</span><br>
-          <span class="comment">   DEPLOYMENT SUCCESSFUL!</span><br>
-          <span class="comment">=========================================================</span><br>
-          <span class="keyword">Web URL:</span>        http://&lt;VPS_IP&gt;<br>
-          <span class="keyword">Database GUI:</span>   http://&lt;VPS_IP&gt;:8082<br>
-          <span class="keyword">MQTT Broker:</span>    mqtt://&lt;VPS_IP&gt;:1883<br>
-          <span class="keyword">WebSocket Port:</span> 8085
+          <span class="prompt">$</span> docker compose up -d --build
+        </div>
+      </div>
+    </li>
+
+    <li class="step-item">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h4>Konfigurasi Nginx Host & SSL Let's Encrypt (Reverse Proxy)</h4>
+        <p>Agar aplikasi dapat diakses melalui port standar web (80/443) dengan sertifikat SSL gratis (HTTPS), pasang Nginx di VPS host untuk melakukan reverse proxy ke container Docker:</p>
+        <div class="cmd-block">
+          <span class="comment"># Pasang Nginx & Certbot SSL</span><br>
+          <span class="prompt">$</span> sudo apt install -y nginx certbot python3-certbot-nginx<br><br>
+          <span class="comment"># Buat berkas server block baru</span><br>
+          <span class="prompt">$</span> sudo nano /etc/nginx/sites-available/dashboard
+        </div>
+        <p>Tempelkan konfigurasi reverse proxy berikut (sesuaikan <span class="mono">server_name</span> dengan domain Anda):</p>
+        <div class="cmd-block" style="background:#0f172a; color:#cbd5e1; font-family:'JetBrains Mono',monospace; padding:15px; border-radius:8px;">
+<span style="color:#f43f5e">server</span> {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">listen</span> 80;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">server_name</span> domain-vps-anda.com;<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#f43f5e">location</span> / {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_pass</span> http://127.0.0.1:8080;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_set_header</span> Host $host;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_set_header</span> X-Real-IP $remote_addr;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_set_header</span> X-Forwarded-For $proxy_add_x_forwarded_for;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_set_header</span> X-Forwarded-Proto $scheme;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+        </div>
+        <p>Aktifkan konfigurasi Nginx dan pasang sertifikat SSL Let's Encrypt secara otomatis:</p>
+        <div class="cmd-block">
+          <span class="comment"># Aktifkan konfigurasi link-symbolic</span><br>
+          <span class="prompt">$</span> sudo ln -s /etc/nginx/sites-available/dashboard /etc/nginx/sites-enabled/<br>
+          <span class="prompt">$</span> sudo systemctl restart nginx<br><br>
+          <span class="comment"># Ajukan SSL Certbot otomatis</span><br>
+          <span class="prompt">$</span> sudo certbot --nginx -d domain-vps-anda.com
+        </div>
+      </div>
+    </li>
+
+    <li class="step-item">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <h4>Konfigurasi Firewall (UFW)</h4>
+        <p>Tutup port-port yang tidak diperlukan agar VPS Anda aman dari scanning luar. Anda hanya perlu membuka port SSH, HTTP, HTTPS, dan port MQTT untuk komunikasi ESP32:</p>
+        <div class="cmd-block">
+          <span class="comment"># Aturan dasar firewall</span><br>
+          <span class="prompt">$</span> sudo ufw default deny incoming<br>
+          <span class="prompt">$</span> sudo ufw default allow outgoing<br><br>
+          <span class="comment"># Buka port penting</span><br>
+          <span class="prompt">$</span> sudo ufw allow 22/tcp<br>
+          <span class="prompt">$</span> sudo ufw allow 80/tcp<br>
+          <span class="prompt">$</span> sudo ufw allow 443/tcp<br>
+          <span class="prompt">$</span> sudo ufw allow 1883/tcp<br><br>
+          <span class="comment"># Aktifkan firewall</span><br>
+          <span class="prompt">$</span> sudo ufw enable
+        </div>
+        <div class="alert info">
+          <div class="alert-icon">💡</div>
+          <div class="alert-content">
+            <h5>Mengapa Port 8085 & 8082 Tidak Perlu Dibuka?</h5>
+            <p>Port Reverb WebSocket (8085) disalurkan dengan aman melalui reverse proxy Nginx pada port HTTPS (443) (lewat route <span class="mono">/app</span>). Port database phpMyAdmin (8082) sengaja tidak dibuka untuk publik agar tidak diretas; jika ingin membukanya, akseslah melalui SSH Tunneling.</p>
+          </div>
         </div>
       </div>
     </li>
   </ul>
+
   <div class="alert success">
     <div class="alert-icon">✅</div>
     <div class="alert-content">
-      <h5>Kredensial Default Aplikasi Web</h5>
-      <p>Email: <span class="mono">admin@admin.com</span> &nbsp;|&nbsp; Password: <span class="mono">password</span> &nbsp;— Ganti segera setelah login pertama!</p>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">🔄</div><div><div class="card-title">Jika IP VPS Berubah</div><div class="card-subtitle">Prosedur update konfigurasi otomatis</div></div></div>
-    <div class="cmd-block">
-      <span class="comment"># Jalankan ulang installer untuk update IP otomatis</span><br>
-      <span class="prompt">$</span> ./install.sh<br><br>
-      <span class="comment"># Atau update manual</span><br>
-      <span class="prompt">$</span> nano .env  <span class="comment"># ubah REVERB_HOST dan VITE_REVERB_HOST</span><br>
-      <span class="prompt">$</span> npm run build &amp;&amp; docker compose restart app
+      <h5>Deployment Selesai & Sukses!</h5>
+      <p>Aplikasi Anda sekarang dapat diakses secara aman di <span class="mono">https://domain-vps-anda.com</span> dengan enkripsi SSL penuh, dan metrik data dari mikrokontroler akan langsung tampil secara <strong>real-time</strong> di HP/Laptop manapun!</p>
     </div>
   </div>
 </div>
+
 
 <!-- BAB 5: KONFIGURASI .ENV -->
 <div class="page">
