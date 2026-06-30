@@ -428,7 +428,7 @@
                         </h3>
                         <button onclick="document.getElementById('debug-log').innerHTML = ''" class="text-xs text-gray-550 hover:text-gray-900 transition-colors">Clear Log</button>
                     </div>
-                    <div class="p-4 bg-gray-900 font-mono text-xs text-green-400 h-44 overflow-y-auto" id="debug-log">
+                    <div class="p-4 bg-gray-900 font-mono text-xs text-green-400 overflow-y-auto" style="height: 320px;" id="debug-log">
                         <div class="mb-1"><span class="text-gray-500">[{{ now()->format('H:i:s') }}]</span> System ready. Waiting for telemetry or ping...</div>
                     </div>
                 </div>
