@@ -353,7 +353,9 @@ void loop() {
     payload += "\"current\":" + String(current, 3) + ",";
     payload += "\"power\":" + String(power, 2) + ",";
     payload += "\"energy\":" + String(energy, 3) + ",";
-    payload += "\"ip\":\"" + WiFi.localIP().toString() + "\"";
+    payload += "\"ip\":\"" + WiFi.localIP().toString() + "\",";
+    payload += "\"rssi\":" + String(WiFi.RSSI()) + ",";
+    payload += "\"heap\":" + String(ESP.getFreeHeap());
     payload += "}";
     
     if (isConnected) {

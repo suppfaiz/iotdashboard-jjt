@@ -277,11 +277,19 @@
                                 <p class="text-[10px] text-slate-400 font-mono mt-0.5 tracking-wider">{{ $device->device_id }}</p>
                             </div>
                             
-                            <!-- Status Badge -->
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $isDeviceActive ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200' }}" id="status-{{ $device->device_id }}">
-                                <span class="w-1.5 h-1.5 mr-1.5 rounded-full {{ $isDeviceActive ? 'bg-green-500 animate-pulse' : 'bg-red-500' }}" id="status-dot-{{ $device->device_id }}"></span>
-                                <span id="status-text-{{ $device->device_id }}">{{ $isDeviceActive ? 'Active' : 'Inactive' }}</span>
-                            </span>
+                            <!-- Status & WiFi Badge -->
+                            <div class="flex flex-col items-end gap-1.5">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $isDeviceActive ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200' }}" id="status-{{ $device->device_id }}">
+                                    <span class="w-1.5 h-1.5 mr-1.5 rounded-full {{ $isDeviceActive ? 'bg-green-500 animate-pulse' : 'bg-red-500' }}" id="status-dot-{{ $device->device_id }}"></span>
+                                    <span id="status-text-{{ $device->device_id }}">{{ $isDeviceActive ? 'Active' : 'Inactive' }}</span>
+                                </span>
+                                @php
+                                    $rssi = Cache::get("rssi:{$device->device_id}", null);
+                                @endphp
+                                <span class="text-[10px] font-mono text-slate-550 flex items-center gap-1 {{ $isDeviceActive && $rssi !== null ? '' : 'hidden' }}" id="wifi-container-{{ $device->device_id }}">
+                                    📶 <span id="wifi-rssi-{{ $device->device_id }}">{{ $rssi }} dBm</span>
+                                </span>
+                            </div>
                         </div>
 
                         <!-- PZEM Metrics Grid -->
@@ -612,6 +620,14 @@
             cardElem.classList.add('flash-active');
             cardElem.classList.add('device-active');
             cardElem.setAttribute('data-last-seen', Math.floor(Date.now() / 1000));
+
+            // Show and update WiFi RSSI if available
+            if(data.rssi !== undefined) {
+                const wifiRssiElem = document.getElementById('wifi-rssi-' + deviceId);
+                const wifiContainer = document.getElementById('wifi-container-' + deviceId);
+                if(wifiRssiElem) wifiRssiElem.innerText = parseInt(data.rssi) + ' dBm';
+                if(wifiContainer) wifiContainer.classList.remove('hidden');
+            }
         }
 
         // Live connection means offline alert is removed
@@ -723,11 +739,15 @@
                     const badgeElem = document.getElementById('status-' + deviceId);
                     const dotElem = document.getElementById('status-dot-' + deviceId);
                     const textElem = document.getElementById('status-text-' + deviceId);
+                    const wifiContainer = document.getElementById('wifi-container-' + deviceId);
 
                     if (badgeElem && dotElem && textElem && textElem.innerText === "Active") {
                         badgeElem.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200";
                         dotElem.className = "w-1.5 h-1.5 mr-1.5 rounded-full bg-red-500";
                         textElem.innerText = "Inactive";
+                    }
+                    if (wifiContainer) {
+                        wifiContainer.classList.add('hidden');
                     }
                 }
 

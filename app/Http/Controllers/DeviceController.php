@@ -149,7 +149,7 @@ class DeviceController extends Controller
             $oldMqttPassword = $matchesPass[1];
         }
 
-        if (strpos($oldCode, 'LittleFS') === false || $oldMqttHost !== $mqtt_host || $oldMqttPort !== $mqtt_port || $oldMqttUseTls !== $mqtt_use_tls || $oldMqttUser !== $mqtt_user || $oldMqttPassword !== $mqtt_password) {
+        if (strpos($oldCode, 'LittleFS') === false || strpos($oldCode, 'rssi') === false || $oldMqttHost !== $mqtt_host || $oldMqttPort !== $mqtt_port || $oldMqttUseTls !== $mqtt_use_tls || $oldMqttUser !== $mqtt_user || $oldMqttPassword !== $mqtt_password) {
             $wifi_ssid = 'YOUR_WIFI_SSID';
             if (preg_match('/const char\* ssid = "(.*?)";/', $oldCode, $matchesSsid)) {
                 $wifi_ssid = $matchesSsid[1];
