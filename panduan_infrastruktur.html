@@ -904,6 +904,10 @@
         <div class="toc-num">18</div><span class="toc-text">Dokumentasi Interaktif API (Scribe)</span><span
           class="toc-page-num">22</span>
       </li>
+      <li class="toc-item">
+        <div class="toc-num">19</div><span class="toc-text">Troubleshooting Khusus Real-Time &amp; MQTT VPS</span><span
+          class="toc-page-num">23</span>
+      </li>
     </ul>
   </div>
 
@@ -3130,9 +3134,123 @@
       </div>
     </div>
 
+    <!-- BAB 19: TROUBLESHOOTING KHUSUS REAL-TIME & MQTT VPS -->
+    <div class="page">
+      <div class="chapter-banner">
+        <div class="chapter-icon">🚀</div>
+        <div class="chapter-text">
+          <small>Bab 19</small>
+          <h2>Troubleshooting <span>Khusus Real-Time &amp; MQTT VPS</span></h2>
+        </div>
+      </div>
+      <p>Bab ini merangkum penyelesaian masalah riil yang dihadapi saat mendeploy sistem pemantauan daya pada lingkungan VPS intranet kantor (jaringan lokal, contoh IP: <span class="mono">192.168.254.254</span>) di mana terdapat pemblokiran port non-standar dan batasan perizinan berkas di tingkat Docker.</p>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon red">🔒</div>
+          <div>
+            <div class="card-title">19.1 Penanganan Port WebSocket 8085 Terblokir</div>
+            <div class="card-subtitle">Menyalurkan koneksi WebSocket menumpang melalui Port 80 (HTTP)</div>
+          </div>
+        </div>
+        <p><strong>Kasus:</strong> Di jaringan lokal kantor, peramban (browser) gagal melakukan jabat tangan (handshake) ke port Reverb <span class="mono">8085</span> secara langsung karena diblokir oleh sistem firewall/router internal.</p>
+        <p><strong>Solusi:</strong> Memaksa WebSocket terhubung menggunakan port aktif halaman web (dalam hal ini Port 80) melalui reverse proxy Nginx ke jalur <span class="mono">/app</span>.</p>
+        <p><strong>Langkah Konfigurasi Client (<span class="mono">resources/js/echo.js</span>)</strong>:</p>
+        <div class="cmd-block">
+          <span class="comment">// Gunakan properti URL peramban secara dinamis untuk port dan host</span><br>
+          const wsHost = window.location.hostname;<br>
+          const wsPort = window.location.port || 80;<br>
+          const wssPort = window.location.port || 443;<br>
+          const forceTLS = window.location.protocol === 'https:';
+        </div>
+        <p><strong>Langkah Konfigurasi Nginx Kontainer (<span class="mono">.docker/nginx.conf</span>)</strong>:</p>
+        <div class="cmd-block">
+          location /app {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;proxy_pass http://127.0.0.1:8085;<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;proxy_http_version 1.1;<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Upgrade $http_upgrade;<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Connection "Upgrade";<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Host $host;<br>
+          }
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon orange">📡</div>
+          <div>
+            <div class="card-title">19.2 Aktivasi Driver Broadcast Laravel Reverb</div>
+            <div class="card-subtitle">Mengubah driver broadcast dari log ke server WebSocket aktif</div>
+          </div>
+        </div>
+        <p><strong>Kasus:</strong> WebSocket browser sukses terhubung (status <span class="mono">101</span>), namun angka pemantauan di layar tetap diam. Saat log diperiksa, tertulis <span class="mono">Broadcasting [...] in channels [telemetry]</span> di berkas <span class="mono">laravel.log</span>.</p>
+        <p><strong>Penyebab:</strong> Driver penyiaran Laravel secara tidak sengaja diatur ke mode <span class="mono">log</span> yang hanya menyimpan riwayat di file teks lokal.</p>
+        <p><strong>Solusi:</strong></p>
+        <ol>
+          <li>Buka file <span class="mono">.env</span> di VPS, lalu ubah pengaturan berikut:<br>
+            <span class="mono">BROADCAST_CONNECTION=reverb</span>
+          </li>
+          <li>Bersihkan cache konfigurasi Laravel di dalam kontainer:<br>
+            <div class="cmd-block">
+              <span class="prompt">$</span> docker compose exec app php artisan config:clear
+            </div>
+          </li>
+          <li>Mulai ulang container:<br>
+            <div class="cmd-block">
+              <span class="prompt">$</span> docker compose restart
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon red">💥</div>
+          <div>
+            <div class="card-title">19.3 Mosquitto (MQTT) Mengalami Loop Crash / Restarting</div>
+            <div class="card-subtitle">Memperbaiki hak kepemilikan dan perizinan berkas passwd</div>
+          </div>
+        </div>
+        <p><strong>Kasus:</strong> Status kontainer MQTT terus-menerus bernilai <span class="mono">Restarting</span>. Saat log diperiksa melalui <span class="mono">docker compose logs mqtt</span>, muncul pesan kesalahan:<br>
+          <span class="mono">password-file: Error: Unable to open pwfile "/mosquitto/config/passwd"</span> atau pembatasan karena pemilik berkas adalah <span class="mono">root</span>.</p>
+        <p><strong>Penyebab:</strong> Mosquitto v2.0+ menolak memuat konfigurasi jika file password dapat dibaca secara bebas (world-readable) atau bukan milik user internal mosquitto (UID <span class="mono">1883</span>).</p>
+        <p><strong>Solusi (Jalankan berurutan di host VPS)</strong>:</p>
+        <div class="cmd-block">
+          <span class="comment"># 1. Hapus berkas/folder password yang lama agar bersih</span><br>
+          <span class="prompt">$</span> sudo rm -rf .docker/passwd<br><br>
+          <span class="comment"># 2. Buat berkas kosong baru</span><br>
+          <span class="prompt">$</span> sudo touch .docker/passwd<br><br>
+          <span class="comment"># 3. Generate password terenkripsi untuk sensor</span><br>
+          <span class="prompt">$</span> sudo docker run --rm -v "$(pwd)/.docker:/config" eclipse-mosquitto:latest mosquitto_passwd -b /config/passwd jamkrida_sensor 756c1c21fc6b204993fc0614210ef3dc<br><br>
+          <span class="comment"># 4. Ubah kepemilikan ke UID mosquitto (1883) &amp; batasi izin ke 600 (owner only)</span><br>
+          <span class="prompt">$</span> sudo chown 1883:1883 .docker/passwd<br>
+          <span class="prompt">$</span> sudo chmod 600 .docker/passwd<br><br>
+          <span class="comment"># 5. Build ulang kontainer MQTT</span><br>
+          <span class="prompt">$</span> sudo docker compose up -d --build mqtt
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon blue">🔌</div>
+          <div>
+            <div class="card-title">19.4 Penyiaran Internal Kontainer via 127.0.0.1</div>
+            <div class="card-subtitle">Menghindari pemblokiran firewall eksternal pada komunikasi kontainer</div>
+          </div>
+        </div>
+        <p><strong>Masalah:</strong> Saat Laravel (PHP) mencoba mem-broadcast data sensor dari MQTT ke Reverb, Laravel mencoba menghubungi IP luar VPS (<span class="mono">192.168.254.254:8085</span>). Firewall eksternal (UFW) pada VPS sering kali memblokir akses balik kontainer Docker ke host-nya sendiri.</p>
+        <p><strong>Solusi:</strong> Karena Laravel dan Reverb berjalan di satu kontainer yang sama, ubah target host penyiaran backend Laravel ke IP internal lokal agar tidak dibatasi oleh firewall UFW.</p>
+        <p>Ubah baris berkas <span class="mono">.env</span> di VPS menjadi:</p>
+        <div class="cmd-block">
+          REVERB_HOST="127.0.0.1"
+        </div>
+        <p>Dengan pengaturan ini, browser tetap terhubung ke IP publik/lokal VPS Anda lewat Nginx Port 80, sedangkan Laravel mem-broadcast data sensor langsung ke Reverb secara internal tanpa melewati port luar.</p>
+      </div>
+    </div>
+
     <div class="divider"></div>
     <p style="text-align:center; color:#94a3b8; font-size:9pt; margin-top:20px;">
-      📄 Jamkrida Energy IoT Dashboard — Panduan Infrastruktur v2.1 &nbsp;|&nbsp; 18 Bab &nbsp;|&nbsp; Lengkap<br>
+      📄 Jamkrida Energy IoT Dashboard — Panduan Infrastruktur v2.1 &nbsp;|&nbsp; 19 Bab &nbsp;|&nbsp; Lengkap<br>
       Dibangun dengan ❤️ menggunakan Laravel 12, Docker, Eclipse Mosquitto &amp; ESP32
     </p>
   </div>
