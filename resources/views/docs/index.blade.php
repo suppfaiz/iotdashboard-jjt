@@ -21,6 +21,9 @@
             <a href="#scheduler" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
                 5. Scheduler & Logging
             </a>
+            <a href="#vps-setup" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                6. VPS Deployment Guide
+            </a>
         </nav>
     </aside>
 
@@ -176,6 +179,140 @@
                         <div class="bg-gray-800 rounded p-4 text-xs font-mono text-white">
                             <span class="text-gray-400 block mb-1"># Run daily log command</span>
                             <code>php artisan energy:log-daily</code>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6: VPS Deployment Guide -->
+            <section id="vps-setup" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600 text-sm font-bold">6</span>
+                    VPS Deployment Guide (Docker & SSL)
+                </h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    Panduan langkah-demi-langkah yang rinci dan teratur untuk melakukan deployment sistem Jamkrida Energy ke server VPS produksi berbasis Linux (Ubuntu/Debian).
+                </p>
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-6">
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 mb-2">Langkah 1: Persiapan Server & Prasyarat</h4>
+                        <p class="text-xs text-gray-600 mb-2 leading-relaxed">
+                            Jalankan perintah ini di terminal VPS Anda untuk menginstal Docker, Docker Compose, Git, dan Node.js/NPM:
+                        </p>
+                        <pre class="bg-gray-800 text-white rounded p-3 text-xs overflow-x-auto font-mono"><code># Update sistem
+sudo apt update && sudo apt upgrade -y
+
+# Install Git, Curl, Node.js & NPM
+sudo apt install -y git curl nodejs npm
+
+# Install Docker & Docker Compose
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh</code></pre>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 mb-2">Langkah 2: Kloning Repositori & Setup Environment</h4>
+                        <p class="text-xs text-gray-600 mb-2 leading-relaxed">
+                            Salin repositori ke VPS Anda, salin berkas konfigurasi, lalu sesuaikan parameter produksi:
+                        </p>
+                        <pre class="bg-gray-800 text-white rounded p-3 text-xs overflow-x-auto font-mono"><code># Clone repo
+git clone https://github.com/suppfaiz/iotdashboard-jjt.git
+cd iotdashboard-jjt
+
+# Salin env example ke env aktif
+cp .env.example .env
+
+# Edit berkas .env
+nano .env</code></pre>
+                        <div class="mt-2 text-xs text-gray-500 font-medium">Pengaturan Penting di <code>.env</code> VPS:</div>
+                        <ul class="list-disc pl-5 mt-1 space-y-1 text-xs text-gray-600">
+                            <li><code>APP_ENV=production</code></li>
+                            <li><code>APP_DEBUG=false</code></li>
+                            <li><code>APP_URL=https://domain-vps-anda.com</code></li>
+                            <li><code>VITE_REVERB_SCHEME=https</code></li>
+                            <li><code>VITE_REVERB_PORT=443</code></li>
+                            <li>Ganti <code>DB_PASSWORD</code> dan <code>MQTT_PASSWORD</code> dengan password yang acak dan kuat.</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 mb-2">Langkah 3: Kompilasi Aset Frontend di VPS Host</h4>
+                        <p class="text-xs text-gray-600 mb-2 leading-relaxed">
+                            Kompilasi aset UI frontend Anda untuk performa produksi sebelum membangun container Docker:
+                        </p>
+                        <pre class="bg-gray-800 text-white rounded p-3 text-xs overflow-x-auto font-mono"><code># Install dependencies node
+npm install
+
+# Jalankan build production untuk aset Javascript/CSS
+npm run build</code></pre>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 mb-2">Langkah 4: Jalankan Container Docker</h4>
+                        <p class="text-xs text-gray-600 mb-2 leading-relaxed">
+                            Mulai seluruh layanan (Aplikasi, MySQL, Mosquitto MQTT Broker, phpMyAdmin) menggunakan Docker Compose:
+                        </p>
+                        <pre class="bg-gray-800 text-white rounded p-3 text-xs overflow-x-auto font-mono"><code># Jalankan container di background & lakukan build image
+docker compose up -d --build</code></pre>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 mb-2">Langkah 5: Konfigurasi Nginx di Host & SSL Gratis (Certbot)</h4>
+                        <p class="text-xs text-gray-600 mb-2 leading-relaxed">
+                            Supaya aplikasi Anda dapat diakses lewat domain HTTPS dan koneksi WebSocket aman (<code>wss://</code>) berjalan, buatlah Nginx Reverse Proxy di host VPS:
+                        </p>
+                        <pre class="bg-gray-800 text-white rounded p-3 text-xs overflow-x-auto font-mono"><code># Install Nginx & Certbot SSL
+sudo apt install -y nginx certbot python3-certbot-nginx
+
+# Buat konfigurasi server block
+sudo nano /etc/nginx/sites-available/dashboard</code></pre>
+                        <div class="mt-2 text-xs text-gray-500 font-medium">Isi file konfigurasi Nginx (<code>/etc/nginx/sites-available/dashboard</code>):</div>
+                        <pre class="bg-gray-800 text-white rounded p-3 text-xs overflow-x-auto font-mono"><code>server {
+    listen 80;
+    server_name domain-vps-anda.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}</code></pre>
+                        <p class="text-xs text-gray-600 my-2 leading-relaxed">
+                            Aktifkan konfigurasi dan pasang sertifikat SSL Let's Encrypt secara otomatis:
+                        </p>
+                        <pre class="bg-gray-800 text-white rounded p-3 text-xs overflow-x-auto font-mono"><code># Aktifkan konfigurasi
+sudo ln -s /etc/nginx/sites-available/dashboard /etc/nginx/sites-enabled/
+sudo systemctl restart nginx
+
+# Jalankan Certbot SSL
+sudo certbot --nginx -d domain-vps-anda.com</code></pre>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 mb-2">Langkah 6: Atur Aturan Firewall Server (UFW)</h4>
+                        <p class="text-xs text-gray-600 mb-2 leading-relaxed">
+                            Batasi port luar yang terbuka di VPS Anda demi keamanan, hanya buka port-port penting berikut ini:
+                        </p>
+                        <pre class="bg-gray-800 text-white rounded p-3 text-xs overflow-x-auto font-mono"><code># Tolak semua koneksi masuk secara default
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# Izinkan SSH (Akses Server)
+sudo ufw allow 22/tcp
+
+# Izinkan port web (HTTP & HTTPS untuk Web & WebSockets)
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+# Izinkan port MQTT broker (untuk pengiriman data dari ESP32)
+sudo ufw allow 1883/tcp
+
+# Aktifkan firewall
+sudo ufw enable</code></pre>
+                        <div class="border-l-4 border-blue-500 bg-blue-50 p-3 rounded-r-xl mt-3 text-xs text-blue-800">
+                            <strong>Mengapa port 8085 tidak perlu dibuka?</strong> Karena kita sudah menggunakan Nginx Reverse Proxy di port 443 (HTTPS) yang secara otomatis menyalurkan semua traffic WebSocket ke port internal 8085 di dalam Docker.
                         </div>
                     </div>
                 </div>
