@@ -491,7 +491,7 @@
             });
     };
 
-    document.addEventListener('DOMContentLoaded', () => {
+    const initEcho = () => {
         if(window.Echo) {
             logDebug('WebSocket connected. Subscribed to telemetry channel.');
             window.Echo.channel('telemetry')
@@ -610,7 +610,13 @@
                     }
                 });
         }
-    });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initEcho);
+    } else {
+        initEcho();
+    }
 
     window.copyCode = function() {
         const codeElement = document.getElementById('cpp-code');
