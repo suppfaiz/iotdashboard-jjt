@@ -3246,6 +3246,28 @@
         </div>
         <p>Dengan pengaturan ini, browser tetap terhubung ke IP publik/lokal VPS Anda lewat Nginx Port 80, sedangkan Laravel mem-broadcast data sensor langsung ke Reverb secara internal tanpa melewati port luar.</p>
       </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon green">🤖</div>
+          <div>
+            <div class="card-title">19.5 Penggunaan Perintah Interaktif Telegram Bot</div>
+            <div class="card-subtitle">Mendapatkan status dan metrik perangkat secara interaktif dari obrolan bot</div>
+          </div>
+        </div>
+        <p><strong>Deskripsi:</strong> Bot Telegram Anda sekarang mendukung perintah interaktif dua arah tanpa membutuhkan IP publik/SSL (Webhooks), berkat daemon Long Polling latar belakang.</p>
+        <p><strong>Daftar Perintah yang Didukung di Chat/Grup Bot:</strong></p>
+        <ul>
+          <li>📍 <span class="mono">/check</span> atau <span class="mono">/status</span> atau <span class="mono">/devices</span>: Memeriksa status keaktifan (Online/Offline) seluruh perangkat beserta nilai Voltase, Arus, Daya, dan Energi terbarunya saat ini.</li>
+          <li>📍 <span class="mono">/help</span> atau <span class="mono">/start</span>: Menampilkan pesan panduan penggunaan bot.</li>
+        </ul>
+        <p><strong>Cara Memulai Ulang Daemon Bot di VPS:</strong></p>
+        <p>Setelah menarik kode terbaru dari GitHub, jalankan perintah ini di VPS untuk mengaktifkan daemon pembaca pesan Telegram:</p>
+        <div class="cmd-block">
+          <span class="comment"># Bangun ulang kontainer untuk menjalankan program supervisord baru</span><br>
+          <span class="prompt">$</span> sudo docker compose up -d --build app
+        </div>
+      </div>
     </div>
 
     <div class="divider"></div>
