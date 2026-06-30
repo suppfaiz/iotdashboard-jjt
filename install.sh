@@ -209,12 +209,23 @@ npm run build
 
 # Start services
 echo "[*] Generating Mosquitto MQTT credentials file..."
+rm -f .docker/passwd
+
+# Detect if docker needs sudo
+DOCKER_CMD="docker"
+if ! docker ps &>/dev/null; then
+    if command -v sudo &>/dev/null; then
+        DOCKER_CMD="sudo docker"
+    fi
+fi
+
 # Generate the passwd file inside the .docker directory using the eclipse-mosquitto image tool
-docker run --rm -v "$(pwd)/.docker:/config" eclipse-mosquitto:latest mosquitto_passwd -c -b /config/passwd "$MQTT_USER" "$MQTT_PASSWORD" || {
+$DOCKER_CMD run --rm -v "$(pwd)/.docker:/config" eclipse-mosquitto:latest mosquitto_passwd -c -b /config/passwd "$MQTT_USER" "$MQTT_PASSWORD" || {
     echo "[!] Warning: Failed to generate encrypted mosquitto passwd file via Docker. Writing unencrypted fallback."
     echo "$MQTT_USER:$MQTT_PASSWORD" > .docker/passwd
 }
-chmod 644 .docker/passwd
+sudo chown 1883:1883 .docker/passwd 2>/dev/null || true
+chmod 600 .docker/passwd
 echo "[*] Building and starting docker containers..."
 $DOCKER_COMPOSE down || true
 $DOCKER_COMPOSE up -d --build
