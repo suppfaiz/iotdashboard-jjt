@@ -625,6 +625,12 @@
                             <button onclick="sendQuickReply('📊 Cara Baca Grafik')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-bold rounded-lg border border-blue-100 transition-colors">📊 Baca Grafik</button>
                             <button onclick="sendQuickReply('🔋 Estimasi Tarif PLN')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-bold rounded-lg border border-blue-100 transition-colors">🔋 Tarif PLN</button>
                             <button onclick="sendQuickReply('⚠️ Notifikasi Telegram')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-bold rounded-lg border border-blue-100 transition-colors">⚠️ Telegram Alert</button>
+                            @php
+                                $elWa = \App\Models\SystemConfig::where('key', 'electrician_whatsapp')->value('value');
+                            @endphp
+                            @if(!empty($elWa))
+                                <a href="https://wa.me/{{ $elWa }}?text=Halo%20Tukang%20Listrik%2C%20ada%20masalah%20pada%20sistem%20listrik%20IoT%20Jamkrida." target="_blank" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 text-[10px] font-bold rounded-lg border border-emerald-100 transition-colors inline-flex items-center gap-1">📞 Hubungi Teknisi</a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -640,6 +646,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const electricianWhatsapp = "{{ \App\Models\SystemConfig::where('key', 'electrician_whatsapp')->value('value') ?? '' }}";
             const toggleBtn = document.getElementById('chatbot-toggle-btn');
             const closeBtn = document.getElementById('chatbot-close-btn');
             const chatWindow = document.getElementById('chatbot-window');
@@ -793,6 +800,16 @@
 
             function getBotResponse(input) {
                 const text = input.toLowerCase();
+
+                if (text.includes('hubungi') || text.includes('tukang') || text.includes('teknisi') || text.includes('listrik')) {
+                    if (electricianWhatsapp) {
+                        return `📞 <b>Hubungi Tukang Listrik:</b><br><br>
+                            Terjadi masalah listrik atau alarm menyala? Anda dapat langsung mengirimkan chat WhatsApp ke teknisi listrik resmi:<br><br>
+                            👉 <a href="https://wa.me/${electricianWhatsapp}?text=Halo%20Tukang%20Listrik%2C%20ada%20masalah%20pada%20sistem%20daya%20IoT%20Jamkrida." target="_blank" class="inline-block px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs shadow-sm transition-colors">Hubungi via WhatsApp</a>`;
+                    } else {
+                        return `📞 Nomor kontak tukang listrik belum dikonfigurasi oleh Administrator di menu Settings.`;
+                    }
+                }
 
                 if (text.includes('tips') || text.includes('hemat')) {
                     return `💡 <b>Berikut Tips Praktis Menghemat Listrik Anda:</b><br><br>

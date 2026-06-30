@@ -259,6 +259,23 @@
                             <p class="mt-1.5 text-xs text-gray-500">Maximum power consumption threshold to trigger alert.</p>
                         </div>
                     </div>
+
+                    <!-- Section 4: Electrician WhatsApp (Hubungi Tukang Listrik) -->
+                    <div class="border-t border-gray-100 pt-6">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            <h2 class="text-base font-bold text-gray-900">Electrician Contact Settings</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="electrician_whatsapp" class="block text-sm font-semibold text-gray-700 mb-2">WhatsApp Number (Electrician)</label>
+                                <input type="text" name="electrician_whatsapp" id="electrician_whatsapp" placeholder="e.g. 628123456789 (Use country code, no +)" value="{{ old('electrician_whatsapp', $configs['electrician_whatsapp'] ?? '') }}" class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                                <p class="mt-1.5 text-xs text-gray-500">Provide the electrician's WhatsApp phone number with country code (e.g. 628123456789) to allow quick messaging during alerts.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="flex justify-end pt-4 border-t border-gray-200 px-6 pb-6 bg-gray-50">

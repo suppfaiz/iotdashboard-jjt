@@ -33,6 +33,7 @@ class SystemConfigController extends Controller
             'alert_voltage_min' => 'required|numeric|min:0',
             'alert_voltage_max' => 'required|numeric|min:0',
             'alert_power_max' => 'required|numeric|min:0',
+            'electrician_whatsapp' => 'nullable|string',
         ]);
 
         $keys = [
@@ -51,6 +52,7 @@ class SystemConfigController extends Controller
             'alert_voltage_min',
             'alert_voltage_max',
             'alert_power_max',
+            'electrician_whatsapp',
         ];
 
         foreach ($keys as $key) {
