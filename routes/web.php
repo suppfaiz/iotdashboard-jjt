@@ -17,6 +17,8 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('dashboard');
     });
     Route::get('/changelog', [DashboardController::class, 'changelog'])->name('changelog');
+    Route::get('/chatbot/analysis', [DashboardController::class, 'chatbotAnalysis'])->name('chatbot.analysis');
+
 
     // Profile routes (Standard Breeze)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

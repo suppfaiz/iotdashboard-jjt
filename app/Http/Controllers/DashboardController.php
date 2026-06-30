@@ -259,4 +259,110 @@ class DashboardController extends Controller
     {
         return view('changelog');
     }
+
+    public function chatbotAnalysis()
+    {
+        $plnTariff = floatval(SystemConfig::where('key', 'pln_tariff')->value('value') ?? 1444.70);
+        $devices = Device::where('status', true)->get();
+        
+        $totalDevices = $devices->count();
+        $onlineDevices = 0;
+        $offlineDevices = 0;
+        $totalKwhToday = 0.0;
+
+        $deviceEnergyList = collect();
+
+        foreach ($devices as $device) {
+            $lastSeen = Cache::get("last_seen:{$device->device_id}", 0);
+            $isOnline = $lastSeen > 0 && (now()->timestamp - $lastSeen) < 300;
+            if ($isOnline) {
+                $onlineDevices++;
+            } else {
+                $offlineDevices++;
+            }
+
+            $energy = floatval(Cache::get("daily_energy:{$device->device_id}", 0.0));
+            $totalKwhToday += $energy;
+
+            $deviceEnergyList->push([
+                'name' => $device->name,
+                'energy' => $energy
+            ]);
+        }
+
+        // Top Consumer today
+        $topConsumer = $deviceEnergyList->sortByDesc('energy')->first();
+
+        // Past 7 days logs
+        $past7DaysLogs = \Illuminate\Support\Facades\DB::table('daily_energy_logs')
+            ->selectRaw('date, SUM(total_kwh_harian) as daily_sum')
+            ->where('date', '>=', now()->subDays(7)->toDateString())
+            ->groupBy('date')
+            ->get();
+
+        $numDays = $past7DaysLogs->count();
+        $avgDailyKwh = $numDays > 0 ? $past7DaysLogs->sum('daily_sum') / $numDays : $totalKwhToday;
+        $avgDailyKwh = round($avgDailyKwh, 3);
+
+        $currentMonthStart = now()->startOfMonth()->toDateString();
+        $currentMonthKwh = \Illuminate\Support\Facades\DB::table('daily_energy_logs')
+            ->where('date', '>=', $currentMonthStart)
+            ->sum('total_kwh_harian') ?? 0.0;
+
+        $currentMonthCost = $currentMonthKwh * $plnTariff;
+        $remainingDays = max(0, now()->daysInMonth - now()->day);
+        $projectedKwh = $currentMonthKwh + ($avgDailyKwh * $remainingDays);
+        $projectedBilling = $projectedKwh * $plnTariff;
+
+        // Warnings count
+        $warningsCount = 0;
+        $vMin = floatval(SystemConfig::where('key', 'alert_voltage_min')->value('value') ?? 200.00);
+        $vMax = floatval(SystemConfig::where('key', 'alert_voltage_max')->value('value') ?? 240.00);
+        $pMax = floatval(SystemConfig::where('key', 'alert_power_max')->value('value') ?? 2200.00);
+
+        foreach ($devices as $device) {
+            $lastSeen = Cache::get("last_seen:{$device->device_id}", 0);
+            $isOffline = ($lastSeen === 0 || (now()->timestamp - $lastSeen) > 300);
+            if ($isOffline) {
+                $warningsCount++;
+            } else {
+                $voltage = floatval(Cache::get("voltage:{$device->device_id}", 0));
+                if ($voltage > 0 && ($voltage < $vMin || $voltage > $vMax)) {
+                    $warningsCount++;
+                }
+                $power = floatval(Cache::get("power:{$device->device_id}", 0));
+                if ($power > $pMax) {
+                    $warningsCount++;
+                }
+            }
+        }
+
+        // Generate dynamic advice
+        $analysisText = "Berikut adalah rangkuman analisis penggunaan listrik Anda berdasarkan data sensor real-time saat ini:<br><br>";
+        $analysisText .= "⚡ <b>Penggunaan Hari Ini</b>: <b>" . number_format($totalKwhToday, 3) . " kWh</b> (Estimasi Biaya: Rp " . number_format($totalKwhToday * $plnTariff, 0, ',', '.') . ")<br>";
+        $analysisText .= "📈 <b>Rata-rata 7 Hari Terakhir</b>: <b>" . number_format($avgDailyKwh, 3) . " kWh/hari</b><br>";
+        $analysisText .= "🔮 <b>Proyeksi Akhir Bulan</b>: <b>" . number_format($projectedKwh, 2) . " kWh</b> (Estimasi Tagihan: <b>Rp " . number_format($projectedBilling, 0, ',', '.') . "</b>)<br>";
+        $analysisText .= "🖥️ <b>Status Alat</b>: <b>{$onlineDevices} Online</b>, <b>{$offlineDevices} Offline</b> (Terdeteksi {$warningsCount} peringatan aktif)<br>";
+        
+        if ($topConsumer && $topConsumer['energy'] > 0) {
+            $analysisText .= "🔥 <b>Konsumen Terbesar Hari Ini</b>: Perangkat <b>{$topConsumer['name']}</b> dengan pemakaian <b>" . number_format($topConsumer['energy'], 3) . " kWh</b>.<br>";
+        }
+
+        $analysisText .= "<br>📢 <b>Analisis & Rekomendasi Pintar</b>:<br>";
+        if ($avgDailyKwh > 0 && $totalKwhToday > ($avgDailyKwh * 1.2)) {
+            $analysisText .= "⚠️ Pemakaian listrik hari ini terdeteksi <b>di atas rata-rata biasanya (naik " . round((($totalKwhToday - $avgDailyKwh) / $avgDailyKwh) * 100) . "%)</b>. Mohon periksa apakah ada perangkat cadangan atau AC yang menyala tidak terpakai.<br>";
+        } else {
+            $analysisText .= "✅ Pemakaian listrik hari ini relatif stabil dan berada dalam batas wajar rata-rata harian Anda.<br>";
+        }
+
+        if ($offlineDevices > 0) {
+            $analysisText .= "❌ Terdeteksi ada <b>{$offlineDevices} perangkat mati/offline</b>. Segera cek koneksi Wi-Fi atau catu daya pada perangkat tersebut agar pemantauan tidak terputus.<br>";
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'analysis' => $analysisText
+        ]);
+    }
 }
+

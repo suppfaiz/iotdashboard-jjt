@@ -620,6 +620,7 @@
                         <p class="text-xs text-slate-700 leading-relaxed">Halo! Saya <b>YukAnalisaListrikmu</b>, asisten pintar untuk menganalisis penggunaan listrik Anda. Ada yang bisa saya bantu hari ini?</p>
                         <!-- Quick Reply suggestions -->
                         <div class="mt-3 flex flex-wrap gap-1.5">
+                            <button onclick="triggerAnalysis()" class="px-2.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 text-[10px] font-bold rounded-lg border border-indigo-100 transition-colors">🔍 Analisis Real-Time</button>
                             <button onclick="sendQuickReply('💡 Tips Hemat Listrik')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-bold rounded-lg border border-blue-100 transition-colors">💡 Tips Hemat</button>
                             <button onclick="sendQuickReply('📊 Cara Baca Grafik')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-bold rounded-lg border border-blue-100 transition-colors">📊 Baca Grafik</button>
                             <button onclick="sendQuickReply('🔋 Estimasi Tarif PLN')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-bold rounded-lg border border-blue-100 transition-colors">🔋 Tarif PLN</button>
@@ -684,23 +685,65 @@
                 // Show typing indicator
                 const typingId = showTypingIndicator();
 
-                // Get bot response
-                setTimeout(() => {
-                    removeTypingIndicator(typingId);
-                    const response = getBotResponse(text);
-                    appendMessage('bot', response);
-                }, 1000);
+                const textLower = text.toLowerCase();
+                if (textLower.includes('analis') || textLower.includes('prediksi') || textLower.includes('ramal') || textLower.includes('forecast') || textLower.includes('cek')) {
+                    fetch('/chatbot/analysis')
+                        .then(res => res.json())
+                        .then(data => {
+                            removeTypingIndicator(typingId);
+                            if (data.status === 'success') {
+                                appendMessage('bot', data.analysis);
+                            } else {
+                                appendMessage('bot', 'Maaf, saya gagal mengambil data analisis saat ini.');
+                            }
+                        })
+                        .catch(err => {
+                            removeTypingIndicator(typingId);
+                            appendMessage('bot', 'Maaf, terjadi kesalahan koneksi saat mengambil data analisis.');
+                        });
+                } else {
+                    // Get bot response
+                    setTimeout(() => {
+                        removeTypingIndicator(typingId);
+                        const response = getBotResponse(text);
+                        appendMessage('bot', response);
+                    }, 1000);
+                }
             }
 
             window.sendQuickReply = function (text) {
                 appendMessage('user', text);
                 const typingId = showTypingIndicator();
-                setTimeout(() => {
-                    removeTypingIndicator(typingId);
-                    const response = getBotResponse(text);
-                    appendMessage('bot', response);
-                }, 1000);
+                
+                const textLower = text.toLowerCase();
+                if (textLower.includes('analis') || textLower.includes('prediksi') || textLower.includes('ramal') || textLower.includes('forecast') || textLower.includes('cek')) {
+                    fetch('/chatbot/analysis')
+                        .then(res => res.json())
+                        .then(data => {
+                            removeTypingIndicator(typingId);
+                            if (data.status === 'success') {
+                                appendMessage('bot', data.analysis);
+                            } else {
+                                appendMessage('bot', 'Maaf, saya gagal mengambil data analisis saat ini.');
+                            }
+                        })
+                        .catch(err => {
+                            removeTypingIndicator(typingId);
+                            appendMessage('bot', 'Maaf, terjadi kesalahan koneksi saat mengambil data analisis.');
+                        });
+                } else {
+                    setTimeout(() => {
+                        removeTypingIndicator(typingId);
+                        const response = getBotResponse(text);
+                        appendMessage('bot', response);
+                    }, 1000);
+                }
             };
+
+            window.triggerAnalysis = function() {
+                window.sendQuickReply('Tolong buatkan analisis penggunaan listrik saat ini');
+            };
+
 
             function appendMessage(sender, text) {
                 const msgDiv = document.createElement('div');
