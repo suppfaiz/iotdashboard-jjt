@@ -122,6 +122,7 @@ update_env_val "DB_PORT" "3306"
 update_env_val "DB_DATABASE" "dashboard_iot_baru"
 update_env_val "DB_USERNAME" "$DB_USERNAME"
 update_env_val "DB_PASSWORD" "$DB_PASSWORD"
+update_env_val "BROADCAST_CONNECTION" "reverb"
 
 update_env_val "REVERB_HOST" "\"$VPS_IP\""
 update_env_val "VITE_REVERB_HOST" "\"$VPS_IP\""
