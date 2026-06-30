@@ -467,6 +467,10 @@
 <script>
     window.logDebug = function(message) {
         const log = document.getElementById('debug-log');
+        if (!log) {
+            console.log(message);
+            return;
+        }
         const time = new Date().toLocaleTimeString('en-US', {hour12:false});
         const div = document.createElement('div');
         div.className = 'mb-1';
