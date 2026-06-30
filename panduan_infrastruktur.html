@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panduan Infrastruktur - Jamkrida Energy IoT Dashboard</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
@@ -22,7 +23,11 @@
       --gray-900: #0f172a;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: 'Inter', sans-serif;
@@ -34,143 +39,675 @@
 
     /* COVER */
     .cover {
-      height: 100vh; min-height: 800px;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      height: 100vh;
+      min-height: 800px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 40%, #1e40af 70%, #3b82f6 100%);
-      color: white; text-align: center; padding: 60px 40px;
-      position: relative; overflow: hidden; page-break-after: always;
+      color: white;
+      text-align: center;
+      padding: 60px 40px;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
     }
+
     .cover::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 20% 20%, rgba(59,130,246,0.3) 0%, transparent 50%),
-                  radial-gradient(ellipse at 80% 80%, rgba(16,185,129,0.2) 0%, transparent 50%);
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(16, 185, 129, 0.2) 0%, transparent 50%);
     }
+
     .cover-badge {
-      position: relative; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.2); border-radius: 50px; padding: 8px 24px;
-      font-size: 9pt; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
-      color: #93c5fd; margin-bottom: 32px;
+      position: relative;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      padding: 8px 24px;
+      font-size: 9pt;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #93c5fd;
+      margin-bottom: 32px;
     }
+
     .cover-logo {
-      position: relative; width: 80px; height: 80px;
-      background: linear-gradient(135deg, #3b82f6, #10b981); border-radius: 24px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 32px; font-size: 36px;
+      position: relative;
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #3b82f6, #10b981);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 32px;
+      font-size: 36px;
     }
-    .cover h1 { position: relative; font-size: 36pt; font-weight: 800; line-height: 1.2; margin-bottom: 12px; letter-spacing: -1px; }
-    .cover h1 span { color: #34d399; }
-    .cover-subtitle { position: relative; font-size: 14pt; font-weight: 300; color: rgba(255,255,255,0.8); margin-bottom: 48px; }
-    .cover-meta { position: relative; display: flex; gap: 48px; justify-content: center; flex-wrap: wrap; }
-    .cover-meta-item { text-align: center; }
-    .cover-meta-label { font-size: 8pt; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
-    .cover-meta-value { font-size: 11pt; font-weight: 600; color: #93c5fd; }
-    .cover-divider { position: relative; width: 60px; height: 3px; background: linear-gradient(90deg, #3b82f6, #10b981); border-radius: 2px; margin: 32px auto; }
+
+    .cover h1 {
+      position: relative;
+      font-size: 36pt;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      letter-spacing: -1px;
+    }
+
+    .cover h1 span {
+      color: #34d399;
+    }
+
+    .cover-subtitle {
+      position: relative;
+      font-size: 14pt;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 48px;
+    }
+
+    .cover-meta {
+      position: relative;
+      display: flex;
+      gap: 48px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cover-meta-item {
+      text-align: center;
+    }
+
+    .cover-meta-label {
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 4px;
+    }
+
+    .cover-meta-value {
+      font-size: 11pt;
+      font-weight: 600;
+      color: #93c5fd;
+    }
+
+    .cover-divider {
+      position: relative;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #3b82f6, #10b981);
+      border-radius: 2px;
+      margin: 32px auto;
+    }
 
     /* TOC */
-    .toc-page { padding: 60px 80px; page-break-after: always; min-height: 900px; }
-    .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
-    .section-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-    .section-title-group h2 { font-size: 20pt; font-weight: 700; color: var(--gray-900); line-height: 1.2; }
-    .section-title-group p { font-size: 9pt; color: var(--gray-400); text-transform: uppercase; letter-spacing: 1.5px; }
-    .toc-list { list-style: none; }
-    .toc-item { display: flex; align-items: center; padding: 12px 16px; border-radius: 10px; margin-bottom: 6px; border: 1px solid var(--gray-200); }
-    .toc-num { width: 28px; height: 28px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 9pt; font-weight: 700; color: white; flex-shrink: 0; margin-right: 14px; }
-    .toc-text { flex: 1; font-weight: 500; color: var(--gray-700); font-size: 10pt; }
-    .toc-page-num { font-size: 9pt; color: var(--gray-400); font-weight: 600; }
+    .toc-page {
+      padding: 60px 80px;
+      page-break-after: always;
+      min-height: 900px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .section-title-group h2 {
+      font-size: 20pt;
+      font-weight: 700;
+      color: var(--gray-900);
+      line-height: 1.2;
+    }
+
+    .section-title-group p {
+      font-size: 9pt;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .toc-list {
+      list-style: none;
+    }
+
+    .toc-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+      border: 1px solid var(--gray-200);
+    }
+
+    .toc-num {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9pt;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+      margin-right: 14px;
+    }
+
+    .toc-text {
+      flex: 1;
+      font-weight: 500;
+      color: var(--gray-700);
+      font-size: 10pt;
+    }
+
+    .toc-page-num {
+      font-size: 9pt;
+      color: var(--gray-400);
+      font-weight: 600;
+    }
 
     /* PAGES */
-    .page { padding: 50px 70px; page-break-before: always; }
-    .chapter-banner { background: linear-gradient(135deg, var(--gray-900) 0%, #1e3a8a 100%); color: white; border-radius: 16px; padding: 28px 32px; margin-bottom: 32px; display: flex; align-items: center; gap: 20px; break-inside: avoid; page-break-inside: avoid; page-break-after: avoid; break-after: avoid; }
-    .chapter-icon { width: 56px; height: 56px; background: rgba(255,255,255,0.15); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
-    .chapter-text small { font-size: 8pt; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5); }
-    .chapter-text h2 { font-size: 18pt; font-weight: 700; line-height: 1.2; margin-top: 4px; }
-    .chapter-text h2 span { color: #34d399; }
+    .page {
+      padding: 50px 70px;
+      page-break-before: always;
+    }
+
+    .chapter-banner {
+      background: linear-gradient(135deg, var(--gray-900) 0%, #1e3a8a 100%);
+      color: white;
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    .chapter-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .chapter-text small {
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .chapter-text h2 {
+      font-size: 18pt;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-top: 4px;
+    }
+
+    .chapter-text h2 span {
+      color: #34d399;
+    }
 
     /* CARDS */
-    .card { border: 1px solid var(--gray-200); border-radius: 12px; padding: 24px; margin-bottom: 20px; background: #fff; break-inside: avoid; page-break-inside: avoid; }
-    .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--gray-100); break-inside: avoid; page-break-inside: avoid; }
-    .card-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-    .card-icon.blue { background: #eff6ff; }
-    .card-icon.green { background: #ecfdf5; }
-    .card-icon.orange { background: #fff7ed; }
-    .card-icon.red { background: #fef2f2; }
-    .card-icon.purple { background: #f5f3ff; }
-    .card-title { font-size: 12pt; font-weight: 700; color: var(--gray-800); }
-    .card-subtitle { font-size: 8pt; color: var(--gray-400); margin-top: 1px; }
+    .card {
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      background: #fff;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--gray-100);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .card-icon.blue {
+      background: #eff6ff;
+    }
+
+    .card-icon.green {
+      background: #ecfdf5;
+    }
+
+    .card-icon.orange {
+      background: #fff7ed;
+    }
+
+    .card-icon.red {
+      background: #fef2f2;
+    }
+
+    .card-icon.purple {
+      background: #f5f3ff;
+    }
+
+    .card-title {
+      font-size: 12pt;
+      font-weight: 700;
+      color: var(--gray-800);
+    }
+
+    .card-subtitle {
+      font-size: 8pt;
+      color: var(--gray-400);
+      margin-top: 1px;
+    }
 
     /* CODE */
-    .cmd-block { background: var(--gray-900); border-radius: 10px; padding: 16px 20px; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 9pt; color: #e2e8f0; overflow-x: auto; break-inside: avoid; page-break-inside: avoid; }
-    .cmd-block .prompt { color: #34d399; }
-    .cmd-block .comment { color: #64748b; font-style: italic; }
-    .cmd-block .keyword { color: #93c5fd; }
-    .cmd-block .string { color: #fbbf24; }
-    .cmd-block .variable { color: #f0abfc; }
-    .cmd-label { font-size: 8pt; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .cmd-block {
+      background: var(--gray-900);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 12px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9pt;
+      color: #e2e8f0;
+      overflow-x: auto;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .cmd-block .prompt {
+      color: #34d399;
+    }
+
+    .cmd-block .comment {
+      color: #64748b;
+      font-style: italic;
+    }
+
+    .cmd-block .keyword {
+      color: #93c5fd;
+    }
+
+    .cmd-block .string {
+      color: #fbbf24;
+    }
+
+    .cmd-block .variable {
+      color: #f0abfc;
+    }
+
+    .cmd-label {
+      font-size: 8pt;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
 
     /* STEPS */
-    .steps { list-style: none; }
-    .step-item { display: flex; gap: 16px; margin-bottom: 20px; break-inside: avoid; page-break-inside: avoid; }
-    .step-num { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10pt; font-weight: 700; color: white; flex-shrink: 0; margin-top: 2px; }
-    .step-content h4 { font-size: 11pt; font-weight: 700; color: var(--gray-800); margin-bottom: 4px; }
-    .step-content p { font-size: 9.5pt; color: var(--gray-600); line-height: 1.6; }
+    .steps {
+      list-style: none;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10pt;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-content h4 {
+      font-size: 11pt;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 4px;
+    }
+
+    .step-content p {
+      font-size: 9.5pt;
+      color: var(--gray-600);
+      line-height: 1.6;
+    }
 
     /* ALERTS */
-    .alert { border-radius: 10px; padding: 14px 18px; margin: 16px 0; display: flex; gap: 12px; align-items: flex-start; break-inside: avoid; page-break-inside: avoid; }
-    .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-    .alert-content h5 { font-size: 10pt; font-weight: 700; margin-bottom: 4px; }
-    .alert-content p { font-size: 9pt; line-height: 1.5; }
-    .alert.info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
-    .alert.success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
-    .alert.warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
-    .alert.danger { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .alert {
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .alert-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .alert-content h5 {
+      font-size: 10pt;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .alert-content p {
+      font-size: 9pt;
+      line-height: 1.5;
+    }
+
+    .alert.info {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+
+    .alert.success {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+
+    .alert.warning {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    .alert.danger {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
 
     /* TABLE */
-    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 9.5pt; break-inside: avoid; page-break-inside: avoid; }
-    thead { background: var(--gray-900); color: white; }
-    thead th { padding: 12px 14px; text-align: left; font-size: 9pt; font-weight: 600; letter-spacing: 0.5px; }
-    tbody tr { break-inside: avoid; page-break-inside: avoid; }
-    tbody tr:nth-child(even) { background: var(--gray-50); }
-    tbody td { padding: 11px 14px; border-bottom: 1px solid var(--gray-200); vertical-align: middle; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 9.5pt;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
 
-    .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 8pt; font-weight: 600; text-transform: uppercase; }
-    .badge.blue { background: #dbeafe; color: #1e40af; }
-    .badge.green { background: #d1fae5; color: #065f46; }
-    .badge.orange { background: #fed7aa; color: #92400e; }
-    .badge.purple { background: #ede9fe; color: #4c1d95; }
-    .badge.gray { background: #e2e8f0; color: #475569; }
+    thead {
+      background: var(--gray-900);
+      color: white;
+    }
 
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; break-inside: avoid; page-break-inside: avoid; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; break-inside: avoid; page-break-inside: avoid; }
+    thead th {
+      padding: 12px 14px;
+      text-align: left;
+      font-size: 9pt;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
 
-    .stat-card { border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; background: linear-gradient(135deg, var(--gray-50), #fff); text-align: center; break-inside: avoid; page-break-inside: avoid; }
-    .stat-icon { font-size: 28px; margin-bottom: 8px; }
-    .stat-value { font-size: 18pt; font-weight: 800; color: var(--primary); line-height: 1; }
-    .stat-label { font-size: 8pt; color: var(--gray-400); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+    tbody tr {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
 
-    .arch-diagram { border: 1px solid var(--gray-200); border-radius: 12px; padding: 24px; background: var(--gray-50); margin: 16px 0; break-inside: avoid; page-break-inside: avoid; }
-    .arch-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
-    .arch-box { border-radius: 10px; padding: 12px 18px; text-align: center; font-size: 8.5pt; font-weight: 600; min-width: 120px; }
-    .arch-box.sensor { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-    .arch-box.mqtt { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
-    .arch-box.app { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
-    .arch-box.ws { background: #ede9fe; color: #4c1d95; border: 1px solid #ddd6fe; }
-    .arch-box.browser { background: #ffe4e6; color: #9f1239; border: 1px solid #fecdd3; }
-    .arch-arrow { color: var(--gray-400); font-size: 16px; }
+    tbody tr:nth-child(even) {
+      background: var(--gray-50);
+    }
 
-    .divider { height: 1px; background: linear-gradient(90deg, var(--primary), transparent); margin: 24px 0; opacity: 0.3; }
+    tbody td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--gray-200);
+      vertical-align: middle;
+    }
 
-    p { margin-bottom: 8px; }
-    ul, ol { padding-left: 20px; margin-bottom: 12px; }
-    li { margin-bottom: 4px; font-size: 9.5pt; color: var(--gray-700); }
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 8pt;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
 
-    .mono { font-family: 'JetBrains Mono', monospace; font-size: 9pt; background: var(--gray-100); padding: 2px 6px; border-radius: 4px; color: var(--primary); }
+    .badge.blue {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .badge.green {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge.orange {
+      background: #fed7aa;
+      color: #92400e;
+    }
+
+    .badge.purple {
+      background: #ede9fe;
+      color: #4c1d95;
+    }
+
+    .badge.gray {
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .stat-card {
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 20px;
+      background: linear-gradient(135deg, var(--gray-50), #fff);
+      text-align: center;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .stat-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 18pt;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 8pt;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    .arch-diagram {
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 24px;
+      background: var(--gray-50);
+      margin: 16px 0;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .arch-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .arch-box {
+      border-radius: 10px;
+      padding: 12px 18px;
+      text-align: center;
+      font-size: 8.5pt;
+      font-weight: 600;
+      min-width: 120px;
+    }
+
+    .arch-box.sensor {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
+    .arch-box.mqtt {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+
+    .arch-box.app {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .arch-box.ws {
+      background: #ede9fe;
+      color: #4c1d95;
+      border: 1px solid #ddd6fe;
+    }
+
+    .arch-box.browser {
+      background: #ffe4e6;
+      color: #9f1239;
+      border: 1px solid #fecdd3;
+    }
+
+    .arch-arrow {
+      color: var(--gray-400);
+      font-size: 16px;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, var(--primary), transparent);
+      margin: 24px 0;
+      opacity: 0.3;
+    }
+
+    p {
+      margin-bottom: 8px;
+    }
+
+    ul,
+    ol {
+      padding-left: 20px;
+      margin-bottom: 12px;
+    }
+
+    li {
+      margin-bottom: 4px;
+      font-size: 9.5pt;
+      color: var(--gray-700);
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9pt;
+      background: var(--gray-100);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--primary);
+    }
 
     @media print {
-      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
 
       /* Page layout */
-      @page { size: A4; margin: 15mm 15mm 18mm 15mm; }
-      @page :first { margin: 0; }
+      @page {
+        size: A4;
+        margin: 15mm 15mm 18mm 15mm;
+      }
+
+      @page :first {
+        margin: 0;
+      }
 
       /* Cover: full page, no margin */
       .cover {
@@ -205,1332 +742,2401 @@
       }
 
       /* All block elements: don't break inside */
-      .card, .alert, .step-item, .arch-diagram,
-      .stat-card, .cmd-block, table, .toc-item {
+      .card,
+      .alert,
+      .step-item,
+      .arch-diagram,
+      .stat-card,
+      .cmd-block,
+      table,
+      .toc-item {
         page-break-inside: avoid;
         break-inside: avoid;
       }
 
       /* Table rows: don't break */
-      tr, thead { page-break-inside: avoid; break-inside: avoid; }
+      tr,
+      thead {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
 
       /* Grid: stack single-column to prevent breaks */
-      .grid-2, .grid-3 {
+      .grid-2,
+      .grid-3 {
         display: block;
         page-break-inside: avoid;
         break-inside: avoid;
       }
-      .grid-2 .card, .grid-3 .card, .grid-2 .stat-card, .grid-3 .stat-card {
+
+      .grid-2 .card,
+      .grid-3 .card,
+      .grid-2 .stat-card,
+      .grid-3 .stat-card {
         margin-bottom: 12px;
         display: block;
         width: 100%;
       }
 
       /* Orphans & widows */
-      p, li { orphans: 3; widows: 3; }
-      h2, h3, h4 { page-break-after: avoid; break-after: avoid; }
+      p,
+      li {
+        orphans: 3;
+        widows: 3;
+      }
+
+      h2,
+      h3,
+      h4 {
+        page-break-after: avoid;
+        break-after: avoid;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<!-- COVER PAGE -->
-<div class="cover">
-  <div class="cover-badge">📋 Dokumentasi Teknis</div>
-  <div class="cover-logo">⚡</div>
-  <h1>Jamkrida Energy<br><span>IoT Dashboard</span></h1>
-  <p class="cover-subtitle">Panduan Infrastruktur, Deployment &amp; Konfigurasi Sistem</p>
-  <div class="cover-divider"></div>
-  <div class="cover-meta">
-    <div class="cover-meta-item">
-      <div class="cover-meta-label">Versi</div>
-      <div class="cover-meta-value">2.0</div>
-    </div>
-    <div class="cover-meta-item">
-      <div class="cover-meta-label">Platform</div>
-      <div class="cover-meta-value">Laravel 12 + Docker</div>
-    </div>
-    <div class="cover-meta-item">
-      <div class="cover-meta-label">Tahun</div>
-      <div class="cover-meta-value">2025</div>
-    </div>
-    <div class="cover-meta-item">
-      <div class="cover-meta-label">Lisensi</div>
-      <div class="cover-meta-value">MIT</div>
+  <!-- COVER PAGE -->
+  <div class="cover">
+    <div class="cover-badge">📋 Dokumentasi Teknis</div>
+    <div class="cover-logo">⚡</div>
+    <h1>Jamkrida Energy<br><span>IoT Dashboard</span></h1>
+    <p class="cover-subtitle">Panduan Infrastruktur, Deployment &amp; Konfigurasi Sistem</p>
+    <div class="cover-divider"></div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Versi</div>
+        <div class="cover-meta-value">2.0</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Platform</div>
+        <div class="cover-meta-value">Laravel 12 + Docker</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Tahun</div>
+        <div class="cover-meta-value">2026</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Lisensi</div>
+        <div class="cover-meta-value">MIT</div>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- TABLE OF CONTENTS -->
-<div class="toc-page">
-  <div class="section-header">
-    <div class="section-icon">📑</div>
-    <div class="section-title-group">
-      <p>Daftar Isi</p>
-      <h2>Isi Dokumen</h2>
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc-page">
+    <div class="section-header">
+      <div class="section-icon">📑</div>
+      <div class="section-title-group">
+        <p>Daftar Isi</p>
+        <h2>Isi Dokumen</h2>
+      </div>
     </div>
+    <ul class="toc-list">
+      <li class="toc-item">
+        <div class="toc-num">1</div><span class="toc-text">Gambaran Umum Sistem</span><span
+          class="toc-page-num">3</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">2</div><span class="toc-text">Arsitektur Infrastruktur</span><span
+          class="toc-page-num">4</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">3</div><span class="toc-text">Prasyarat &amp; Persyaratan Sistem</span><span
+          class="toc-page-num">5</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">4</div><span class="toc-text">Panduan Deployment VPS (Docker)</span><span
+          class="toc-page-num">6</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">5</div><span class="toc-text">Konfigurasi File .env</span><span
+          class="toc-page-num">8</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">6</div><span class="toc-text">Menjalankan Layanan Secara Lokal</span><span
+          class="toc-page-num">9</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">7</div><span class="toc-text">Konfigurasi MQTT Broker (Mosquitto)</span><span
+          class="toc-page-num">10</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">8</div><span class="toc-text">Integrasi Perangkat ESP32</span><span
+          class="toc-page-num">11</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">9</div><span class="toc-text">Fitur &amp; Kemampuan Dashboard</span><span
+          class="toc-page-num">13</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">10</div><span class="toc-text">Referensi Port &amp; Endpoint</span><span
+          class="toc-page-num">14</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">11</div><span class="toc-text">Manajemen &amp; Pemantauan Container</span><span
+          class="toc-page-num">15</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">12</div><span class="toc-text">Troubleshooting</span><span class="toc-page-num">16</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">13</div><span class="toc-text">Skema Database</span><span class="toc-page-num">17</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">14</div><span class="toc-text">Manajemen Perangkat &amp; Kalibrasi</span><span
+          class="toc-page-num">18</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">15</div><span class="toc-text">Konfigurasi Sistem via UI Dashboard</span><span
+          class="toc-page-num">19</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">16</div><span class="toc-text">Update Firmware OTA (Over-the-Air)</span><span
+          class="toc-page-num">20</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">17</div><span class="toc-text">Keamanan &amp; Manajemen User</span><span
+          class="toc-page-num">21</span>
+      </li>
+      <li class="toc-item">
+        <div class="toc-num">18</div><span class="toc-text">Dokumentasi Interaktif API (Scribe)</span><span
+          class="toc-page-num">22</span>
+      </li>
+    </ul>
   </div>
-  <ul class="toc-list">
-    <li class="toc-item"><div class="toc-num">1</div><span class="toc-text">Gambaran Umum Sistem</span><span class="toc-page-num">3</span></li>
-    <li class="toc-item"><div class="toc-num">2</div><span class="toc-text">Arsitektur Infrastruktur</span><span class="toc-page-num">4</span></li>
-    <li class="toc-item"><div class="toc-num">3</div><span class="toc-text">Prasyarat &amp; Persyaratan Sistem</span><span class="toc-page-num">5</span></li>
-    <li class="toc-item"><div class="toc-num">4</div><span class="toc-text">Panduan Deployment VPS (Docker)</span><span class="toc-page-num">6</span></li>
-    <li class="toc-item"><div class="toc-num">5</div><span class="toc-text">Konfigurasi File .env</span><span class="toc-page-num">8</span></li>
-    <li class="toc-item"><div class="toc-num">6</div><span class="toc-text">Menjalankan Layanan Secara Lokal</span><span class="toc-page-num">9</span></li>
-    <li class="toc-item"><div class="toc-num">7</div><span class="toc-text">Konfigurasi MQTT Broker (Mosquitto)</span><span class="toc-page-num">10</span></li>
-    <li class="toc-item"><div class="toc-num">8</div><span class="toc-text">Integrasi Perangkat ESP32</span><span class="toc-page-num">11</span></li>
-    <li class="toc-item"><div class="toc-num">9</div><span class="toc-text">Fitur &amp; Kemampuan Dashboard</span><span class="toc-page-num">13</span></li>
-    <li class="toc-item"><div class="toc-num">10</div><span class="toc-text">Referensi Port &amp; Endpoint</span><span class="toc-page-num">14</span></li>
-    <li class="toc-item"><div class="toc-num">11</div><span class="toc-text">Manajemen &amp; Pemantauan Container</span><span class="toc-page-num">15</span></li>
-    <li class="toc-item"><div class="toc-num">12</div><span class="toc-text">Troubleshooting</span><span class="toc-page-num">16</span></li>
-    <li class="toc-item"><div class="toc-num">13</div><span class="toc-text">Skema Database</span><span class="toc-page-num">17</span></li>
-    <li class="toc-item"><div class="toc-num">14</div><span class="toc-text">Manajemen Perangkat &amp; Kalibrasi</span><span class="toc-page-num">18</span></li>
-    <li class="toc-item"><div class="toc-num">15</div><span class="toc-text">Konfigurasi Sistem via UI Dashboard</span><span class="toc-page-num">19</span></li>
-    <li class="toc-item"><div class="toc-num">16</div><span class="toc-text">Update Firmware OTA (Over-the-Air)</span><span class="toc-page-num">20</span></li>
-    <li class="toc-item"><div class="toc-num">17</div><span class="toc-text">Keamanan &amp; Manajemen User</span><span class="toc-page-num">21</span></li>
-    <li class="toc-item"><div class="toc-num">18</div><span class="toc-text">Dokumentasi Interaktif API (Scribe)</span><span class="toc-page-num">22</span></li>
-  </ul>
-</div>
 
-<!-- BAB 1: GAMBARAN UMUM -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">🌐</div>
-    <div class="chapter-text">
-      <small>Bab 1</small>
-      <h2>Gambaran <span>Umum Sistem</span></h2>
+  <!-- BAB 1: GAMBARAN UMUM -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">🌐</div>
+      <div class="chapter-text">
+        <small>Bab 1</small>
+        <h2>Gambaran <span>Umum Sistem</span></h2>
+      </div>
     </div>
-  </div>
-  <p>Jamkrida Energy IoT Dashboard adalah platform pemantauan energi berbasis web yang dirancang untuk memonitor konsumsi listrik secara <em>real-time</em> dari sensor IoT (ESP32/PZEM) melalui protokol MQTT. Platform ini dibangun di atas framework <strong>Laravel 12</strong> dan didistribusikan sebagai kontainer Docker untuk kemudahan deployment di VPS manapun.</p>
-  <div class="grid-3" style="margin: 24px 0;">
-    <div class="stat-card"><div class="stat-icon">⚡</div><div class="stat-value">Real-time</div><div class="stat-label">Monitoring Energi</div></div>
-    <div class="stat-card"><div class="stat-icon">📡</div><div class="stat-value">MQTT</div><div class="stat-label">Protokol IoT</div></div>
-    <div class="stat-card"><div class="stat-icon">🐳</div><div class="stat-value">Docker</div><div class="stat-label">Container Deployment</div></div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">✨</div><div><div class="card-title">Teknologi Utama</div><div class="card-subtitle">Stack yang digunakan dalam sistem</div></div></div>
-    <table>
-      <thead><tr><th>Komponen</th><th>Teknologi</th><th>Keterangan</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Backend Framework</strong></td><td><span class="badge blue">Laravel 12</span></td><td>API, bisnis logika, ORM</td></tr>
-        <tr><td><strong>Database</strong></td><td><span class="badge blue">MySQL (Docker)</span></td><td>Penyimpanan data perangkat &amp; user</td></tr>
-        <tr><td><strong>Real-time</strong></td><td><span class="badge purple">Laravel Reverb</span></td><td>WebSocket server (port 8085)</td></tr>
-        <tr><td><strong>MQTT Broker</strong></td><td><span class="badge orange">Eclipse Mosquitto</span></td><td>Terima data dari sensor IoT</td></tr>
-        <tr><td><strong>Frontend</strong></td><td><span class="badge blue">Blade + Vite</span></td><td>UI dashboard interaktif</td></tr>
-        <tr><td><strong>Containerization</strong></td><td><span class="badge green">Docker Compose</span></td><td>Orchestrasi layanan</td></tr>
-        <tr><td><strong>Notifikasi</strong></td><td><span class="badge orange">Telegram Bot</span></td><td>Alert anomali konsumsi</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- BAB 2: ARSITEKTUR -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">🏗️</div>
-    <div class="chapter-text">
-      <small>Bab 2</small>
-      <h2>Arsitektur <span>Infrastruktur</span></h2>
+    <p>Jamkrida Energy IoT Dashboard adalah platform pemantauan energi berbasis web yang dirancang untuk memonitor
+      konsumsi listrik secara <em>real-time</em> dari sensor IoT (ESP32/PZEM) melalui protokol MQTT. Platform ini
+      dibangun di atas framework <strong>Laravel 12</strong> dan didistribusikan sebagai kontainer Docker untuk
+      kemudahan deployment di VPS manapun.</p>
+    <div class="grid-3" style="margin: 24px 0;">
+      <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-value">Real-time</div>
+        <div class="stat-label">Monitoring Energi</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📡</div>
+        <div class="stat-value">MQTT</div>
+        <div class="stat-label">Protokol IoT</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🐳</div>
+        <div class="stat-value">Docker</div>
+        <div class="stat-label">Container Deployment</div>
+      </div>
     </div>
-  </div>
-  <div class="arch-diagram">
-    <h4 style="text-align:center; color: #334155; margin-bottom: 20px; font-size: 10pt;">Alur Data Sistem IoT Dashboard</h4>
-    <div class="arch-row">
-      <div class="arch-box sensor">🔌 Sensor ESP32<br><small>PZEM-004T</small></div>
-      <div class="arch-arrow">→</div>
-      <div class="arch-box mqtt">📡 MQTT Broker<br><small>Mosquitto :1883</small></div>
-      <div class="arch-arrow">→</div>
-      <div class="arch-box app">⚙️ MQTT Worker<br><small>mqtt:listen</small></div>
-    </div>
-    <div class="arch-row"><div style="width:100%; text-align:center; color:#94a3b8; font-size:20px;">↓</div></div>
-    <div class="arch-row">
-      <div class="arch-box browser">🖥️ Browser User<br><small>Dashboard UI</small></div>
-      <div class="arch-arrow">←</div>
-      <div class="arch-box ws">🔄 Reverb WS<br><small>:8085</small></div>
-      <div class="arch-arrow">←</div>
-      <div class="arch-box app">📦 Laravel App<br><small>Cache + DB</small></div>
-    </div>
-  </div>
-  <div class="grid-2" style="margin-top:20px;">
     <div class="card">
-      <div class="card-header"><div class="card-icon blue">🐳</div><div><div class="card-title">Kontainer Docker</div><div class="card-subtitle">Services yang berjalan</div></div></div>
-      <ul>
-        <li><strong>iot_dashboard_app</strong> — Laravel + Nginx + Reverb + Worker</li>
-        <li><strong>iot_dashboard_mqtt</strong> — Eclipse Mosquitto Broker</li>
-        <li><strong>iot_dashboard_mysql</strong> — MySQL 8.0 Database Server</li>
-        <li><strong>iot_dashboard_phpmyadmin</strong> — phpMyAdmin (Database manager web)</li>
-      </ul>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="card-icon purple">🔄</div><div><div class="card-title">Supervisor Processes</div><div class="card-subtitle">Proses yang dikelola Supervisor</div></div></div>
-      <ul>
-        <li><strong>nginx</strong> — Web server (port 80)</li>
-        <li><strong>php-fpm</strong> — PHP FastCGI handler</li>
-        <li><strong>reverb</strong> — WebSocket server (port 8085)</li>
-        <li><strong>queue worker</strong> — Queue processing</li>
-        <li><strong>mqtt worker</strong> — MQTT listener &amp; broadcaster</li>
-      </ul>
-    </div>
-  </div>
-  <div class="alert info">
-    <div class="alert-icon">💡</div>
-    <div class="alert-content">
-      <h5>IP Otomatis</h5>
-      <p>Script <span class="mono">install.sh</span> secara otomatis mendeteksi IP publik VPS menggunakan <span class="mono">ifconfig.me</span> dan menggunakannya sebagai konfigurasi REVERB_HOST. Jika IP VPS berubah, cukup jalankan ulang <span class="mono">./install.sh</span>.</p>
-    </div>
-  </div>
-</div>
-
-<!-- BAB 3: PRASYARAT -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">✅</div>
-    <div class="chapter-text">
-      <small>Bab 3</small>
-      <h2>Prasyarat <span>&amp; Persyaratan</span></h2>
-    </div>
-  </div>
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-header"><div class="card-icon blue">🖥️</div><div><div class="card-title">Spesifikasi VPS Minimum</div><div class="card-subtitle">Untuk deployment produksi</div></div></div>
+      <div class="card-header">
+        <div class="card-icon blue">✨</div>
+        <div>
+          <div class="card-title">Teknologi Utama</div>
+          <div class="card-subtitle">Stack yang digunakan dalam sistem</div>
+        </div>
+      </div>
       <table>
-        <thead><tr><th>Sumber Daya</th><th>Minimum</th><th>Rekomendasi</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Komponen</th>
+            <th>Teknologi</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr><td>CPU</td><td>1 Core</td><td>2 Core</td></tr>
-          <tr><td>RAM</td><td>1 GB</td><td>2 GB</td></tr>
-          <tr><td>Storage</td><td>10 GB</td><td>20 GB SSD</td></tr>
-          <tr><td>OS</td><td>Ubuntu 22.04</td><td>Ubuntu 24.04</td></tr>
-          <tr><td>Bandwidth</td><td>100 Mbps</td><td>1 Gbps</td></tr>
+          <tr>
+            <td><strong>Backend Framework</strong></td>
+            <td><span class="badge blue">Laravel 12</span></td>
+            <td>API, bisnis logika, ORM</td>
+          </tr>
+          <tr>
+            <td><strong>Database</strong></td>
+            <td><span class="badge blue">MySQL (Docker)</span></td>
+            <td>Penyimpanan data perangkat &amp; user</td>
+          </tr>
+          <tr>
+            <td><strong>Real-time</strong></td>
+            <td><span class="badge purple">Laravel Reverb</span></td>
+            <td>WebSocket server (port 8085)</td>
+          </tr>
+          <tr>
+            <td><strong>MQTT Broker</strong></td>
+            <td><span class="badge orange">Eclipse Mosquitto</span></td>
+            <td>Terima data dari sensor IoT</td>
+          </tr>
+          <tr>
+            <td><strong>Frontend</strong></td>
+            <td><span class="badge blue">Blade + Vite</span></td>
+            <td>UI dashboard interaktif</td>
+          </tr>
+          <tr>
+            <td><strong>Containerization</strong></td>
+            <td><span class="badge green">Docker Compose</span></td>
+            <td>Orchestrasi layanan</td>
+          </tr>
+          <tr>
+            <td><strong>Notifikasi</strong></td>
+            <td><span class="badge orange">Telegram Bot</span></td>
+            <td>Alert anomali konsumsi</td>
+          </tr>
         </tbody>
       </table>
     </div>
-    <div class="card">
-      <div class="card-header"><div class="card-icon green">📦</div><div><div class="card-title">Software Prasyarat</div><div class="card-subtitle">Dipasang otomatis oleh install.sh</div></div></div>
-      <ul>
-        <li>🐳 <strong>Docker Engine</strong> ≥ 24.x</li>
-        <li>📦 <strong>Docker Compose</strong> v2</li>
-        <li>🐘 <strong>PHP</strong> ≥ 8.4 (curl, mbstring, sockets, xml, zip)</li>
-        <li>🎵 <strong>Composer</strong> ≥ 2.x</li>
-        <li>🟢 <strong>Node.js</strong> ≥ 20.x &amp; NPM</li>
-        <li>🔐 <strong>OpenSSL</strong> (untuk generate password)</li>
-      </ul>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">🔓</div><div><div class="card-title">Port yang Harus Terbuka di Firewall</div></div></div>
-    <table>
-      <thead><tr><th>Port</th><th>Protokol</th><th>Layanan</th><th>Keterangan</th></tr></thead>
-      <tbody>
-        <tr><td><strong>80</strong></td><td>TCP</td><td>HTTP / Nginx</td><td>Akses dashboard web</td></tr>
-        <tr><td><strong>1883</strong></td><td>TCP</td><td>MQTT</td><td>Data dari sensor ESP32</td></tr>
-        <tr><td><strong>8082</strong></td><td>TCP</td><td>phpMyAdmin</td><td>Manajemen database (opsional)</td></tr>
-        <tr><td><strong>8085</strong></td><td>TCP</td><td>Reverb WebSocket</td><td>Data real-time ke browser</td></tr>
-        <tr><td><strong>22</strong></td><td>TCP</td><td>SSH</td><td>Akses server jarak jauh</td></tr>
-      </tbody>
-    </table>
-    <div class="cmd-label" style="margin-top:14px;">Perintah buka port (UFW):</div>
-    <div class="cmd-block"><span class="prompt">$</span> sudo ufw allow 80,1883,8082,8085,22/tcp &amp;&amp; sudo ufw enable</div>
-  </div>
-</div>
-
-<!-- BAB 4: DEPLOYMENT VPS -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">🚀</div>
-    <div class="chapter-text">
-      <small>Bab 4</small>
-      <h2>Panduan Deployment <span>VPS (Docker & SSL)</span></h2>
-    </div>
-  </div>
-  <div class="alert warning">
-    <div class="alert-icon">⚠️</div>
-    <div class="alert-content">
-      <h5>Sebelum Memulai</h5>
-      <p>Pastikan VPS Anda menggunakan sistem operasi berbasis Linux (seperti Ubuntu atau Debian) dengan akses internet aktif, dan Anda masuk sebagai user dengan hak <span class="mono">sudo</span>.</p>
-    </div>
   </div>
 
-  <ul class="steps">
-    <li class="step-item">
-      <div class="step-num">1</div>
-      <div class="step-content">
-        <h4>Persiapan Server & Clone Repositori</h4>
-        <p>Jalankan perintah berikut untuk memperbarui paket sistem, memasang prasyarat (Git, Curl, Node.js, dan NPM), serta menginstal Docker Engine di VPS Host:</p>
-        <div class="cmd-block">
-          <span class="comment"># Update sistem dan install paket dasar</span><br>
-          <span class="prompt">$</span> sudo apt update && sudo apt upgrade -y<br>
-          <span class="prompt">$</span> sudo apt install -y git curl nodejs npm<br><br>
-          <span class="comment"># Pasang Docker & Docker Compose secara resmi</span><br>
-          <span class="prompt">$</span> curl -fsSL https://get.docker.com -o get-docker.sh<br>
-          <span class="prompt">$</span> sudo sh get-docker.sh<br><br>
-          <span class="comment"># Clone source code aplikasi ke VPS</span><br>
-          <span class="prompt">$</span> git clone https://github.com/suppfaiz/iotdashboard-jjt.git<br>
-          <span class="prompt">$</span> cd iotdashboard-jjt
-        </div>
+  <!-- BAB 2: ARSITEKTUR -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">🏗️</div>
+      <div class="chapter-text">
+        <small>Bab 2</small>
+        <h2>Arsitektur <span>Infrastruktur</span></h2>
       </div>
-    </li>
-
-    <li class="step-item">
-      <div class="step-num">2</div>
-      <div class="step-content">
-        <h4>Konfigurasi Berkas Lingkungan (.env)</h4>
-        <p>Salin file template <span class="mono">.env.example</span> menjadi berkas konfigurasi aktif <span class="mono">.env</span>, lalu edit untuk menyesuaikan konfigurasi produksi:</p>
-        <div class="cmd-block">
-          <span class="prompt">$</span> cp .env.example .env<br>
-          <span class="prompt">$</span> nano .env
+    </div>
+    <div class="arch-diagram">
+      <h4 style="text-align:center; color: #334155; margin-bottom: 20px; font-size: 10pt;">Alur Data Sistem IoT
+        Dashboard</h4>
+      <div class="arch-row">
+        <div class="arch-box sensor">🔌 Sensor ESP32<br><small>PZEM-004T</small></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box mqtt">📡 MQTT Broker<br><small>Mosquitto :1883</small></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box app">⚙️ MQTT Worker<br><small>mqtt:listen</small></div>
+      </div>
+      <div class="arch-row">
+        <div style="width:100%; text-align:center; color:#94a3b8; font-size:20px;">↓</div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-box browser">🖥️ Browser User<br><small>Dashboard UI</small></div>
+        <div class="arch-arrow">←</div>
+        <div class="arch-box ws">🔄 Reverb WS<br><small>:8085</small></div>
+        <div class="arch-arrow">←</div>
+        <div class="arch-box app">📦 Laravel App<br><small>Cache + DB</small></div>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:20px;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon blue">🐳</div>
+          <div>
+            <div class="card-title">Kontainer Docker</div>
+            <div class="card-subtitle">Services yang berjalan</div>
+          </div>
         </div>
-        <p>Sesuaikan nilai variabel lingkungan berikut demi keamanan dan fungsi real-time di VPS:</p>
+        <ul>
+          <li><strong>iot_dashboard_app</strong> — Laravel + Nginx + Reverb + Worker</li>
+          <li><strong>iot_dashboard_mqtt</strong> — Eclipse Mosquitto Broker</li>
+          <li><strong>iot_dashboard_mysql</strong> — MySQL 8.0 Database Server</li>
+          <li><strong>iot_dashboard_phpmyadmin</strong> — phpMyAdmin (Database manager web)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon purple">🔄</div>
+          <div>
+            <div class="card-title">Supervisor Processes</div>
+            <div class="card-subtitle">Proses yang dikelola Supervisor</div>
+          </div>
+        </div>
+        <ul>
+          <li><strong>nginx</strong> — Web server (port 80)</li>
+          <li><strong>php-fpm</strong> — PHP FastCGI handler</li>
+          <li><strong>reverb</strong> — WebSocket server (port 8085)</li>
+          <li><strong>queue worker</strong> — Queue processing</li>
+          <li><strong>mqtt worker</strong> — MQTT listener &amp; broadcaster</li>
+        </ul>
+      </div>
+    </div>
+    <div class="alert info">
+      <div class="alert-icon">💡</div>
+      <div class="alert-content">
+        <h5>IP Otomatis</h5>
+        <p>Script <span class="mono">install.sh</span> secara otomatis mendeteksi IP publik VPS menggunakan <span
+            class="mono">ifconfig.me</span> dan menggunakannya sebagai konfigurasi REVERB_HOST. Jika IP VPS berubah,
+          cukup jalankan ulang <span class="mono">./install.sh</span>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BAB 3: PRASYARAT -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">✅</div>
+      <div class="chapter-text">
+        <small>Bab 3</small>
+        <h2>Prasyarat <span>&amp; Persyaratan</span></h2>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon blue">🖥️</div>
+          <div>
+            <div class="card-title">Spesifikasi VPS Minimum</div>
+            <div class="card-subtitle">Untuk deployment produksi</div>
+          </div>
+        </div>
         <table>
           <thead>
             <tr>
-              <th>Variabel .env</th>
-              <th>Nilai Produksi / VPS</th>
-              <th>Keterangan</th>
+              <th>Sumber Daya</th>
+              <th>Minimum</th>
+              <th>Rekomendasi</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>APP_ENV</strong></td>
-              <td><span class="mono">production</span></td>
-              <td>Menandakan aplikasi berjalan di lingkungan produksi.</td>
+              <td>CPU</td>
+              <td>1 Core</td>
+              <td>2 Core</td>
             </tr>
             <tr>
-              <td><strong>APP_DEBUG</strong></td>
-              <td><span class="mono">false</span></td>
-              <td>Menonaktifkan pesan error detail demi keamanan.</td>
+              <td>RAM</td>
+              <td>1 GB</td>
+              <td>2 GB</td>
             </tr>
             <tr>
-              <td><strong>APP_URL</strong></td>
-              <td><span class="mono">https://domain-vps-anda.com</span></td>
-              <td>URL domain utama VPS Anda (wajib gunakan HTTPS).</td>
+              <td>Storage</td>
+              <td>10 GB</td>
+              <td>20 GB SSD</td>
             </tr>
             <tr>
-              <td><strong>VITE_REVERB_SCHEME</strong></td>
-              <td><span class="mono">https</span></td>
-              <td>Memaksa koneksi WebSocket menggunakan enkripsi TLS (<span class="mono">wss://</span>).</td>
+              <td>OS</td>
+              <td>Ubuntu 22.04</td>
+              <td>Ubuntu 24.04</td>
             </tr>
             <tr>
-              <td><strong>VITE_REVERB_PORT</strong></td>
-              <td><span class="mono">443</span></td>
-              <td>Koneksi WebSocket diarahkan melalui port HTTPS standar.</td>
-            </tr>
-            <tr>
-              <td><strong>DB_PASSWORD</strong></td>
-              <td><span class="mono">PasswordAmanSatu23!</span></td>
-              <td>Ganti dengan password database yang acak dan kuat.</td>
-            </tr>
-            <tr>
-              <td><strong>MQTT_PASSWORD</strong></td>
-              <td><span class="mono">PasswordBrokerAman456!</span></td>
-              <td>Ganti dengan credential broker MQTT yang kuat.</td>
+              <td>Bandwidth</td>
+              <td>100 Mbps</td>
+              <td>1 Gbps</td>
             </tr>
           </tbody>
         </table>
       </div>
-    </li>
-
-    <li class="step-item">
-      <div class="step-num">3</div>
-      <div class="step-content">
-        <h4>Kompilasi Aset Frontend (Host)</h4>
-        <p>Sebelum membangun container Docker, aset frontend (CSS, Javascript, Echo Client) harus dikompilasi terlebih dahulu agar memuat variabel Reverb yang dinamis:</p>
-        <div class="cmd-block">
-          <span class="comment"># Install dependencies npm</span><br>
-          <span class="prompt">$</span> npm install<br><br>
-          <span class="comment"># Jalankan kompilasi produksi</span><br>
-          <span class="prompt">$</span> npm run build
-        </div>
-      </div>
-    </li>
-
-    <li class="step-item">
-      <div class="step-num">4</div>
-      <div class="step-content">
-        <h4>Jalankan Container Docker</h4>
-        <p>Bangun dan aktifkan seluruh stack aplikasi (PHP Laravel App, MySQL, Mosquitto MQTT Broker, phpMyAdmin) dalam mode daemon (background):</p>
-        <div class="cmd-block">
-          <span class="prompt">$</span> docker compose up -d --build
-        </div>
-      </div>
-    </li>
-
-    <li class="step-item">
-      <div class="step-num">5</div>
-      <div class="step-content">
-        <h4>Konfigurasi Nginx Host & SSL Let's Encrypt (Reverse Proxy)</h4>
-        <p>Agar aplikasi dapat diakses melalui port standar web (80/443) dengan sertifikat SSL gratis (HTTPS), pasang Nginx di VPS host untuk melakukan reverse proxy ke container Docker:</p>
-        <div class="cmd-block">
-          <span class="comment"># Pasang Nginx & Certbot SSL</span><br>
-          <span class="prompt">$</span> sudo apt install -y nginx certbot python3-certbot-nginx<br><br>
-          <span class="comment"># Buat berkas server block baru</span><br>
-          <span class="prompt">$</span> sudo nano /etc/nginx/sites-available/dashboard
-        </div>
-        <p>Tempelkan konfigurasi reverse proxy berikut (sesuaikan <span class="mono">server_name</span> dengan domain Anda):</p>
-        <div class="cmd-block" style="background:#0f172a; color:#cbd5e1; font-family:'JetBrains Mono',monospace; padding:15px; border-radius:8px;">
-<span style="color:#f43f5e">server</span> {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">listen</span> 80;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">server_name</span> domain-vps-anda.com;<br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#f43f5e">location</span> / {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_pass</span> http://127.0.0.1:8080;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_set_header</span> Host $host;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_set_header</span> X-Real-IP $remote_addr;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_set_header</span> X-Forwarded-For $proxy_add_x_forwarded_for;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_set_header</span> X-Forwarded-Proto $scheme;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-}
-        </div>
-        <p>Aktifkan konfigurasi Nginx dan pasang sertifikat SSL Let's Encrypt secara otomatis:</p>
-        <div class="cmd-block">
-          <span class="comment"># Aktifkan konfigurasi link-symbolic</span><br>
-          <span class="prompt">$</span> sudo ln -s /etc/nginx/sites-available/dashboard /etc/nginx/sites-enabled/<br>
-          <span class="prompt">$</span> sudo systemctl restart nginx<br><br>
-          <span class="comment"># Ajukan SSL Certbot otomatis</span><br>
-          <span class="prompt">$</span> sudo certbot --nginx -d domain-vps-anda.com
-        </div>
-      </div>
-    </li>
-
-    <li class="step-item">
-      <div class="step-num">6</div>
-      <div class="step-content">
-        <h4>Konfigurasi Firewall (UFW)</h4>
-        <p>Tutup port-port yang tidak diperlukan agar VPS Anda aman dari scanning luar. Anda hanya perlu membuka port SSH, HTTP, HTTPS, dan port MQTT untuk komunikasi ESP32:</p>
-        <div class="cmd-block">
-          <span class="comment"># Aturan dasar firewall</span><br>
-          <span class="prompt">$</span> sudo ufw default deny incoming<br>
-          <span class="prompt">$</span> sudo ufw default allow outgoing<br><br>
-          <span class="comment"># Buka port penting</span><br>
-          <span class="prompt">$</span> sudo ufw allow 22/tcp<br>
-          <span class="prompt">$</span> sudo ufw allow 80/tcp<br>
-          <span class="prompt">$</span> sudo ufw allow 443/tcp<br>
-          <span class="prompt">$</span> sudo ufw allow 1883/tcp<br><br>
-          <span class="comment"># Aktifkan firewall</span><br>
-          <span class="prompt">$</span> sudo ufw enable
-        </div>
-        <div class="alert info">
-          <div class="alert-icon">💡</div>
-          <div class="alert-content">
-            <h5>Mengapa Port 8085 & 8082 Tidak Perlu Dibuka?</h5>
-            <p>Port Reverb WebSocket (8085) disalurkan dengan aman melalui reverse proxy Nginx pada port HTTPS (443) (lewat route <span class="mono">/app</span>). Port database phpMyAdmin (8082) sengaja tidak dibuka untuk publik agar tidak diretas; jika ingin membukanya, akseslah melalui SSH Tunneling.</p>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon green">📦</div>
+          <div>
+            <div class="card-title">Software Prasyarat</div>
+            <div class="card-subtitle">Dipasang otomatis oleh install.sh</div>
           </div>
         </div>
-      </div>
-    </li>
-  </ul>
-
-  <div class="alert success">
-    <div class="alert-icon">✅</div>
-    <div class="alert-content">
-      <h5>Deployment Selesai & Sukses!</h5>
-      <p>Aplikasi Anda sekarang dapat diakses secara aman di <span class="mono">https://domain-vps-anda.com</span> dengan enkripsi SSL penuh, dan metrik data dari mikrokontroler akan langsung tampil secara <strong>real-time</strong> di HP/Laptop manapun!</p>
-    </div>
-  </div>
-</div>
-
-
-<!-- BAB 5: KONFIGURASI .ENV -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">⚙️</div>
-    <div class="chapter-text">
-      <small>Bab 5</small>
-      <h2>Konfigurasi <span>File .env</span></h2>
-    </div>
-  </div>
-  <p>File <span class="mono">.env</span> adalah pusat konfigurasi seluruh sistem. Berikut parameter-parameter kunci yang perlu dikonfigurasi:</p>
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">🔧</div><div><div class="card-title">Konfigurasi Aplikasi Utama</div></div></div>
-    <div class="cmd-block">
-      <span class="comment"># Identitas Aplikasi</span><br>
-      <span class="keyword">APP_NAME</span>=<span class="string">"Jamkrida Energy Dashboard"</span><br>
-      <span class="keyword">APP_ENV</span>=<span class="string">production</span><br>
-      <span class="keyword">APP_DEBUG</span>=<span class="string">false</span><br>
-      <span class="keyword">APP_URL</span>=<span class="string">http://&lt;IP_VPS&gt;</span><br><br>
-      <span class="comment"># Database (MySQL)</span><br>
-      <span class="keyword">DB_CONNECTION</span>=<span class="string">mysql</span><br>
-      <span class="keyword">DB_HOST</span>=<span class="string">mysql</span><br>
-      <span class="keyword">DB_PORT</span>=<span class="string">3306</span><br>
-      <span class="keyword">DB_DATABASE</span>=<span class="string">dashboard_iot_baru</span><br>
-      <span class="keyword">DB_USERNAME</span>=<span class="string">root</span><br>
-      <span class="keyword">DB_PASSWORD</span>=<span class="string">&lt;password_database_anda&gt;</span>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon purple">🔄</div><div><div class="card-title">Konfigurasi WebSocket (Reverb)</div></div></div>
-    <div class="cmd-block">
-      <span class="keyword">BROADCAST_CONNECTION</span>=<span class="string">reverb</span><br>
-      <span class="keyword">REVERB_HOST</span>=<span class="variable">"&lt;IP_VPS&gt;"</span>  <span class="comment"># IP publik VPS Anda</span><br>
-      <span class="keyword">REVERB_PORT</span>=<span class="string">8085</span><br>
-      <span class="keyword">REVERB_SCHEME</span>=<span class="string">http</span><br>
-      <span class="keyword">VITE_REVERB_HOST</span>=<span class="variable">"&lt;IP_VPS&gt;"</span>  <span class="comment"># harus sama dengan REVERB_HOST</span><br>
-      <span class="keyword">VITE_REVERB_PORT</span>=<span class="string">8085</span>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">📡</div><div><div class="card-title">Konfigurasi MQTT</div></div></div>
-    <div class="cmd-block">
-      <span class="keyword">MQTT_HOST</span>=<span class="string">mqtt</span>  <span class="comment"># "mqtt" = Docker internal. Ganti ke IP eksternal jika broker berbeda</span><br>
-      <span class="keyword">MQTT_PORT</span>=<span class="string">1883</span><br>
-      <span class="keyword">MQTT_USERNAME</span>=<span class="string">jamkrida_sensor</span><br>
-      <span class="keyword">MQTT_PASSWORD</span>=<span class="string">&lt;password_yang_di-generate&gt;</span>
-    </div>
-    <div class="alert info" style="margin-top:12px;">
-      <div class="alert-icon">💡</div>
-      <div class="alert-content">
-        <h5>Tentang MQTT_HOST</h5>
-        <p>Nilai <span class="mono">mqtt</span> adalah nama service Docker internal. Gunakan ini jika sistem berjalan dalam Docker. Jika menggunakan broker MQTT eksternal, ganti dengan IP/domain broker tersebut.</p>
+        <ul>
+          <li>🐳 <strong>Docker Engine</strong> ≥ 24.x</li>
+          <li>📦 <strong>Docker Compose</strong> v2</li>
+          <li>🐘 <strong>PHP</strong> ≥ 8.4 (curl, mbstring, sockets, xml, zip)</li>
+          <li>🎵 <strong>Composer</strong> ≥ 2.x</li>
+          <li>🟢 <strong>Node.js</strong> ≥ 20.x &amp; NPM</li>
+          <li>🔐 <strong>OpenSSL</strong> (untuk generate password)</li>
+        </ul>
       </div>
     </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon green">🔔</div><div><div class="card-title">Konfigurasi Notifikasi Telegram (Opsional)</div></div></div>
-    <div class="cmd-block">
-      <span class="keyword">TELEGRAM_BOT_TOKEN</span>=<span class="string">&lt;token_dari_BotFather&gt;</span><br>
-      <span class="keyword">TELEGRAM_CHAT_ID</span>=<span class="string">&lt;chat_id_grup_atau_user&gt;</span>
-    </div>
-  </div>
-</div>
-
-<!-- BAB 6: LAYANAN LOKAL -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">💻</div>
-    <div class="chapter-text">
-      <small>Bab 6</small>
-      <h2>Menjalankan <span>Layanan Lokal</span></h2>
-    </div>
-  </div>
-  <p>Untuk pengembangan di mesin lokal (tanpa Docker), jalankan setiap layanan berikut di terminal yang berbeda dari folder root project.</p>
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">1️⃣</div><div><div class="card-title">Laravel Web Server</div><div class="card-subtitle">Aplikasi web utama — http://127.0.0.1:8000</div></div></div>
-    <div class="cmd-block"><span class="prompt">$</span> php artisan serve</div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon purple">2️⃣</div><div><div class="card-title">Reverb WebSocket Server</div><div class="card-subtitle">Server real-time — ws://127.0.0.1:8085</div></div></div>
-    <div class="cmd-block"><span class="prompt">$</span> php artisan reverb:start --port=8085 --debug</div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">3️⃣</div><div><div class="card-title">MQTT Listener Worker</div><div class="card-subtitle">Menerima data sensor &amp; broadcast ke WebSocket</div></div></div>
-    <div class="cmd-block"><span class="prompt">$</span> php artisan mqtt:listen</div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon green">4️⃣</div><div><div class="card-title">Queue Listener</div></div></div>
-    <div class="cmd-block"><span class="prompt">$</span> php artisan queue:listen</div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">5️⃣</div><div><div class="card-title">Vite Aset Frontend</div></div></div>
-    <div class="cmd-block">
-      <span class="comment"># Mode Development (hot reload)</span><br>
-      <span class="prompt">$</span> npm run dev<br><br>
-      <span class="comment"># Mode Produksi (kompilasi statis, direkomendasikan di VPS)</span><br>
-      <span class="prompt">$</span> npm run build
-    </div>
-  </div>
-  <div class="alert warning">
-    <div class="alert-icon">⚠️</div>
-    <div class="alert-content">
-      <h5>Urutan Menjalankan Layanan</h5>
-      <p>Pastikan menjalankan <strong>Reverb</strong> sebelum <strong>MQTT Worker</strong>. MQTT Worker akan broadcast ke Reverb saat data sensor masuk.</p>
-    </div>
-  </div>
-</div>
-
-<!-- BAB 7: MQTT BROKER -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">📡</div>
-    <div class="chapter-text">
-      <small>Bab 7</small>
-      <h2>Konfigurasi <span>MQTT Broker</span></h2>
-    </div>
-  </div>
-  <p>Sistem menggunakan <strong>Eclipse Mosquitto</strong> sebagai MQTT broker yang berjalan di dalam kontainer Docker. Autentikasi wajib diaktifkan untuk keamanan.</p>
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">📄</div><div><div class="card-title">File Konfigurasi Mosquitto</div><div class="card-subtitle">.docker/mosquitto.conf</div></div></div>
-    <div class="cmd-block">
-      <span class="keyword">persistence</span> true<br>
-      <span class="keyword">persistence_location</span> /mosquitto/data/<br>
-      <span class="keyword">log_dest</span> file /mosquitto/log/mosquitto.log<br><br>
-      <span class="keyword">listener</span> 1883<br>
-      <span class="keyword">allow_anonymous</span> false  <span class="comment"># Wajib autentikasi</span><br>
-      <span class="keyword">password_file</span> /mosquitto/config/passwd
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">🔑</div><div><div class="card-title">Manajemen Kredensial MQTT</div><div class="card-subtitle">Dibuat otomatis saat install.sh dijalankan</div></div></div>
-    <div class="cmd-block">
-      <span class="comment"># Generate file passwd baru dengan password berbeda</span><br>
-      <span class="prompt">$</span> docker run --rm -v "$(pwd)/.docker:/config" \<br>
-        &nbsp;&nbsp;eclipse-mosquitto:latest \<br>
-        &nbsp;&nbsp;mosquitto_passwd -c -b /config/passwd jamkrida_sensor &lt;password_baru&gt;<br><br>
-      <span class="comment"># Restart broker untuk terapkan perubahan</span><br>
-      <span class="prompt">$</span> docker compose restart mqtt
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon green">🧪</div><div><div class="card-title">Test Koneksi MQTT</div></div></div>
-    <div class="cmd-block">
-      <span class="comment"># Subscribe ke semua topic (butuh mosquitto-clients)</span><br>
-      <span class="prompt">$</span> mosquitto_sub -h &lt;IP_VPS&gt; -p 1883 -u jamkrida_sensor -P &lt;password&gt; -t "#" -v<br><br>
-      <span class="comment"># Publish test message</span><br>
-      <span class="prompt">$</span> mosquitto_pub -h &lt;IP_VPS&gt; -p 1883 -u jamkrida_sensor -P &lt;password&gt; \<br>
-        &nbsp;&nbsp;-t "device/&lt;device_key&gt;/telemetry" \<br>
-        &nbsp;&nbsp;-m '{"voltage":220,"current":1.5,"power":330,"energy":5.0}'
-    </div>
-  </div>
-</div>
-
-<!-- BAB 8: INTEGRASI ESP32 -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">🔌</div>
-    <div class="chapter-text">
-      <small>Bab 8</small>
-      <h2>Integrasi <span>Perangkat ESP32</span></h2>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">📋</div><div><div class="card-title">Format Topic MQTT</div><div class="card-subtitle">Struktur topic yang dikenali sistem</div></div></div>
-    <table>
-      <thead><tr><th>Topic</th><th>Arah</th><th>Fungsi</th></tr></thead>
-      <tbody>
-        <tr><td><span class="mono">device/{device_key}/telemetry</span></td><td><span class="badge green">Publish</span></td><td>Data sensor: volt, arus, daya, energi, RSSI, heap</td></tr>
-        <tr><td><span class="mono">device/{device_key}/status</span></td><td><span class="badge green">Publish</span></td><td>Status perangkat (online/offline), IP address</td></tr>
-        <tr><td><span class="mono">device/{device_key}/cmd</span></td><td><span class="badge blue">Subscribe</span></td><td>Terima perintah dari dashboard</td></tr>
-        <tr><td><span class="mono">device/{device_key}/cmd_resp</span></td><td><span class="badge green">Publish</span></td><td>Respons terhadap perintah yang diterima</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">📦</div><div><div class="card-title">Format Payload Telemetri (JSON)</div><div class="card-subtitle">Struktur data yang dikirim ESP32</div></div></div>
-    <div class="cmd-block">
-      {<br>
-      &nbsp;&nbsp;<span class="string">"voltage"</span>:   <span class="keyword">220.5</span>,     <span class="comment">// Tegangan (Volt)</span><br>
-      &nbsp;&nbsp;<span class="string">"current"</span>:   <span class="keyword">1.52</span>,      <span class="comment">// Arus (Ampere)</span><br>
-      &nbsp;&nbsp;<span class="string">"power"</span>:     <span class="keyword">334.76</span>,    <span class="comment">// Daya aktif (Watt)</span><br>
-      &nbsp;&nbsp;<span class="string">"energy"</span>:    <span class="keyword">12.40</span>,     <span class="comment">// Energi kumulatif (kWh)</span><br>
-      &nbsp;&nbsp;<span class="string">"frequency"</span>: <span class="keyword">50.0</span>,      <span class="comment">// Frekuensi (Hz)</span><br>
-      &nbsp;&nbsp;<span class="string">"pf"</span>:        <span class="keyword">0.98</span>,      <span class="comment">// Power Factor</span><br>
-      &nbsp;&nbsp;<span class="string">"rssi"</span>:      <span class="keyword">-62</span>,       <span class="comment">// Kekuatan sinyal WiFi (dBm)</span><br>
-      &nbsp;&nbsp;<span class="string">"heap"</span>:      <span class="keyword">182340</span>,    <span class="comment">// Free heap memory (bytes)</span><br>
-      &nbsp;&nbsp;<span class="string">"ip"</span>:        <span class="string">"192.168.1.10"</span>  <span class="comment">// IP lokal perangkat</span><br>
-      }
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon green">📶</div><div><div class="card-title">Interpretasi Nilai RSSI WiFi</div></div></div>
-    <table>
-      <thead><tr><th>Rentang RSSI (dBm)</th><th>Kualitas</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr><td>-30 s/d -50 dBm</td><td>Sangat Baik</td><td><span class="badge green">Excellent</span></td></tr>
-        <tr><td>-51 s/d -67 dBm</td><td>Baik</td><td><span class="badge blue">Good</span></td></tr>
-        <tr><td>-68 s/d -79 dBm</td><td>Cukup</td><td><span class="badge orange">Fair</span></td></tr>
-        <tr><td>-80 dBm ke bawah</td><td>Lemah</td><td><span class="badge gray">Weak</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- BAB 9: FITUR DASHBOARD -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">📊</div>
-    <div class="chapter-text">
-      <small>Bab 9</small>
-      <h2>Fitur <span>Dashboard</span></h2>
-    </div>
-  </div>
-  <div class="grid-2">
     <div class="card">
-      <div class="card-header"><div class="card-icon blue">⚡</div><div><div class="card-title">Pemantauan Real-time</div></div></div>
-      <ul>
-        <li>📊 Grafik tegangan, arus, daya &amp; energi live</li>
-        <li>📡 Indikator kekuatan sinyal WiFi (RSSI)</li>
-        <li>🧠 Monitor free heap memory ESP32</li>
-        <li>📍 Tampilan IP lokal perangkat aktif</li>
-        <li>🔄 Update otomatis via WebSocket</li>
-      </ul>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="card-icon green">📅</div><div><div class="card-title">Analitik &amp; Laporan</div></div></div>
-      <ul>
-        <li>📈 Grafik histori harian &amp; bulanan</li>
-        <li>💰 Kalkulasi biaya listrik (per kWh)</li>
-        <li>📊 Perbandingan konsumsi antar perangkat</li>
-        <li>🎯 Budget bulanan &amp; prediksi pemakaian</li>
-        <li>📤 Export laporan (PDF/CSV)</li>
-      </ul>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="card-icon orange">🔔</div><div><div class="card-title">Alert &amp; Notifikasi</div></div></div>
-      <ul>
-        <li>⚡ Alert tegangan abnormal</li>
-        <li>📉 Peringatan konsumsi melebihi batas</li>
-        <li>📱 Notifikasi via Telegram Bot</li>
-        <li>🔴 Indikator status online/offline perangkat</li>
-        <li>🕐 Log histori alert</li>
-      </ul>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="card-icon purple">🎮</div><div><div class="card-title">Kontrol Perangkat</div></div></div>
-      <ul>
-        <li>💻 Remote console dengan preset perintah</li>
-        <li>🔄 Reset energi kumulatif jarak jauh</li>
-        <li>🔃 Restart perangkat ESP32 jarak jauh</li>
-        <li>📋 Riwayat perintah yang dikirim</li>
-        <li>📡 Status respons dari perangkat</li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!-- BAB 10: PORT & ENDPOINT -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">🔗</div>
-    <div class="chapter-text">
-      <small>Bab 10</small>
-      <h2>Referensi <span>Port &amp; Endpoint</span></h2>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">🌐</div><div><div class="card-title">Endpoint Akses Sistem</div><div class="card-subtitle">Semua URL menggunakan IP/domain VPS Anda</div></div></div>
-    <table>
-      <thead><tr><th>Layanan</th><th>URL / Endpoint</th><th>Port</th><th>Keterangan</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Dashboard Web</strong></td><td><span class="mono">http://&lt;VPS_IP&gt;</span></td><td>80</td><td>Halaman utama dashboard</td></tr>
-        <tr><td><strong>Database Manager</strong></td><td><span class="mono">http://&lt;VPS_IP&gt;:8082</span></td><td>8082</td><td>phpMyAdmin GUI</td></tr>
-        <tr><td><strong>WebSocket Reverb</strong></td><td><span class="mono">ws://&lt;VPS_IP&gt;:8085</span></td><td>8085</td><td>Koneksi real-time browser</td></tr>
-        <tr><td><strong>MQTT Broker</strong></td><td><span class="mono">mqtt://&lt;VPS_IP&gt;:1883</span></td><td>1883</td><td>Koneksi dari sensor ESP32</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="card" style="margin-top:20px;">
-    <div class="card-header"><div class="card-icon green">🔑</div><div><div class="card-title">Endpoint API Internal (Laravel)</div></div></div>
-    <table>
-      <thead><tr><th>Method</th><th>Endpoint</th><th>Fungsi</th></tr></thead>
-      <tbody>
-        <tr><td><span class="badge blue">GET</span></td><td><span class="mono">/dashboard</span></td><td>Halaman dashboard utama</td></tr>
-        <tr><td><span class="badge blue">GET</span></td><td><span class="mono">/devices</span></td><td>Daftar semua perangkat</td></tr>
-        <tr><td><span class="badge blue">GET</span></td><td><span class="mono">/devices/{id}</span></td><td>Detail &amp; monitoring perangkat</td></tr>
-        <tr><td><span class="badge green">POST</span></td><td><span class="mono">/devices/{id}/command</span></td><td>Kirim perintah ke perangkat</td></tr>
-        <tr><td><span class="badge blue">GET</span></td><td><span class="mono">/api/telemetry/{key}</span></td><td>Ambil data telemetri terbaru</td></tr>
-        <tr><td><span class="badge blue">GET</span></td><td><span class="mono">/api/devices/{id}/chart</span></td><td>Data grafik historis</td></tr>
-        <tr><td><span class="badge orange">PUT</span></td><td><span class="mono">/settings</span></td><td>Update pengaturan sistem</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- BAB 11: MANAJEMEN -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">🛠️</div>
-    <div class="chapter-text">
-      <small>Bab 11</small>
-      <h2>Manajemen <span>&amp; Pemantauan</span></h2>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">🐳</div><div><div class="card-title">Perintah Docker Umum</div></div></div>
-    <div class="cmd-block">
-      <span class="comment"># Cek status semua container</span><br>
-      <span class="prompt">$</span> docker compose ps<br><br>
-      <span class="comment"># Lihat log real-time semua service</span><br>
-      <span class="prompt">$</span> docker compose logs -f<br><br>
-      <span class="comment"># Lihat log service tertentu</span><br>
-      <span class="prompt">$</span> docker compose logs -f app<br><br>
-      <span class="comment"># Restart semua service</span><br>
-      <span class="prompt">$</span> docker compose restart<br><br>
-      <span class="comment"># Stop semua service</span><br>
-      <span class="prompt">$</span> docker compose down<br><br>
-      <span class="comment"># Start ulang setelah update kode</span><br>
-      <span class="prompt">$</span> docker compose up -d --build
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">📝</div><div><div class="card-title">Akses ke dalam Container</div></div></div>
-    <div class="cmd-block">
-      <span class="comment"># Masuk ke container aplikasi</span><br>
-      <span class="prompt">$</span> docker compose exec app sh<br><br>
-      <span class="comment"># Jalankan artisan dari luar container</span><br>
-      <span class="prompt">$</span> docker compose exec app php artisan migrate<br>
-      <span class="prompt">$</span> docker compose exec app php artisan cache:clear<br>
-      <span class="prompt">$</span> docker compose exec app php artisan config:cache
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon green">🔄</div><div><div class="card-title">Update Kode Aplikasi</div></div></div>
-    <div class="cmd-block">
-      <span class="prompt">$</span> git pull origin main<br>
-      <span class="prompt">$</span> npm run build<br>
-      <span class="prompt">$</span> docker compose up -d --build<br>
-      <span class="prompt">$</span> docker compose exec app php artisan migrate --force
-    </div>
-  </div>
-</div>
-
-<!-- BAB 12: TROUBLESHOOTING -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">🔧</div>
-    <div class="chapter-text">
-      <small>Bab 12</small>
-      <h2>Trouble<span>shooting</span></h2>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon red">❌</div><div><div class="card-title">Dashboard tidak update real-time</div></div></div>
-    <p><strong>Penyebab:</strong> WebSocket tidak terkoneksi, nilai <span class="mono">REVERB_HOST</span> salah atau port 8085 terblokir.</p>
-    <div class="cmd-block">
-      <span class="prompt">$</span> docker compose logs app | grep reverb<br>
-      <span class="prompt">$</span> grep REVERB_HOST .env<br>
-      <span class="prompt">$</span> sudo ufw allow 8085/tcp
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon red">❌</div><div><div class="card-title">Data sensor tidak masuk ke dashboard</div></div></div>
-    <p><strong>Penyebab:</strong> MQTT Worker tidak berjalan, kredensial MQTT salah, atau topic tidak sesuai.</p>
-    <div class="cmd-block">
-      <span class="prompt">$</span> docker compose logs -f app | grep mqtt<br><br>
-      <span class="comment"># Test publish manual</span><br>
-      <span class="prompt">$</span> mosquitto_pub -h &lt;VPS_IP&gt; -p 1883 -u jamkrida_sensor -P &lt;password&gt; \<br>
-        &nbsp;&nbsp;-t "device/&lt;device_key&gt;/telemetry" \<br>
-        &nbsp;&nbsp;-m '{"voltage":220,"current":1.5,"power":330,"energy":5.0}'
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon red">❌</div><div><div class="card-title">Error 500 saat akses web</div></div></div>
-    <p><strong>Penyebab:</strong> Konfigurasi <span class="mono">.env</span> salah, cache belum di-clear, atau migrasi belum dijalankan.</p>
-    <div class="cmd-block">
-      <span class="prompt">$</span> docker compose exec app php artisan cache:clear<br>
-      <span class="prompt">$</span> docker compose exec app php artisan config:cache<br>
-      <span class="prompt">$</span> docker compose exec app tail -100 storage/logs/laravel.log
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">⚠️</div><div><div class="card-title">Perangkat muncul offline padahal aktif</div></div></div>
-    <p>Sistem menandai perangkat sebagai offline jika tidak ada data masuk selama 5 menit. Periksa koneksi WiFi ESP32 dan pastikan topic MQTT yang digunakan sesuai dengan device key yang terdaftar.</p>
-    <div class="alert warning" style="margin-top:12px;">
-      <div class="alert-icon">💡</div>
-      <div class="alert-content">
-        <h5>Tip: Monitor RSSI di Dashboard</h5>
-        <p>Jika RSSI ESP32 menunjukkan nilai di bawah -80 dBm, pertimbangkan untuk memindahkan router lebih dekat atau menggunakan repeater WiFi.</p>
+      <div class="card-header">
+        <div class="card-icon orange">🔓</div>
+        <div>
+          <div class="card-title">Port yang Harus Terbuka di Firewall</div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-  <p style="text-align:center; color:#94a3b8; font-size:9pt; margin-top:20px;">
-    📄 Jamkrida Energy IoT Dashboard — Panduan Infrastruktur v2.0<br>
-    Dibuat dengan ❤️ menggunakan Laravel 12, Docker &amp; Eclipse Mosquitto
-  </p>
-</div>
-
-<!-- BAB 13: SKEMA DATABASE -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">🗄️</div>
-    <div class="chapter-text">
-      <small>Bab 13</small>
-      <h2>Skema <span>Database</span></h2>
-    </div>
-  </div>
-  <p>Sistem menggunakan <strong>MySQL</strong> sebagai database utama di dalam Docker container. Berikut tabel-tabel yang digunakan beserta relasi dan kegunaannya.</p>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">👥</div><div><div class="card-title">Tabel: users</div><div class="card-subtitle">Autentikasi dan otorisasi pengguna</div></div></div>
-    <table>
-      <thead><tr><th>Kolom</th><th>Tipe</th><th>Keterangan</th></tr></thead>
-      <tbody>
-        <tr><td><span class="mono">id</span></td><td>integer PK</td><td>Primary key auto-increment</td></tr>
-        <tr><td><span class="mono">name</span></td><td>string</td><td>Nama lengkap pengguna</td></tr>
-        <tr><td><span class="mono">email</span></td><td>string unique</td><td>Email untuk login</td></tr>
-        <tr><td><span class="mono">password</span></td><td>string</td><td>Hash bcrypt password</td></tr>
-        <tr><td><span class="mono">role</span></td><td>enum</td><td><span class="badge blue">admin</span> atau <span class="badge gray">user</span></td></tr>
-        <tr><td><span class="mono">created_at / updated_at</span></td><td>timestamp</td><td>Waktu pembuatan &amp; update</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon green">📦</div><div><div class="card-title">Tabel: groups</div><div class="card-subtitle">Pengelompokan perangkat</div></div></div>
-    <table>
-      <thead><tr><th>Kolom</th><th>Tipe</th><th>Keterangan</th></tr></thead>
-      <tbody>
-        <tr><td><span class="mono">id</span></td><td>integer PK</td><td>Primary key</td></tr>
-        <tr><td><span class="mono">name</span></td><td>string</td><td>Nama grup (contoh: "Lantai 1", "Server Room")</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">🔌</div><div><div class="card-title">Tabel: devices</div><div class="card-subtitle">Data perangkat IoT yang terdaftar</div></div></div>
-    <table>
-      <thead><tr><th>Kolom</th><th>Tipe</th><th>Keterangan</th></tr></thead>
-      <tbody>
-        <tr><td><span class="mono">device_id</span></td><td>string unique</td><td>ID unik perangkat (contoh: <span class="mono">dev_AbCd1234</span>)</td></tr>
-        <tr><td><span class="mono">name</span></td><td>string</td><td>Nama deskriptif perangkat</td></tr>
-        <tr><td><span class="mono">group_id</span></td><td>FK → groups</td><td>Grup tempat perangkat berada</td></tr>
-        <tr><td><span class="mono">status</span></td><td>boolean</td><td>Aktif/nonaktif di sistem</td></tr>
-        <tr><td><span class="mono">mqtt_topic</span></td><td>string</td><td>Topic MQTT perangkat (contoh: <span class="mono">telemetry/lantai1/dev_xxx</span>)</td></tr>
-        <tr><td><span class="mono">provisioning_code</span></td><td>text</td><td>Kode Arduino/ESP32 yang di-generate otomatis</td></tr>
-        <tr><td><span class="mono">firmware_path</span></td><td>string</td><td>Path firmware .bin untuk OTA update</td></tr>
-        <tr><td><span class="mono">voltage_multiplier</span></td><td>decimal</td><td>Faktor kalibrasi tegangan (default: 1.00)</td></tr>
-        <tr><td><span class="mono">current_multiplier</span></td><td>decimal</td><td>Faktor kalibrasi arus (default: 1.00)</td></tr>
-        <tr><td><span class="mono">monthly_budget_kwh</span></td><td>decimal null</td><td>Batas budget kWh per bulan</td></tr>
-        <tr><td><span class="mono">monthly_budget_cost</span></td><td>decimal null</td><td>Batas budget biaya (Rp) per bulan</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-header"><div class="card-icon purple">📊</div><div><div class="card-title">Tabel: daily_energy_logs</div><div class="card-subtitle">Riwayat energi harian</div></div></div>
       <table>
-        <thead><tr><th>Kolom</th><th>Tipe</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Port</th>
+            <th>Protokol</th>
+            <th>Layanan</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr><td><span class="mono">device_id</span></td><td>FK → devices</td></tr>
-          <tr><td><span class="mono">date</span></td><td>date</td></tr>
-          <tr><td><span class="mono">total_kwh_harian</span></td><td>decimal</td></tr>
+          <tr>
+            <td><strong>80</strong></td>
+            <td>TCP</td>
+            <td>HTTP / Nginx</td>
+            <td>Akses dashboard web</td>
+          </tr>
+          <tr>
+            <td><strong>1883</strong></td>
+            <td>TCP</td>
+            <td>MQTT</td>
+            <td>Data dari sensor ESP32</td>
+          </tr>
+          <tr>
+            <td><strong>8082</strong></td>
+            <td>TCP</td>
+            <td>phpMyAdmin</td>
+            <td>Manajemen database (opsional)</td>
+          </tr>
+          <tr>
+            <td><strong>8085</strong></td>
+            <td>TCP</td>
+            <td>Reverb WebSocket</td>
+            <td>Data real-time ke browser</td>
+          </tr>
+          <tr>
+            <td><strong>22</strong></td>
+            <td>TCP</td>
+            <td>SSH</td>
+            <td>Akses server jarak jauh</td>
+          </tr>
         </tbody>
       </table>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="card-icon blue">⏱️</div><div><div class="card-title">Tabel: hourly_energy_logs</div><div class="card-subtitle">Riwayat energi per jam</div></div></div>
-      <table>
-        <thead><tr><th>Kolom</th><th>Tipe</th></tr></thead>
-        <tbody>
-          <tr><td><span class="mono">device_id</span></td><td>FK → devices</td></tr>
-          <tr><td><span class="mono">logged_at</span></td><td>timestamp</td></tr>
-          <tr><td><span class="mono">voltage / current / power / energy</span></td><td>decimal</td></tr>
-        </tbody>
-      </table>
+      <div class="cmd-label" style="margin-top:14px;">Perintah buka port (UFW):</div>
+      <div class="cmd-block"><span class="prompt">$</span> sudo ufw allow 80,1883,8082,8085,22/tcp &amp;&amp; sudo ufw
+        enable</div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">⚙️</div><div><div class="card-title">Tabel: system_configs</div><div class="card-subtitle">Konfigurasi sistem key-value</div></div></div>
-    <table>
-      <thead><tr><th>Key</th><th>Nilai Default</th><th>Keterangan</th></tr></thead>
-      <tbody>
-        <tr><td><span class="mono">pln_tariff</span></td><td>1444.70</td><td>Tarif PLN dasar (Rp/kWh)</td></tr>
-        <tr><td><span class="mono">pln_tariff_wbp</span></td><td>2000.00</td><td>Tarif WBP — Waktu Beban Puncak (Rp/kWh)</td></tr>
-        <tr><td><span class="mono">pln_tariff_lwbp</span></td><td>1444.70</td><td>Tarif LWBP — Luar Waktu Beban Puncak (Rp/kWh)</td></tr>
-        <tr><td><span class="mono">wbp_start</span></td><td>17:00</td><td>Jam mulai WBP</td></tr>
-        <tr><td><span class="mono">wbp_end</span></td><td>22:00</td><td>Jam selesai WBP</td></tr>
-        <tr><td><span class="mono">mqtt_host</span></td><td>(dari .env)</td><td>IP/domain MQTT broker aktif</td></tr>
-        <tr><td><span class="mono">alert_voltage_min</span></td><td>180</td><td>Tegangan minimum sebelum alert (Volt)</td></tr>
-        <tr><td><span class="mono">alert_voltage_max</span></td><td>240</td><td>Tegangan maksimum sebelum alert (Volt)</td></tr>
-        <tr><td><span class="mono">alert_power_max</span></td><td>2000</td><td>Daya maksimum sebelum alert (Watt)</td></tr>
-        <tr><td><span class="mono">telegram_bot_token</span></td><td>—</td><td>Token bot Telegram untuk notifikasi</td></tr>
-        <tr><td><span class="mono">telegram_chat_id</span></td><td>—</td><td>Chat ID tujuan notifikasi Telegram</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- BAB 14: MANAJEMEN PERANGKAT -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">🔌</div>
-    <div class="chapter-text">
-      <small>Bab 14</small>
-      <h2>Manajemen Perangkat <span>&amp; Kalibrasi</span></h2>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">➕</div><div><div class="card-title">Mendaftarkan Perangkat Baru</div><div class="card-subtitle">Alur registrasi perangkat ESP32</div></div></div>
-    <ul class="steps">
-      <li class="step-item">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h4>Buat Grup Lokasi</h4>
-          <p>Masuk ke <strong>Pengaturan → Grup</strong>, tambahkan grup berdasarkan lokasi (contoh: &quot;Server Room&quot;, &quot;Gedung A Lantai 2&quot;).</p>
-        </div>
-      </li>
-      <li class="step-item">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h4>Daftarkan Perangkat</h4>
-          <p>Buka <strong>Perangkat → Tambah Perangkat</strong>. Isi nama, pilih grup, masukkan SSID dan password WiFi lokal ESP32.</p>
-        </div>
-      </li>
-      <li class="step-item">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h4>Download Kode Arduino</h4>
-          <p>Sistem akan <em>otomatis</em> generate kode C++ siap pakai yang sudah berisi: device key, topic MQTT, WiFi credentials, dan alamat server. Copy &amp; upload ke ESP32 via Arduino IDE.</p>
-        </div>
-      </li>
-      <li class="step-item">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h4>Verifikasi Koneksi</h4>
-          <p>Setelah ESP32 dinyalakan, indikator status di dashboard akan berubah menjadi <span class="badge green">Online</span> dalam beberapa detik. Data sensor langsung muncul secara real-time.</p>
-        </div>
-      </li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">🔧</div><div><div class="card-title">Kalibrasi Sensor</div><div class="card-subtitle">Menyesuaikan pembacaan PZEM-004T</div></div></div>
-    <p>Jika pembacaan sensor tidak sesuai dengan alat ukur referensi, gunakan faktor kalibrasi. Nilai baru akan diterapkan ke semua data masuk berikutnya secara <em>real-time</em>.</p>
-    <table>
-      <thead><tr><th>Parameter</th><th>Rentang</th><th>Default</th><th>Keterangan</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Voltage Multiplier</strong></td><td>0.1 — 10.0</td><td>1.00</td><td>Nilai tegangan dikali faktor ini. Contoh: 0.98 untuk kalibrasi -2%</td></tr>
-        <tr><td><strong>Current Multiplier</strong></td><td>0.1 — 10.0</td><td>1.00</td><td>Nilai arus dikali faktor ini. Power dihitung ulang dari V×I setelah kalibrasi</td></tr>
-      </tbody>
-    </table>
-    <div class="alert info">
-      <div class="alert-icon">💡</div>
-      <div class="alert-content">
-        <h5>Cara Menghitung Faktor Kalibrasi</h5>
-        <p>Faktor = Nilai Referensi ÷ Nilai Terukur Sensor. Contoh: multimeter membaca 218V, sensor membaca 222V → faktor = 218 ÷ 222 = <strong>0.982</strong></p>
+  <!-- BAB 4: DEPLOYMENT VPS -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">🚀</div>
+      <div class="chapter-text">
+        <small>Bab 4</small>
+        <h2>Panduan Deployment <span>VPS (Docker & SSL)</span></h2>
       </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon purple">💰</div><div><div class="card-title">Budget Bulanan per Perangkat</div><div class="card-subtitle">Forecasting konsumsi individu</div></div></div>
-    <p>Setiap perangkat dapat diset batas konsumsi bulanan. Dashboard akan menghitung proyeksi akhir bulan berdasarkan rata-rata harian dan memberi peringatan jika melebihi budget.</p>
-    <table>
-      <thead><tr><th>Field</th><th>Keterangan</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Budget kWh/bulan</strong></td><td>Batas energi maksimal per bulan dalam kWh</td></tr>
-        <tr><td><strong>Budget Biaya/bulan</strong></td><td>Batas biaya maksimal per bulan dalam Rupiah</td></tr>
-        <tr><td><strong>Proyeksi kWh</strong></td><td>Estimasi pemakaian akhir bulan = akumulasi + (rata-rata harian × sisa hari)</td></tr>
-        <tr><td><strong>Proyeksi Biaya</strong></td><td>Proyeksi kWh × tarif PLN aktif</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon red">🔄</div><div><div class="card-title">Perintah Remote via MQTT</div><div class="card-subtitle">Dieksekusi melalui topic <span class="mono">cmd/{device_id}</span></div></div></div>
-    <table>
-      <thead><tr><th>Perintah</th><th>Payload JSON</th><th>Efek</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Reset Energi</strong></td><td><span class="mono">{"cmd": "reset_energy"}</span></td><td>Mereset penghitung kWh PZEM ke 0, cache ikut direset</td></tr>
-        <tr><td><strong>Restart</strong></td><td><span class="mono">{"cmd": "restart"}</span></td><td>ESP32 melakukan restart (reboot) jarak jauh</td></tr>
-        <tr><td><strong>OTA Update</strong></td><td><span class="mono">{"cmd": "update_firmware", "url": "http://..."}</span></td><td>ESP32 mengunduh &amp; flash firmware baru</td></tr>
-        <tr><td><strong>Custom Command</strong></td><td>JSON bebas</td><td>Dikirim via Remote Console di halaman detail perangkat</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- BAB 15: KONFIGURASI SISTEM VIA UI -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">⚙️</div>
-    <div class="chapter-text">
-      <small>Bab 15</small>
-      <h2>Konfigurasi Sistem <span>via UI Dashboard</span></h2>
-    </div>
-  </div>
-  <p>Semua konfigurasi berikut dapat diubah secara langsung dari halaman <strong>Pengaturan</strong> di dashboard, <em>tanpa</em> perlu mengedit file <span class="mono">.env</span> atau restart server. Konfigurasi disimpan di tabel <span class="mono">system_configs</span> dan memiliki prioritas lebih tinggi dari <span class="mono">.env</span>.</p>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">💡</div><div><div class="card-title">Tab: Konfigurasi Tarif PLN</div></div></div>
-    <table>
-      <thead><tr><th>Pengaturan</th><th>Keterangan</th><th>Default</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Tarif Dasar PLN</strong></td><td>Tarif flat untuk kalkulasi biaya (Rp/kWh)</td><td>Rp 1.444,70</td></tr>
-        <tr><td><strong>Tarif WBP</strong></td><td>Waktu Beban Puncak — tarif lebih tinggi di jam sibuk</td><td>Rp 2.000,00</td></tr>
-        <tr><td><strong>Tarif LWBP</strong></td><td>Luar Waktu Beban Puncak — tarif normal</td><td>Rp 1.444,70</td></tr>
-        <tr><td><strong>Jam WBP Mulai</strong></td><td>Format HH:MM. Contoh: 17:00</td><td>17:00</td></tr>
-        <tr><td><strong>Jam WBP Selesai</strong></td><td>Format HH:MM. Contoh: 22:00</td><td>22:00</td></tr>
-      </tbody>
-    </table>
-    <div class="alert info">
-      <div class="alert-icon">💡</div>
-      <div class="alert-content">
-        <h5>Sistem Tarif Ganda (WBP/LWBP)</h5>
-        <p>MQTT Worker secara otomatis mendeteksi apakah timestamp data masuk termasuk jam WBP atau LWBP, lalu menggunakan tarif yang sesuai untuk menghitung biaya harian secara akurat.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon red">🔔</div><div><div class="card-title">Tab: Konfigurasi Alert Anomali</div></div></div>
-    <table>
-      <thead><tr><th>Pengaturan</th><th>Keterangan</th><th>Default</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Tegangan Minimum</strong></td><td>Alert dikirim jika tegangan di bawah nilai ini (Volt)</td><td>180 V</td></tr>
-        <tr><td><strong>Tegangan Maksimum</strong></td><td>Alert dikirim jika tegangan di atas nilai ini (Volt)</td><td>240 V</td></tr>
-        <tr><td><strong>Daya Maksimum</strong></td><td>Alert dikirim jika daya melebihi nilai ini (Watt)</td><td>2000 W</td></tr>
-      </tbody>
-    </table>
-    <p>Saat kondisi abnormal terdeteksi, notifikasi <strong>Telegram</strong> dikirim secara otomatis. Untuk mengaktifkan, isi <span class="mono">telegram_bot_token</span> dan <span class="mono">telegram_chat_id</span> di tab Notifikasi.</p>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">📡</div><div><div class="card-title">Tab: Konfigurasi MQTT Broker</div><div class="card-subtitle">Prioritas lebih tinggi dari file .env</div></div></div>
-    <table>
-      <thead><tr><th>Pengaturan</th><th>Keterangan</th></tr></thead>
-      <tbody>
-        <tr><td><strong>MQTT Host</strong></td><td>Alamat IP atau domain dari broker MQTT aktif yang ingin dituju.</td></tr>
-        <tr><td><strong>MQTT Port</strong></td><td>Port koneksi broker (standard non-TLS: 1883, secure TLS: 8883).</td></tr>
-        <tr><td><strong>MQTT Username</strong></td><td>Nama pengguna autentikasi broker (kosongkan jika tanpa autentikasi).</td></tr>
-        <tr><td><strong>MQTT Password</strong></td><td>Kata sandi autentikasi broker (kosongkan jika tanpa autentikasi).</td></tr>
-        <tr><td><strong>Enable SSL/TLS Connection</strong></td><td>Centang untuk mengaktifkan enkripsi SSL/TLS (wajib untuk HiveMQ Cloud).</td></tr>
-      </tbody>
-    </table>
-
-    <h5 style="margin-top: 20px; font-weight: bold; color: #1e3a8a;">Panduan Pemilihan & Cara Mengganti Broker MQTT</h5>
-    
-    <h6 style="font-weight: bold; margin-top: 10px; color: #374151;">Pilihan 1: Broker MQTT Lokal (Docker Compose Mosquitto)</h6>
-    <p>Gunakan opsi ini jika ingin data telemetri disimpan dalam jaringan lokal yang sama dengan VPS/Server tanpa bergantung koneksi internet luar.</p>
-    <ul>
-      <li><strong>MQTT Host</strong>: <span class="mono">mqtt</span> (jika Laravel berjalan di dalam Docker Compose yang sama) atau IP Publik VPS Anda.</li>
-      <li><strong>MQTT Port</strong>: <span class="mono">1883</span></li>
-      <li><strong>MQTT Username &amp; Password</strong>: Masukkan kredensial lokal yang dibuat oleh <span class="mono">install.sh</span> (dapat dilihat di file host <span class="mono">.env</span>).</li>
-      <li><strong>SSL/TLS Connection</strong>: Jangan centang (Disabled).</li>
-    </ul>
-
-    <h6 style="font-weight: bold; margin-top: 10px; color: #374151;">Pilihan 2: Broker Cloud (HiveMQ Cloud)</h6>
-    <p>Gunakan opsi ini jika server berada di cloud terdistribusi dengan enkripsi tinggi tanpa membebani performa VPS lokal.</p>
-    <ul>
-      <li><strong>MQTT Host</strong>: Alamat host HiveMQ Anda (contoh: <span class="mono">25b7768b96d642e28fab356da906f103.s1.eu.hivemq.cloud</span>).</li>
-      <li><strong>MQTT Port</strong>: <span class="mono">8883</span> (wajib TLS).</li>
-      <li><strong>MQTT Username &amp; Password</strong>: Kredensial cluster yang Anda daftarkan di dashboard HiveMQ Cloud Anda.</li>
-      <li><strong>SSL/TLS Connection</strong>: Centang (Enabled).</li>
-    </ul>
-
-    <h6 style="font-weight: bold; margin-top: 10px; color: #374151;">Pilihan 3: Enterprise Broker (EMQX Cluster)</h6>
-    <p>Gunakan jika sistem Anda menskalakan hingga jutaan perangkat dan membutuhkan clustering failover performa tinggi.</p>
-    <ul>
-      <li><strong>MQTT Host</strong>: Domain atau IP Server EMQX Cluster Anda.</li>
-      <li><strong>MQTT Port</strong>: <span class="mono">1883</span> (Non-TLS) atau <span class="mono">8883</span> (TLS).</li>
-      <li><strong>MQTT Username &amp; Password</strong>: Kredensial klien EMQX Anda.</li>
-      <li><strong>SSL/TLS Connection</strong>: Sesuaikan dengan konfigurasi listener SSL/TLS di EMQX Dashboard.</li>
-    </ul>
-
-    <div class="alert warning" style="margin-top: 15px;">
-      <div class="alert-icon">⚠️</div>
-      <div class="alert-content">
-        <h5>Langkah Penting Setelah Mengganti Broker</h5>
-        <p>1. <strong>Simpan Pengaturan</strong>: Klik tombol <em>Save Settings</em>.<br>
-        2. <strong>Upload Ulang ESP32</strong>: Kode Arduino ESP32 pada menu <strong>Devices -> Provisioning</strong> akan ter-generate ulang secara otomatis. Copy dan upload ulang kode tersebut ke microcontroller Anda.<br>
-        3. <strong>Restart Worker</strong>: Di VPS, jalankan <span class="mono">docker compose restart app</span> agar background worker Laravel mendengarkan di broker yang baru.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- BAB 16: OTA FIRMWARE -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">📡</div>
-    <div class="chapter-text">
-      <small>Bab 16</small>
-      <h2>Update Firmware <span>OTA (Over-the-Air)</span></h2>
-    </div>
-  </div>
-  <p>Fitur OTA memungkinkan pembaruan firmware ESP32 dari jarak jauh tanpa perlu menghubungkan kabel USB ke perangkat. Dashboard mengirim URL firmware melalui MQTT, dan ESP32 mengunduh serta mem-flash sendiri.</p>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">🔄</div><div><div class="card-title">Alur Proses OTA Update</div></div></div>
-    <ul class="steps">
-      <li class="step-item">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h4>Compile Firmware Terbaru</h4>
-          <p>Di Arduino IDE, pilih menu <strong>Sketch → Export Compiled Binary</strong>. Akan menghasilkan file <span class="mono">.bin</span> di folder project.</p>
-        </div>
-      </li>
-      <li class="step-item">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h4>Upload Firmware ke Dashboard</h4>
-          <p>Buka detail perangkat di dashboard → tab <strong>OTA Update</strong> → klik <strong>Upload Firmware (.bin)</strong>. File disimpan di <span class="mono">storage/app/public/firmwares/</span>.</p>
-        </div>
-      </li>
-      <li class="step-item">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h4>Kirim Perintah OTA</h4>
-          <p>Klik tombol <strong>Trigger OTA Update</strong>. Dashboard akan mengirim perintah via MQTT ke topic <span class="mono">cmd/{device_id}</span> berisi URL download firmware.</p>
-        </div>
-      </li>
-      <li class="step-item">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h4>ESP32 Mengunduh &amp; Flash Otomatis</h4>
-          <p>ESP32 menerima perintah, mengunduh file <span class="mono">.bin</span> dari URL, mem-flash ke partisi firmware baru, lalu restart otomatis dengan firmware terbaru. Progress ditampilkan di dashboard melalui WebSocket.</p>
-        </div>
-      </li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">📋</div><div><div class="card-title">Format Perintah OTA via MQTT</div></div></div>
-    <div class="cmd-block">
-      <span class="comment">// Topic: cmd/{device_id}</span><br>
-      {<br>
-      &nbsp;&nbsp;<span class="string">"cmd"</span>: <span class="string">"update_firmware"</span>,<br>
-      &nbsp;&nbsp;<span class="string">"url"</span>: <span class="string">"http://&lt;VPS_IP&gt;/storage/firmwares/firmware_dev_xxx_1234567890.bin"</span><br>
-      }
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon green">📊</div><div><div class="card-title">Monitoring Progress OTA (Real-time)</div></div></div>
-    <p>ESP32 mengirim laporan progress ke topic <span class="mono">telemetry/ota_status/{device_id}</span> yang kemudian di-broadcast ke dashboard via WebSocket.</p>
-    <div class="cmd-block">
-      <span class="comment">// Progress update dari ESP32</span><br>
-      {<br>
-      &nbsp;&nbsp;<span class="string">"progress"</span>: <span class="keyword">75</span>,        <span class="comment">// Persentase download</span><br>
-      &nbsp;&nbsp;<span class="string">"status"</span>: <span class="string">"downloading"</span>,  <span class="comment">// Status: downloading / flashing / done / error</span><br>
-      &nbsp;&nbsp;<span class="string">"message"</span>: <span class="string">"75% downloaded"</span><br>
-      }
     </div>
     <div class="alert warning">
       <div class="alert-icon">⚠️</div>
       <div class="alert-content">
-        <h5>Syarat OTA Berhasil</h5>
-        <p>ESP32 harus dapat mengakses URL firmware (pastikan port 80 VPS terbuka). Firmware <span class="mono">.bin</span> harus di-compile untuk board yang sama. Proses OTA membutuhkan free heap memory &gt; 50KB.</p>
+        <h5>Sebelum Memulai</h5>
+        <p>Pastikan VPS Anda menggunakan sistem operasi berbasis Linux (seperti Ubuntu atau Debian) dengan akses
+          internet aktif, dan Anda masuk sebagai user dengan hak <span class="mono">sudo</span>.</p>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- BAB 17: KEAMANAN & MANAJEMEN USER -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">🔐</div>
-    <div class="chapter-text">
-      <small>Bab 17</small>
-      <h2>Keamanan <span>&amp; Manajemen User</span></h2>
-    </div>
-  </div>
+    <ul class="steps">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Persiapan Server & Clone Repositori</h4>
+          <p>Jalankan perintah berikut untuk memperbarui paket sistem, memasang prasyarat (Git, Curl, Node.js, dan NPM),
+            serta menginstal Docker Engine di VPS Host:</p>
+          <div class="cmd-block">
+            <span class="comment"># Update sistem dan install paket dasar</span><br>
+            <span class="prompt">$</span> sudo apt update && sudo apt upgrade -y<br>
+            <span class="prompt">$</span> sudo apt install -y git curl nodejs npm<br><br>
+            <span class="comment"># Pasang Docker & Docker Compose secara resmi</span><br>
+            <span class="prompt">$</span> curl -fsSL https://get.docker.com -o get-docker.sh<br>
+            <span class="prompt">$</span> sudo sh get-docker.sh<br><br>
+            <span class="comment"># Clone source code aplikasi ke VPS</span><br>
+            <span class="prompt">$</span> git clone https://github.com/suppfaiz/iotdashboard-jjt.git<br>
+            <span class="prompt">$</span> cd iotdashboard-jjt
+          </div>
+        </div>
+      </li>
 
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">👤</div><div><div class="card-title">Sistem Role &amp; Hak Akses</div><div class="card-subtitle">Dua level otorisasi pengguna</div></div></div>
-    <table>
-      <thead><tr><th>Fitur / Halaman</th><th>Admin</th><th>User Biasa</th></tr></thead>
-      <tbody>
-        <tr><td>Lihat Dashboard Utama</td><td><span class="badge green">✅ Ya</span></td><td><span class="badge green">✅ Ya</span></td></tr>
-        <tr><td>Lihat Detail &amp; Grafik Perangkat</td><td><span class="badge green">✅ Ya</span></td><td><span class="badge green">✅ Ya</span></td></tr>
-        <tr><td>Export CSV Data Perangkat</td><td><span class="badge green">✅ Ya</span></td><td><span class="badge green">✅ Ya</span></td></tr>
-        <tr><td>Tambah / Edit / Hapus Perangkat</td><td><span class="badge green">✅ Ya</span></td><td><span class="badge gray">❌ Tidak</span></td></tr>
-        <tr><td>Kirim Perintah Remote &amp; OTA</td><td><span class="badge green">✅ Ya</span></td><td><span class="badge gray">❌ Tidak</span></td></tr>
-        <tr><td>Reset Energi &amp; Restart Perangkat</td><td><span class="badge green">✅ Ya</span></td><td><span class="badge gray">❌ Tidak</span></td></tr>
-        <tr><td>Konfigurasi Tarif &amp; Alert</td><td><span class="badge green">✅ Ya</span></td><td><span class="badge gray">❌ Tidak</span></td></tr>
-        <tr><td>Manajemen User</td><td><span class="badge green">✅ Ya</span></td><td><span class="badge gray">❌ Tidak</span></td></tr>
-        <tr><td>Lihat Log Sistem</td><td><span class="badge green">✅ Ya</span></td><td><span class="badge gray">❌ Tidak</span></td></tr>
-      </tbody>
-    </table>
-  </div>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Konfigurasi Berkas Lingkungan (.env)</h4>
+          <p>Salin file template <span class="mono">.env.example</span> menjadi berkas konfigurasi aktif <span
+              class="mono">.env</span>, lalu edit untuk menyesuaikan konfigurasi produksi:</p>
+          <div class="cmd-block">
+            <span class="prompt">$</span> cp .env.example .env<br>
+            <span class="prompt">$</span> nano .env
+          </div>
+          <p>Sesuaikan nilai variabel lingkungan berikut demi keamanan dan fungsi real-time di VPS:</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Variabel .env</th>
+                <th>Nilai Produksi / VPS</th>
+                <th>Keterangan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>APP_ENV</strong></td>
+                <td><span class="mono">production</span></td>
+                <td>Menandakan aplikasi berjalan di lingkungan produksi.</td>
+              </tr>
+              <tr>
+                <td><strong>APP_DEBUG</strong></td>
+                <td><span class="mono">false</span></td>
+                <td>Menonaktifkan pesan error detail demi keamanan.</td>
+              </tr>
+              <tr>
+                <td><strong>APP_URL</strong></td>
+                <td><span class="mono">https://domain-vps-anda.com</span></td>
+                <td>URL domain utama VPS Anda (wajib gunakan HTTPS).</td>
+              </tr>
+              <tr>
+                <td><strong>VITE_REVERB_SCHEME</strong></td>
+                <td><span class="mono">https</span></td>
+                <td>Memaksa koneksi WebSocket menggunakan enkripsi TLS (<span class="mono">wss://</span>).</td>
+              </tr>
+              <tr>
+                <td><strong>VITE_REVERB_PORT</strong></td>
+                <td><span class="mono">443</span></td>
+                <td>Koneksi WebSocket diarahkan melalui port HTTPS standar.</td>
+              </tr>
+              <tr>
+                <td><strong>DB_PASSWORD</strong></td>
+                <td><span class="mono">PasswordAmanSatu23!</span></td>
+                <td>Ganti dengan password database yang acak dan kuat.</td>
+              </tr>
+              <tr>
+                <td><strong>MQTT_PASSWORD</strong></td>
+                <td><span class="mono">PasswordBrokerAman456!</span></td>
+                <td>Ganti dengan credential broker MQTT yang kuat.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </li>
 
-  <div class="card">
-    <div class="card-header"><div class="card-icon green">➕</div><div><div class="card-title">Menambah User Baru</div><div class="card-subtitle">Hanya bisa dilakukan oleh Admin</div></div></div>
-    <p>Buka <strong>Pengaturan → Tab Users</strong> → klik <strong>Tambah User</strong>. Isi form:</p>
-    <table>
-      <thead><tr><th>Field</th><th>Keterangan</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Nama</strong></td><td>Nama lengkap pengguna</td></tr>
-        <tr><td><strong>Email</strong></td><td>Digunakan sebagai username login (harus unik)</td></tr>
-        <tr><td><strong>Password</strong></td><td>Minimal 8 karakter, dikonfirmasi ulang</td></tr>
-        <tr><td><strong>Role</strong></td><td><span class="badge blue">admin</span> atau <span class="badge gray">user</span></td></tr>
-      </tbody>
-    </table>
-    <div class="alert info">
-      <div class="alert-icon">🔒</div>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Kompilasi Aset Frontend (Host)</h4>
+          <p>Sebelum membangun container Docker, aset frontend (CSS, Javascript, Echo Client) harus dikompilasi terlebih
+            dahulu agar memuat variabel Reverb yang dinamis:</p>
+          <div class="cmd-block">
+            <span class="comment"># Install dependencies npm</span><br>
+            <span class="prompt">$</span> npm install<br><br>
+            <span class="comment"># Jalankan kompilasi produksi</span><br>
+            <span class="prompt">$</span> npm run build
+          </div>
+        </div>
+      </li>
+
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Jalankan Container Docker</h4>
+          <p>Bangun dan aktifkan seluruh stack aplikasi (PHP Laravel App, MySQL, Mosquitto MQTT Broker, phpMyAdmin)
+            dalam mode daemon (background):</p>
+          <div class="cmd-block">
+            <span class="prompt">$</span> docker compose up -d --build
+          </div>
+        </div>
+      </li>
+
+      <li class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>Konfigurasi Nginx Host & SSL Let's Encrypt (Reverse Proxy)</h4>
+          <p>Agar aplikasi dapat diakses melalui port standar web (80/443) dengan sertifikat SSL gratis (HTTPS), pasang
+            Nginx di VPS host untuk melakukan reverse proxy ke container Docker:</p>
+          <div class="cmd-block">
+            <span class="comment"># Pasang Nginx & Certbot SSL</span><br>
+            <span class="prompt">$</span> sudo apt install -y nginx certbot python3-certbot-nginx<br><br>
+            <span class="comment"># Buat berkas server block baru</span><br>
+            <span class="prompt">$</span> sudo nano /etc/nginx/sites-available/dashboard
+          </div>
+          <p>Tempelkan konfigurasi reverse proxy berikut (sesuaikan <span class="mono">server_name</span> dengan domain
+            Anda):</p>
+          <div class="cmd-block"
+            style="background:#0f172a; color:#cbd5e1; font-family:'JetBrains Mono',monospace; padding:15px; border-radius:8px;">
+            <span style="color:#f43f5e">server</span> {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">listen</span> 80;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">server_name</span> domain-vps-anda.com;<br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#f43f5e">location</span> / {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_pass</span>
+            http://127.0.0.1:8080;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_set_header</span> Host
+            $host;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_set_header</span>
+            X-Real-IP $remote_addr;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_set_header</span>
+            X-Forwarded-For $proxy_add_x_forwarded_for;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#38bdf8">proxy_set_header</span>
+            X-Forwarded-Proto $scheme;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            }
+          </div>
+          <p>Aktifkan konfigurasi Nginx dan pasang sertifikat SSL Let's Encrypt secara otomatis:</p>
+          <div class="cmd-block">
+            <span class="comment"># Aktifkan konfigurasi link-symbolic</span><br>
+            <span class="prompt">$</span> sudo ln -s /etc/nginx/sites-available/dashboard /etc/nginx/sites-enabled/<br>
+            <span class="prompt">$</span> sudo systemctl restart nginx<br><br>
+            <span class="comment"># Ajukan SSL Certbot otomatis</span><br>
+            <span class="prompt">$</span> sudo certbot --nginx -d domain-vps-anda.com
+          </div>
+        </div>
+      </li>
+
+      <li class="step-item">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h4>Konfigurasi Firewall (UFW)</h4>
+          <p>Tutup port-port yang tidak diperlukan agar VPS Anda aman dari scanning luar. Anda hanya perlu membuka port
+            SSH, HTTP, HTTPS, dan port MQTT untuk komunikasi ESP32:</p>
+          <div class="cmd-block">
+            <span class="comment"># Aturan dasar firewall</span><br>
+            <span class="prompt">$</span> sudo ufw default deny incoming<br>
+            <span class="prompt">$</span> sudo ufw default allow outgoing<br><br>
+            <span class="comment"># Buka port penting</span><br>
+            <span class="prompt">$</span> sudo ufw allow 22/tcp<br>
+            <span class="prompt">$</span> sudo ufw allow 80/tcp<br>
+            <span class="prompt">$</span> sudo ufw allow 443/tcp<br>
+            <span class="prompt">$</span> sudo ufw allow 1883/tcp<br><br>
+            <span class="comment"># Aktifkan firewall</span><br>
+            <span class="prompt">$</span> sudo ufw enable
+          </div>
+          <div class="alert info">
+            <div class="alert-icon">💡</div>
+            <div class="alert-content">
+              <h5>Mengapa Port 8085 & 8082 Tidak Perlu Dibuka?</h5>
+              <p>Port Reverb WebSocket (8085) disalurkan dengan aman melalui reverse proxy Nginx pada port HTTPS (443)
+                (lewat route <span class="mono">/app</span>). Port database phpMyAdmin (8082) sengaja tidak dibuka untuk
+                publik agar tidak diretas; jika ingin membukanya, akseslah melalui SSH Tunneling.</p>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="alert success">
+      <div class="alert-icon">✅</div>
       <div class="alert-content">
-        <h5>Admin tidak dapat menghapus akun sendiri</h5>
-        <p>Sistem secara otomatis mencegah Admin menghapus akun yang sedang aktif digunakan untuk login, mencegah sistem terkunci tanpa akun admin.</p>
+        <h5>Deployment Selesai & Sukses!</h5>
+        <p>Aplikasi Anda sekarang dapat diakses secara aman di <span class="mono">https://domain-vps-anda.com</span>
+          dengan enkripsi SSL penuh, dan metrik data dari mikrokontroler akan langsung tampil secara
+          <strong>real-time</strong> di HP/Laptop manapun!</p>
       </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-header"><div class="card-icon orange">🛡️</div><div><div class="card-title">Rekomendasi Keamanan</div></div></div>
-    <ul>
-      <li>🔑 Ganti password default (<span class="mono">admin@admin.com / password</span>) segera setelah deployment pertama</li>
-      <li>🌐 Gunakan domain dengan <strong>HTTPS</strong> (SSL/TLS) di produksi — tambahkan reverse proxy Nginx dengan Let's Encrypt</li>
-      <li>🔒 Jangan expose port <strong>8082 (phpMyAdmin)</strong> ke internet publik — akses via SSH tunnel</li>
-      <li>🔐 Gunakan password MQTT yang kuat dan unik — di-generate otomatis oleh <span class="mono">install.sh</span></li>
-      <li>🚫 Nonaktifkan <span class="mono">APP_DEBUG=true</span> di lingkungan produksi (set ke <span class="mono">false</span>)</li>
-      <li>🔄 Rotasi <span class="mono">APP_KEY</span> secara berkala dengan <span class="mono">php artisan key:generate</span></li>
-      <li>📋 Aktifkan logging dan pantau <span class="mono">storage/logs/laravel.log</span> secara rutin</li>
-    </ul>
-  </div>
 
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">🔑</div><div><div class="card-title">Mengubah Password Database MySQL</div><div class="card-subtitle">Panduan memperbarui kata sandi MySQL Docker</div></div></div>
-    <div class="cmd-block">
-      <span class="comment"># OPSI 1: Jika database kosong / ingin dimulai dari awal (Hapus Volume)</span><br>
-      <span class="comment"># 1. Edit file .env dan ubah nilai DB_PASSWORD</span><br>
-      <span class="prompt">$</span> nano .env<br>
-      <span class="comment"># 2. Hentikan container dan bersihkan volume lama</span><br>
-      <span class="prompt">$</span> docker compose down -v<br>
-      <span class="comment"># 3. Jalankan kembali script installer</span><br>
-      <span class="prompt">$</span> ./install.sh<br><br>
-
-      <span class="comment"># OPSI 2: Jika ingin mempertahankan data yang sudah ada (Tanpa Hapus Data)</span><br>
-      <span class="comment"># 1. Jalankan perintah ALTER USER di kontainer MySQL</span><br>
-      <span class="prompt">$</span> docker exec -it iot_dashboard_mysql mysql -u root -p -e "ALTER USER 'root'@'%' IDENTIFIED BY 'PasswordBaruAnda';"<br>
-      <span class="comment"># 2. Edit file .env dan sesuaikan nilai DB_PASSWORD Anda</span><br>
-      <span class="prompt">$</span> nano .env<br>
-      <span class="comment"># 3. Restart kontainer aplikasi agar memuat konfigurasi baru</span><br>
-      <span class="prompt">$</span> docker compose restart app phpmyadmin
+  <!-- BAB 5: KONFIGURASI .ENV -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">⚙️</div>
+      <div class="chapter-text">
+        <small>Bab 5</small>
+        <h2>Konfigurasi <span>File .env</span></h2>
+      </div>
+    </div>
+    <p>File <span class="mono">.env</span> adalah pusat konfigurasi seluruh sistem. Berikut parameter-parameter kunci
+      yang perlu dikonfigurasi:</p>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon blue">🔧</div>
+        <div>
+          <div class="card-title">Konfigurasi Aplikasi Utama</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="comment"># Identitas Aplikasi</span><br>
+        <span class="keyword">APP_NAME</span>=<span class="string">"Jamkrida Energy Dashboard"</span><br>
+        <span class="keyword">APP_ENV</span>=<span class="string">production</span><br>
+        <span class="keyword">APP_DEBUG</span>=<span class="string">false</span><br>
+        <span class="keyword">APP_URL</span>=<span class="string">http://&lt;IP_VPS&gt;</span><br><br>
+        <span class="comment"># Database (MySQL)</span><br>
+        <span class="keyword">DB_CONNECTION</span>=<span class="string">mysql</span><br>
+        <span class="keyword">DB_HOST</span>=<span class="string">mysql</span><br>
+        <span class="keyword">DB_PORT</span>=<span class="string">3306</span><br>
+        <span class="keyword">DB_DATABASE</span>=<span class="string">dashboard_iot_baru</span><br>
+        <span class="keyword">DB_USERNAME</span>=<span class="string">root</span><br>
+        <span class="keyword">DB_PASSWORD</span>=<span class="string">&lt;password_database_anda&gt;</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon purple">🔄</div>
+        <div>
+          <div class="card-title">Konfigurasi WebSocket (Reverb)</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="keyword">BROADCAST_CONNECTION</span>=<span class="string">reverb</span><br>
+        <span class="keyword">REVERB_HOST</span>=<span class="variable">"&lt;IP_VPS&gt;"</span> <span class="comment">#
+          IP publik VPS Anda</span><br>
+        <span class="keyword">REVERB_PORT</span>=<span class="string">8085</span><br>
+        <span class="keyword">REVERB_SCHEME</span>=<span class="string">http</span><br>
+        <span class="keyword">VITE_REVERB_HOST</span>=<span class="variable">"&lt;IP_VPS&gt;"</span> <span
+          class="comment"># harus sama dengan REVERB_HOST</span><br>
+        <span class="keyword">VITE_REVERB_PORT</span>=<span class="string">8085</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon orange">📡</div>
+        <div>
+          <div class="card-title">Konfigurasi MQTT</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="keyword">MQTT_HOST</span>=<span class="string">mqtt</span> <span class="comment"># "mqtt" = Docker
+          internal. Ganti ke IP eksternal jika broker berbeda</span><br>
+        <span class="keyword">MQTT_PORT</span>=<span class="string">1883</span><br>
+        <span class="keyword">MQTT_USERNAME</span>=<span class="string">jamkrida_sensor</span><br>
+        <span class="keyword">MQTT_PASSWORD</span>=<span class="string">&lt;password_yang_di-generate&gt;</span>
+      </div>
+      <div class="alert info" style="margin-top:12px;">
+        <div class="alert-icon">💡</div>
+        <div class="alert-content">
+          <h5>Tentang MQTT_HOST</h5>
+          <p>Nilai <span class="mono">mqtt</span> adalah nama service Docker internal. Gunakan ini jika sistem berjalan
+            dalam Docker. Jika menggunakan broker MQTT eksternal, ganti dengan IP/domain broker tersebut.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon green">🔔</div>
+        <div>
+          <div class="card-title">Konfigurasi Notifikasi Telegram (Opsional)</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="keyword">TELEGRAM_BOT_TOKEN</span>=<span class="string">&lt;token_dari_BotFather&gt;</span><br>
+        <span class="keyword">TELEGRAM_CHAT_ID</span>=<span class="string">&lt;chat_id_grup_atau_user&gt;</span>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-header"><div class="card-icon purple">🔐</div><div><div class="card-title">HTTPS dengan Nginx Reverse Proxy</div><div class="card-subtitle">Contoh konfigurasi untuk domain publik</div></div></div>
-    <div class="cmd-block">
-      <span class="comment"># Install Certbot untuk Let's Encrypt</span><br>
-      <span class="prompt">$</span> sudo apt install certbot python3-certbot-nginx<br>
-      <span class="prompt">$</span> sudo certbot --nginx -d dashboard.domain-anda.com<br><br>
-      <span class="comment"># Nginx akan auto-diperbarui dengan HTTPS</span><br>
-      <span class="comment"># Pastikan REVERB_SCHEME=https dan VITE_REVERB_SCHEME=https</span><br>
-      <span class="comment"># Ubah WebSocket ke wss:// (port 443 atau custom)</span>
+  <!-- BAB 6: LAYANAN LOKAL -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">💻</div>
+      <div class="chapter-text">
+        <small>Bab 6</small>
+        <h2>Menjalankan <span>Layanan Lokal</span></h2>
+      </div>
+    </div>
+    <p>Untuk pengembangan di mesin lokal (tanpa Docker), jalankan setiap layanan berikut di terminal yang berbeda dari
+      folder root project.</p>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon blue">1️⃣</div>
+        <div>
+          <div class="card-title">Laravel Web Server</div>
+          <div class="card-subtitle">Aplikasi web utama — http://127.0.0.1:8000</div>
+        </div>
+      </div>
+      <div class="cmd-block"><span class="prompt">$</span> php artisan serve</div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon purple">2️⃣</div>
+        <div>
+          <div class="card-title">Reverb WebSocket Server</div>
+          <div class="card-subtitle">Server real-time — ws://127.0.0.1:8085</div>
+        </div>
+      </div>
+      <div class="cmd-block"><span class="prompt">$</span> php artisan reverb:start --port=8085 --debug</div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon orange">3️⃣</div>
+        <div>
+          <div class="card-title">MQTT Listener Worker</div>
+          <div class="card-subtitle">Menerima data sensor &amp; broadcast ke WebSocket</div>
+        </div>
+      </div>
+      <div class="cmd-block"><span class="prompt">$</span> php artisan mqtt:listen</div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon green">4️⃣</div>
+        <div>
+          <div class="card-title">Queue Listener</div>
+        </div>
+      </div>
+      <div class="cmd-block"><span class="prompt">$</span> php artisan queue:listen</div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon blue">5️⃣</div>
+        <div>
+          <div class="card-title">Vite Aset Frontend</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="comment"># Mode Development (hot reload)</span><br>
+        <span class="prompt">$</span> npm run dev<br><br>
+        <span class="comment"># Mode Produksi (kompilasi statis, direkomendasikan di VPS)</span><br>
+        <span class="prompt">$</span> npm run build
+      </div>
+    </div>
+    <div class="alert warning">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-content">
+        <h5>Urutan Menjalankan Layanan</h5>
+        <p>Pastikan menjalankan <strong>Reverb</strong> sebelum <strong>MQTT Worker</strong>. MQTT Worker akan broadcast
+          ke Reverb saat data sensor masuk.</p>
+      </div>
     </div>
   </div>
 
-<!-- BAB 18: DOKUMENTASI INTERAKTIF API -->
-<div class="page">
-  <div class="chapter-banner">
-    <div class="chapter-icon">📚</div>
-    <div class="chapter-text">
-      <small>Bab 18</small>
-      <h2>Dokumentasi <span>Interaktif API (Scribe)</span></h2>
+  <!-- BAB 7: MQTT BROKER -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">📡</div>
+      <div class="chapter-text">
+        <small>Bab 7</small>
+        <h2>Konfigurasi <span>MQTT Broker</span></h2>
+      </div>
+    </div>
+    <p>Sistem menggunakan <strong>Eclipse Mosquitto</strong> sebagai MQTT broker yang berjalan di dalam kontainer
+      Docker. Autentikasi wajib diaktifkan untuk keamanan.</p>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon blue">📄</div>
+        <div>
+          <div class="card-title">File Konfigurasi Mosquitto</div>
+          <div class="card-subtitle">.docker/mosquitto.conf</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="keyword">persistence</span> true<br>
+        <span class="keyword">persistence_location</span> /mosquitto/data/<br>
+        <span class="keyword">log_dest</span> file /mosquitto/log/mosquitto.log<br><br>
+        <span class="keyword">listener</span> 1883<br>
+        <span class="keyword">allow_anonymous</span> false <span class="comment"># Wajib autentikasi</span><br>
+        <span class="keyword">password_file</span> /mosquitto/config/passwd
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon orange">🔑</div>
+        <div>
+          <div class="card-title">Manajemen Kredensial MQTT</div>
+          <div class="card-subtitle">Dibuat otomatis saat install.sh dijalankan</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="comment"># Generate file passwd baru dengan password berbeda</span><br>
+        <span class="prompt">$</span> docker run --rm -v "$(pwd)/.docker:/config" \<br>
+        &nbsp;&nbsp;eclipse-mosquitto:latest \<br>
+        &nbsp;&nbsp;mosquitto_passwd -c -b /config/passwd jamkrida_sensor &lt;password_baru&gt;<br><br>
+        <span class="comment"># Restart broker untuk terapkan perubahan</span><br>
+        <span class="prompt">$</span> docker compose restart mqtt
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon green">🧪</div>
+        <div>
+          <div class="card-title">Test Koneksi MQTT</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="comment"># Subscribe ke semua topic (butuh mosquitto-clients)</span><br>
+        <span class="prompt">$</span> mosquitto_sub -h &lt;IP_VPS&gt; -p 1883 -u jamkrida_sensor -P &lt;password&gt; -t
+        "#" -v<br><br>
+        <span class="comment"># Publish test message</span><br>
+        <span class="prompt">$</span> mosquitto_pub -h &lt;IP_VPS&gt; -p 1883 -u jamkrida_sensor -P &lt;password&gt;
+        \<br>
+        &nbsp;&nbsp;-t "device/&lt;device_key&gt;/telemetry" \<br>
+        &nbsp;&nbsp;-m '{"voltage":220,"current":1.5,"power":330,"energy":5.0}'
+      </div>
     </div>
   </div>
-  <p>Untuk mempermudah integrasi pihak ketiga dan pengembangan perangkat baru, dashboard ini dilengkapi dengan dokumentasi API interaktif menggunakan <strong>Scribe</strong> dengan tema premium <strong>Stoplight Elements</strong>.</p>
 
-  <div class="card">
-    <div class="card-header"><div class="card-icon blue">🌐</div><div><div class="card-title">Akses Dokumentasi API</div><div class="card-subtitle">Dapat diakses langsung via browser</div></div></div>
-    <p>Dokumentasi API disajikan secara statis untuk performa maksimal dan 100% bebas dari kendala routing atau database Laravel:</p>
-    <ul>
-      <li>📍 <strong>URL Akses</strong>: <span class="mono">http://&lt;IP_VPS_ATAU_LOCALHOST&gt;/api-docs/index.html</span></li>
-      <li>🔗 <strong>Integrasi UI</strong>: Tombol <strong>API Docs</strong> pada bilah navigasi (Navbar) admin.</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-icon green">🛠️</div><div><div class="card-title">Perintah Regenerasi Dokumentasi</div><div class="card-subtitle">Gunakan saat Anda memodifikasi atau menambah API baru</div></div></div>
-    <p>Jika Anda melakukan perubahan rute atau menambahkan controller API baru, jalankan perintah berikut untuk memperbarui dokumentasi:</p>
-    <div class="cmd-block">
-      <span class="comment"># Jika berjalan secara lokal (Host PC/Mac)</span><br>
-      <span class="prompt">$</span> php artisan scribe:generate<br><br>
-      <span class="comment"># Jika berjalan di lingkungan VPS (Docker Compose)</span><br>
-      <span class="prompt">$</span> docker compose exec app php artisan scribe:generate
+  <!-- BAB 8: INTEGRASI ESP32 -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">🔌</div>
+      <div class="chapter-text">
+        <small>Bab 8</small>
+        <h2>Integrasi <span>Perangkat ESP32</span></h2>
+      </div>
     </div>
-    <p>Perintah tersebut akan otomatis men-generate file HTML statis di folder <span class="mono">public/api-docs/</span> beserta spesifikasi OpenAPI (<span class="mono">openapi.yaml</span>) dan Postman Collection (<span class="mono">collection.json</span>).</p>
-  </div>
-</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon orange">📋</div>
+        <div>
+          <div class="card-title">Format Topic MQTT</div>
+          <div class="card-subtitle">Struktur topic yang dikenali sistem</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Topic</th>
+            <th>Arah</th>
+            <th>Fungsi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="mono">device/{device_key}/telemetry</span></td>
+            <td><span class="badge green">Publish</span></td>
+            <td>Data sensor: volt, arus, daya, energi, RSSI, heap</td>
+          </tr>
+          <tr>
+            <td><span class="mono">device/{device_key}/status</span></td>
+            <td><span class="badge green">Publish</span></td>
+            <td>Status perangkat (online/offline), IP address</td>
+          </tr>
+          <tr>
+            <td><span class="mono">device/{device_key}/cmd</span></td>
+            <td><span class="badge blue">Subscribe</span></td>
+            <td>Terima perintah dari dashboard</td>
+          </tr>
+          <tr>
+            <td><span class="mono">device/{device_key}/cmd_resp</span></td>
+            <td><span class="badge green">Publish</span></td>
+            <td>Respons terhadap perintah yang diterima</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon blue">📦</div>
+        <div>
+          <div class="card-title">Format Payload Telemetri (JSON)</div>
+          <div class="card-subtitle">Struktur data yang dikirim ESP32</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        {<br>
+        &nbsp;&nbsp;<span class="string">"voltage"</span>: <span class="keyword">220.5</span>, <span class="comment">//
+          Tegangan (Volt)</span><br>
+        &nbsp;&nbsp;<span class="string">"current"</span>: <span class="keyword">1.52</span>, <span class="comment">//
+          Arus (Ampere)</span><br>
+        &nbsp;&nbsp;<span class="string">"power"</span>: <span class="keyword">334.76</span>, <span class="comment">//
+          Daya aktif (Watt)</span><br>
+        &nbsp;&nbsp;<span class="string">"energy"</span>: <span class="keyword">12.40</span>, <span class="comment">//
+          Energi kumulatif (kWh)</span><br>
+        &nbsp;&nbsp;<span class="string">"frequency"</span>: <span class="keyword">50.0</span>, <span class="comment">//
+          Frekuensi (Hz)</span><br>
+        &nbsp;&nbsp;<span class="string">"pf"</span>: <span class="keyword">0.98</span>, <span class="comment">// Power
+          Factor</span><br>
+        &nbsp;&nbsp;<span class="string">"rssi"</span>: <span class="keyword">-62</span>, <span class="comment">//
+          Kekuatan sinyal WiFi (dBm)</span><br>
+        &nbsp;&nbsp;<span class="string">"heap"</span>: <span class="keyword">182340</span>, <span class="comment">//
+          Free heap memory (bytes)</span><br>
+        &nbsp;&nbsp;<span class="string">"ip"</span>: <span class="string">"192.168.1.10"</span> <span
+          class="comment">// IP lokal perangkat</span><br>
+        }
+      </div>
+    </div>
 
-  <div class="divider"></div>
-  <p style="text-align:center; color:#94a3b8; font-size:9pt; margin-top:20px;">
-    📄 Jamkrida Energy IoT Dashboard — Panduan Infrastruktur v2.1 &nbsp;|&nbsp; 18 Bab &nbsp;|&nbsp; Lengkap<br>
-    Dibangun dengan ❤️ menggunakan Laravel 12, Docker, Eclipse Mosquitto &amp; ESP32
-  </p>
-</div>
+    <div class="alert info">
+      <div class="alert-icon">💡</div>
+      <div class="alert-content">
+        <h5>Pembaruan Payload (v2.2): RSSI & Heap</h5>
+        <p>Sejak versi 2.2, payload JSON yang dikirimkan perangkat wajib menyertakan parameter <code>rssi</code> (kekuatan sinyal WiFi dalam dBm) dan <code>heap</code> (sisa memori RAM perangkat dalam bytes) agar status koneksi dan kesehatan perangkat dapat dipantau langsung dari dashboard utama secara real-time.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon green">📶</div>
+        <div>
+          <div class="card-title">Interpretasi Nilai RSSI WiFi</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Rentang RSSI (dBm)</th>
+            <th>Kualitas</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>-30 s/d -50 dBm</td>
+            <td>Sangat Baik</td>
+            <td><span class="badge green">Excellent</span></td>
+          </tr>
+          <tr>
+            <td>-51 s/d -67 dBm</td>
+            <td>Baik</td>
+            <td><span class="badge blue">Good</span></td>
+          </tr>
+          <tr>
+            <td>-68 s/d -79 dBm</td>
+            <td>Cukup</td>
+            <td><span class="badge orange">Fair</span></td>
+          </tr>
+          <tr>
+            <td>-80 dBm ke bawah</td>
+            <td>Lemah</td>
+            <td><span class="badge gray">Weak</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- BAB 9: FITUR DASHBOARD -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">📊</div>
+      <div class="chapter-text">
+        <small>Bab 9</small>
+        <h2>Fitur <span>Dashboard</span></h2>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon blue">⚡</div>
+          <div>
+            <div class="card-title">Pemantauan Real-time</div>
+          </div>
+        </div>
+        <ul>
+          <li>📊 Grafik tegangan, arus, daya &amp; energi live</li>
+          <li>📡 Indikator kekuatan sinyal WiFi (RSSI)</li>
+          <li>🧠 Monitor free heap memory ESP32</li>
+          <li>📍 Tampilan IP lokal perangkat aktif</li>
+          <li>🔄 Update otomatis via WebSocket</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon green">📅</div>
+          <div>
+            <div class="card-title">Analitik &amp; Laporan</div>
+          </div>
+        </div>
+        <ul>
+          <li>📈 Grafik histori harian &amp; bulanan</li>
+          <li>💰 Kalkulasi biaya listrik (per kWh)</li>
+          <li>📊 Perbandingan konsumsi antar perangkat</li>
+          <li>🎯 Budget bulanan &amp; prediksi pemakaian</li>
+          <li>📤 Export laporan (PDF/CSV)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon orange">🔔</div>
+          <div>
+            <div class="card-title">Alert &amp; Notifikasi</div>
+          </div>
+        </div>
+        <ul>
+          <li>⚡ Alert tegangan abnormal</li>
+          <li>📉 Peringatan konsumsi melebihi batas</li>
+          <li>📱 Notifikasi via Telegram Bot</li>
+          <li>🔴 Indikator status online/offline perangkat</li>
+          <li>🕐 Log histori alert</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon purple">🎮</div>
+          <div>
+            <div class="card-title">Kontrol Perangkat</div>
+          </div>
+        </div>
+        <ul>
+          <li>💻 Remote console dengan preset perintah</li>
+          <li>🔄 Reset energi kumulatif jarak jauh</li>
+          <li>🔃 Restart perangkat ESP32 jarak jauh</li>
+          <li>📋 Riwayat perintah yang dikirim</li>
+          <li>📡 Status respons dari perangkat</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- BAB 10: PORT & ENDPOINT -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">🔗</div>
+      <div class="chapter-text">
+        <small>Bab 10</small>
+        <h2>Referensi <span>Port &amp; Endpoint</span></h2>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon blue">🌐</div>
+        <div>
+          <div class="card-title">Endpoint Akses Sistem</div>
+          <div class="card-subtitle">Semua URL menggunakan IP/domain VPS Anda</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Layanan</th>
+            <th>URL / Endpoint</th>
+            <th>Port</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Dashboard Web</strong></td>
+            <td><span class="mono">http://&lt;VPS_IP&gt;</span></td>
+            <td>80</td>
+            <td>Halaman utama dashboard</td>
+          </tr>
+          <tr>
+            <td><strong>Database Manager</strong></td>
+            <td><span class="mono">http://&lt;VPS_IP&gt;:8082</span></td>
+            <td>8082</td>
+            <td>phpMyAdmin GUI</td>
+          </tr>
+          <tr>
+            <td><strong>WebSocket Reverb</strong></td>
+            <td><span class="mono">ws://&lt;VPS_IP&gt;:8085</span></td>
+            <td>8085</td>
+            <td>Koneksi real-time browser</td>
+          </tr>
+          <tr>
+            <td><strong>MQTT Broker</strong></td>
+            <td><span class="mono">mqtt://&lt;VPS_IP&gt;:1883</span></td>
+            <td>1883</td>
+            <td>Koneksi dari sensor ESP32</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header">
+        <div class="card-icon green">🔑</div>
+        <div>
+          <div class="card-title">Endpoint API Internal (Laravel)</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Endpoint</th>
+            <th>Fungsi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge blue">GET</span></td>
+            <td><span class="mono">/dashboard</span></td>
+            <td>Halaman dashboard utama</td>
+          </tr>
+          <tr>
+            <td><span class="badge blue">GET</span></td>
+            <td><span class="mono">/devices</span></td>
+            <td>Daftar semua perangkat</td>
+          </tr>
+          <tr>
+            <td><span class="badge blue">GET</span></td>
+            <td><span class="mono">/devices/{id}</span></td>
+            <td>Detail &amp; monitoring perangkat</td>
+          </tr>
+          <tr>
+            <td><span class="badge green">POST</span></td>
+            <td><span class="mono">/devices/{id}/command</span></td>
+            <td>Kirim perintah ke perangkat</td>
+          </tr>
+          <tr>
+            <td><span class="badge blue">GET</span></td>
+            <td><span class="mono">/api/telemetry/{key}</span></td>
+            <td>Ambil data telemetri terbaru</td>
+          </tr>
+          <tr>
+            <td><span class="badge blue">GET</span></td>
+            <td><span class="mono">/api/devices/{id}/chart</span></td>
+            <td>Data grafik historis</td>
+          </tr>
+          <tr>
+            <td><span class="badge orange">PUT</span></td>
+            <td><span class="mono">/settings</span></td>
+            <td>Update pengaturan sistem</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- BAB 11: MANAJEMEN -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">🛠️</div>
+      <div class="chapter-text">
+        <small>Bab 11</small>
+        <h2>Manajemen <span>&amp; Pemantauan</span></h2>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon blue">🐳</div>
+        <div>
+          <div class="card-title">Perintah Docker Umum</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="comment"># Cek status semua container</span><br>
+        <span class="prompt">$</span> docker compose ps<br><br>
+        <span class="comment"># Lihat log real-time semua service</span><br>
+        <span class="prompt">$</span> docker compose logs -f<br><br>
+        <span class="comment"># Lihat log service tertentu</span><br>
+        <span class="prompt">$</span> docker compose logs -f app<br><br>
+        <span class="comment"># Restart semua service</span><br>
+        <span class="prompt">$</span> docker compose restart<br><br>
+        <span class="comment"># Stop semua service</span><br>
+        <span class="prompt">$</span> docker compose down<br><br>
+        <span class="comment"># Start ulang setelah update kode</span><br>
+        <span class="prompt">$</span> docker compose up -d --build
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon orange">📝</div>
+        <div>
+          <div class="card-title">Akses ke dalam Container</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="comment"># Masuk ke container aplikasi</span><br>
+        <span class="prompt">$</span> docker compose exec app sh<br><br>
+        <span class="comment"># Jalankan artisan dari luar container</span><br>
+        <span class="prompt">$</span> docker compose exec app php artisan migrate<br>
+        <span class="prompt">$</span> docker compose exec app php artisan cache:clear<br>
+        <span class="prompt">$</span> docker compose exec app php artisan config:cache
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon green">🔄</div>
+        <div>
+          <div class="card-title">Update Kode Aplikasi</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="prompt">$</span> git pull origin main<br>
+        <span class="prompt">$</span> npm run build<br>
+        <span class="prompt">$</span> docker compose up -d --build<br>
+        <span class="prompt">$</span> docker compose exec app php artisan migrate --force
+      </div>
+    </div>
+  </div>
+
+  <!-- BAB 12: TROUBLESHOOTING -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">🔧</div>
+      <div class="chapter-text">
+        <small>Bab 12</small>
+        <h2>Trouble<span>shooting</span></h2>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon red">❌</div>
+        <div>
+          <div class="card-title">Dashboard tidak update real-time</div>
+        </div>
+      </div>
+      <p><strong>Penyebab:</strong> WebSocket tidak terkoneksi, nilai <span class="mono">REVERB_HOST</span> salah atau
+        port 8085 terblokir.</p>
+      <div class="cmd-block">
+        <span class="prompt">$</span> docker compose logs app | grep reverb<br>
+        <span class="prompt">$</span> grep REVERB_HOST .env<br>
+        <span class="prompt">$</span> sudo ufw allow 8085/tcp
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon red">❌</div>
+        <div>
+          <div class="card-title">Data sensor tidak masuk ke dashboard</div>
+        </div>
+      </div>
+      <p><strong>Penyebab:</strong> MQTT Worker tidak berjalan, kredensial MQTT salah, atau topic tidak sesuai.</p>
+      <div class="cmd-block">
+        <span class="prompt">$</span> docker compose logs -f app | grep mqtt<br><br>
+        <span class="comment"># Test publish manual</span><br>
+        <span class="prompt">$</span> mosquitto_pub -h &lt;VPS_IP&gt; -p 1883 -u jamkrida_sensor -P &lt;password&gt;
+        \<br>
+        &nbsp;&nbsp;-t "device/&lt;device_key&gt;/telemetry" \<br>
+        &nbsp;&nbsp;-m '{"voltage":220,"current":1.5,"power":330,"energy":5.0}'
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon red">❌</div>
+        <div>
+          <div class="card-title">Error 500 saat akses web</div>
+        </div>
+      </div>
+      <p><strong>Penyebab:</strong> Konfigurasi <span class="mono">.env</span> salah, cache belum di-clear, atau migrasi
+        belum dijalankan.</p>
+      <div class="cmd-block">
+        <span class="prompt">$</span> docker compose exec app php artisan cache:clear<br>
+        <span class="prompt">$</span> docker compose exec app php artisan config:cache<br>
+        <span class="prompt">$</span> docker compose exec app tail -100 storage/logs/laravel.log
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon orange">⚠️</div>
+        <div>
+          <div class="card-title">Perangkat muncul offline padahal aktif</div>
+        </div>
+      </div>
+      <p>Sistem menandai perangkat sebagai offline jika tidak ada data masuk selama 5 menit. Periksa koneksi WiFi ESP32
+        dan pastikan topic MQTT yang digunakan sesuai dengan device key yang terdaftar.</p>
+      <div class="alert warning" style="margin-top:12px;">
+        <div class="alert-icon">💡</div>
+        <div class="alert-content">
+          <h5>Tip: Monitor RSSI di Dashboard</h5>
+          <p>Jika RSSI ESP32 menunjukkan nilai di bawah -80 dBm, pertimbangkan untuk memindahkan router lebih dekat atau
+            menggunakan repeater WiFi.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <p style="text-align:center; color:#94a3b8; font-size:9pt; margin-top:20px;">
+      📄 Jamkrida Energy IoT Dashboard — Panduan Infrastruktur v2.0<br>
+      Dibuat dengan ❤️ menggunakan Laravel 12, Docker &amp; Eclipse Mosquitto
+    </p>
+  </div>
+
+  <!-- BAB 13: SKEMA DATABASE -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">🗄️</div>
+      <div class="chapter-text">
+        <small>Bab 13</small>
+        <h2>Skema <span>Database</span></h2>
+      </div>
+    </div>
+    <p>Sistem menggunakan <strong>MySQL</strong> sebagai database utama di dalam Docker container. Berikut tabel-tabel
+      yang digunakan beserta relasi dan kegunaannya.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon blue">👥</div>
+        <div>
+          <div class="card-title">Tabel: users</div>
+          <div class="card-subtitle">Autentikasi dan otorisasi pengguna</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Kolom</th>
+            <th>Tipe</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="mono">id</span></td>
+            <td>integer PK</td>
+            <td>Primary key auto-increment</td>
+          </tr>
+          <tr>
+            <td><span class="mono">name</span></td>
+            <td>string</td>
+            <td>Nama lengkap pengguna</td>
+          </tr>
+          <tr>
+            <td><span class="mono">email</span></td>
+            <td>string unique</td>
+            <td>Email untuk login</td>
+          </tr>
+          <tr>
+            <td><span class="mono">password</span></td>
+            <td>string</td>
+            <td>Hash bcrypt password</td>
+          </tr>
+          <tr>
+            <td><span class="mono">role</span></td>
+            <td>enum</td>
+            <td><span class="badge blue">admin</span> atau <span class="badge gray">user</span></td>
+          </tr>
+          <tr>
+            <td><span class="mono">created_at / updated_at</span></td>
+            <td>timestamp</td>
+            <td>Waktu pembuatan &amp; update</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon green">📦</div>
+        <div>
+          <div class="card-title">Tabel: groups</div>
+          <div class="card-subtitle">Pengelompokan perangkat</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Kolom</th>
+            <th>Tipe</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="mono">id</span></td>
+            <td>integer PK</td>
+            <td>Primary key</td>
+          </tr>
+          <tr>
+            <td><span class="mono">name</span></td>
+            <td>string</td>
+            <td>Nama grup (contoh: "Lantai 1", "Server Room")</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon orange">🔌</div>
+        <div>
+          <div class="card-title">Tabel: devices</div>
+          <div class="card-subtitle">Data perangkat IoT yang terdaftar</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Kolom</th>
+            <th>Tipe</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="mono">device_id</span></td>
+            <td>string unique</td>
+            <td>ID unik perangkat (contoh: <span class="mono">dev_AbCd1234</span>)</td>
+          </tr>
+          <tr>
+            <td><span class="mono">name</span></td>
+            <td>string</td>
+            <td>Nama deskriptif perangkat</td>
+          </tr>
+          <tr>
+            <td><span class="mono">group_id</span></td>
+            <td>FK → groups</td>
+            <td>Grup tempat perangkat berada</td>
+          </tr>
+          <tr>
+            <td><span class="mono">status</span></td>
+            <td>boolean</td>
+            <td>Aktif/nonaktif di sistem</td>
+          </tr>
+          <tr>
+            <td><span class="mono">mqtt_topic</span></td>
+            <td>string</td>
+            <td>Topic MQTT perangkat (contoh: <span class="mono">telemetry/lantai1/dev_xxx</span>)</td>
+          </tr>
+          <tr>
+            <td><span class="mono">provisioning_code</span></td>
+            <td>text</td>
+            <td>Kode Arduino/ESP32 yang di-generate otomatis</td>
+          </tr>
+          <tr>
+            <td><span class="mono">firmware_path</span></td>
+            <td>string</td>
+            <td>Path firmware .bin untuk OTA update</td>
+          </tr>
+          <tr>
+            <td><span class="mono">voltage_multiplier</span></td>
+            <td>decimal</td>
+            <td>Faktor kalibrasi tegangan (default: 1.00)</td>
+          </tr>
+          <tr>
+            <td><span class="mono">current_multiplier</span></td>
+            <td>decimal</td>
+            <td>Faktor kalibrasi arus (default: 1.00)</td>
+          </tr>
+          <tr>
+            <td><span class="mono">monthly_budget_kwh</span></td>
+            <td>decimal null</td>
+            <td>Batas budget kWh per bulan</td>
+          </tr>
+          <tr>
+            <td><span class="mono">monthly_budget_cost</span></td>
+            <td>decimal null</td>
+            <td>Batas budget biaya (Rp) per bulan</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon purple">📊</div>
+          <div>
+            <div class="card-title">Tabel: daily_energy_logs</div>
+            <div class="card-subtitle">Riwayat energi harian</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Kolom</th>
+              <th>Tipe</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="mono">device_id</span></td>
+              <td>FK → devices</td>
+            </tr>
+            <tr>
+              <td><span class="mono">date</span></td>
+              <td>date</td>
+            </tr>
+            <tr>
+              <td><span class="mono">total_kwh_harian</span></td>
+              <td>decimal</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon blue">⏱️</div>
+          <div>
+            <div class="card-title">Tabel: hourly_energy_logs</div>
+            <div class="card-subtitle">Riwayat energi per jam</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Kolom</th>
+              <th>Tipe</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="mono">device_id</span></td>
+              <td>FK → devices</td>
+            </tr>
+            <tr>
+              <td><span class="mono">logged_at</span></td>
+              <td>timestamp</td>
+            </tr>
+            <tr>
+              <td><span class="mono">voltage / current / power / energy</span></td>
+              <td>decimal</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon orange">⚙️</div>
+        <div>
+          <div class="card-title">Tabel: system_configs</div>
+          <div class="card-subtitle">Konfigurasi sistem key-value</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Nilai Default</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="mono">pln_tariff</span></td>
+            <td>1444.70</td>
+            <td>Tarif PLN dasar (Rp/kWh)</td>
+          </tr>
+          <tr>
+            <td><span class="mono">pln_tariff_wbp</span></td>
+            <td>2000.00</td>
+            <td>Tarif WBP — Waktu Beban Puncak (Rp/kWh)</td>
+          </tr>
+          <tr>
+            <td><span class="mono">pln_tariff_lwbp</span></td>
+            <td>1444.70</td>
+            <td>Tarif LWBP — Luar Waktu Beban Puncak (Rp/kWh)</td>
+          </tr>
+          <tr>
+            <td><span class="mono">wbp_start</span></td>
+            <td>17:00</td>
+            <td>Jam mulai WBP</td>
+          </tr>
+          <tr>
+            <td><span class="mono">wbp_end</span></td>
+            <td>22:00</td>
+            <td>Jam selesai WBP</td>
+          </tr>
+          <tr>
+            <td><span class="mono">mqtt_host</span></td>
+            <td>(dari .env)</td>
+            <td>IP/domain MQTT broker aktif</td>
+          </tr>
+          <tr>
+            <td><span class="mono">alert_voltage_min</span></td>
+            <td>180</td>
+            <td>Tegangan minimum sebelum alert (Volt)</td>
+          </tr>
+          <tr>
+            <td><span class="mono">alert_voltage_max</span></td>
+            <td>240</td>
+            <td>Tegangan maksimum sebelum alert (Volt)</td>
+          </tr>
+          <tr>
+            <td><span class="mono">alert_power_max</span></td>
+            <td>2000</td>
+            <td>Daya maksimum sebelum alert (Watt)</td>
+          </tr>
+          <tr>
+            <td><span class="mono">telegram_bot_token</span></td>
+            <td>—</td>
+            <td>Token bot Telegram untuk notifikasi</td>
+          </tr>
+          <tr>
+            <td><span class="mono">telegram_chat_id</span></td>
+            <td>—</td>
+            <td>Chat ID tujuan notifikasi Telegram</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- BAB 14: MANAJEMEN PERANGKAT -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">🔌</div>
+      <div class="chapter-text">
+        <small>Bab 14</small>
+        <h2>Manajemen Perangkat <span>&amp; Kalibrasi</span></h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon blue">➕</div>
+        <div>
+          <div class="card-title">Mendaftarkan Perangkat Baru</div>
+          <div class="card-subtitle">Alur registrasi perangkat ESP32</div>
+        </div>
+      </div>
+      <ul class="steps">
+        <li class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Buat Grup Lokasi</h4>
+            <p>Masuk ke <strong>Pengaturan → Grup</strong>, tambahkan grup berdasarkan lokasi (contoh: &quot;Server
+              Room&quot;, &quot;Gedung A Lantai 2&quot;).</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Daftarkan Perangkat</h4>
+            <p>Buka <strong>Perangkat → Tambah Perangkat</strong>. Isi nama, pilih grup, masukkan SSID dan password WiFi
+              lokal ESP32.</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Download Kode Arduino</h4>
+            <p>Sistem akan <em>otomatis</em> generate kode C++ siap pakai yang sudah berisi: device key, topic MQTT,
+              WiFi credentials, dan alamat server. Copy &amp; upload ke ESP32 via Arduino IDE.</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Verifikasi Koneksi</h4>
+            <p>Setelah ESP32 dinyalakan, indikator status di dashboard akan berubah menjadi <span
+                class="badge green">Online</span> dalam beberapa detik. Data sensor langsung muncul secara real-time.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon orange">🔧</div>
+        <div>
+          <div class="card-title">Kalibrasi Sensor</div>
+          <div class="card-subtitle">Menyesuaikan pembacaan PZEM-004T</div>
+        </div>
+      </div>
+      <p>Jika pembacaan sensor tidak sesuai dengan alat ukur referensi, gunakan faktor kalibrasi. Nilai baru akan
+        diterapkan ke semua data masuk berikutnya secara <em>real-time</em>.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Rentang</th>
+            <th>Default</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Voltage Multiplier</strong></td>
+            <td>0.1 — 10.0</td>
+            <td>1.00</td>
+            <td>Nilai tegangan dikali faktor ini. Contoh: 0.98 untuk kalibrasi -2%</td>
+          </tr>
+          <tr>
+            <td><strong>Current Multiplier</strong></td>
+            <td>0.1 — 10.0</td>
+            <td>1.00</td>
+            <td>Nilai arus dikali faktor ini. Power dihitung ulang dari V×I setelah kalibrasi</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert info">
+        <div class="alert-icon">💡</div>
+        <div class="alert-content">
+          <h5>Cara Menghitung Faktor Kalibrasi</h5>
+          <p>Faktor = Nilai Referensi ÷ Nilai Terukur Sensor. Contoh: multimeter membaca 218V, sensor membaca 222V →
+            faktor = 218 ÷ 222 = <strong>0.982</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon purple">💰</div>
+        <div>
+          <div class="card-title">Budget Bulanan per Perangkat</div>
+          <div class="card-subtitle">Forecasting konsumsi individu</div>
+        </div>
+      </div>
+      <p>Setiap perangkat dapat diset batas konsumsi bulanan. Dashboard akan menghitung proyeksi akhir bulan berdasarkan
+        rata-rata harian dan memberi peringatan jika melebihi budget.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Budget kWh/bulan</strong></td>
+            <td>Batas energi maksimal per bulan dalam kWh</td>
+          </tr>
+          <tr>
+            <td><strong>Budget Biaya/bulan</strong></td>
+            <td>Batas biaya maksimal per bulan dalam Rupiah</td>
+          </tr>
+          <tr>
+            <td><strong>Proyeksi kWh</strong></td>
+            <td>Estimasi pemakaian akhir bulan = akumulasi + (rata-rata harian × sisa hari)</td>
+          </tr>
+          <tr>
+            <td><strong>Proyeksi Biaya</strong></td>
+            <td>Proyeksi kWh × tarif PLN aktif</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon red">🔄</div>
+        <div>
+          <div class="card-title">Perintah Remote via MQTT</div>
+          <div class="card-subtitle">Dieksekusi melalui topic <span class="mono">cmd/{device_id}</span></div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Perintah</th>
+            <th>Payload JSON</th>
+            <th>Efek</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Reset Energi</strong></td>
+            <td><span class="mono">{"cmd": "reset_energy"}</span></td>
+            <td>Mereset penghitung kWh PZEM ke 0, cache ikut direset</td>
+          </tr>
+          <tr>
+            <td><strong>Restart</strong></td>
+            <td><span class="mono">{"cmd": "restart"}</span></td>
+            <td>ESP32 melakukan restart (reboot) jarak jauh</td>
+          </tr>
+          <tr>
+            <td><strong>OTA Update</strong></td>
+            <td><span class="mono">{"cmd": "update_firmware", "url": "http://..."}</span></td>
+            <td>ESP32 mengunduh &amp; flash firmware baru</td>
+          </tr>
+          <tr>
+            <td><strong>Custom Command</strong></td>
+            <td>JSON bebas</td>
+            <td>Dikirim via Remote Console di halaman detail perangkat</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- BAB 15: KONFIGURASI SISTEM VIA UI -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">⚙️</div>
+      <div class="chapter-text">
+        <small>Bab 15</small>
+        <h2>Konfigurasi Sistem <span>via UI Dashboard</span></h2>
+      </div>
+    </div>
+    <p>Semua konfigurasi berikut dapat diubah secara langsung dari halaman <strong>Pengaturan</strong> di dashboard,
+      <em>tanpa</em> perlu mengedit file <span class="mono">.env</span> atau restart server. Konfigurasi disimpan di
+      tabel <span class="mono">system_configs</span> dan memiliki prioritas lebih tinggi dari <span
+        class="mono">.env</span>.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon blue">💡</div>
+        <div>
+          <div class="card-title">Tab: Konfigurasi Tarif PLN</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Pengaturan</th>
+            <th>Keterangan</th>
+            <th>Default</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Tarif Dasar PLN</strong></td>
+            <td>Tarif flat untuk kalkulasi biaya (Rp/kWh)</td>
+            <td>Rp 1.444,70</td>
+          </tr>
+          <tr>
+            <td><strong>Tarif WBP</strong></td>
+            <td>Waktu Beban Puncak — tarif lebih tinggi di jam sibuk</td>
+            <td>Rp 2.000,00</td>
+          </tr>
+          <tr>
+            <td><strong>Tarif LWBP</strong></td>
+            <td>Luar Waktu Beban Puncak — tarif normal</td>
+            <td>Rp 1.444,70</td>
+          </tr>
+          <tr>
+            <td><strong>Jam WBP Mulai</strong></td>
+            <td>Format HH:MM. Contoh: 17:00</td>
+            <td>17:00</td>
+          </tr>
+          <tr>
+            <td><strong>Jam WBP Selesai</strong></td>
+            <td>Format HH:MM. Contoh: 22:00</td>
+            <td>22:00</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert info">
+        <div class="alert-icon">💡</div>
+        <div class="alert-content">
+          <h5>Sistem Tarif Ganda (WBP/LWBP)</h5>
+          <p>MQTT Worker secara otomatis mendeteksi apakah timestamp data masuk termasuk jam WBP atau LWBP, lalu
+            menggunakan tarif yang sesuai untuk menghitung biaya harian secara akurat.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon red">🔔</div>
+        <div>
+          <div class="card-title">Tab: Konfigurasi Alert Anomali</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Pengaturan</th>
+            <th>Keterangan</th>
+            <th>Default</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Tegangan Minimum</strong></td>
+            <td>Alert dikirim jika tegangan di bawah nilai ini (Volt)</td>
+            <td>180 V</td>
+          </tr>
+          <tr>
+            <td><strong>Tegangan Maksimum</strong></td>
+            <td>Alert dikirim jika tegangan di atas nilai ini (Volt)</td>
+            <td>240 V</td>
+          </tr>
+          <tr>
+            <td><strong>Daya Maksimum</strong></td>
+            <td>Alert dikirim jika daya melebihi nilai ini (Watt)</td>
+            <td>2000 W</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Saat kondisi abnormal terdeteksi, notifikasi <strong>Telegram</strong> dikirim secara otomatis. Untuk
+        mengaktifkan, isi <span class="mono">telegram_bot_token</span> dan <span class="mono">telegram_chat_id</span> di
+        tab Notifikasi.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon orange">📡</div>
+        <div>
+          <div class="card-title">Tab: Konfigurasi MQTT Broker</div>
+          <div class="card-subtitle">Prioritas lebih tinggi dari file .env</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Pengaturan</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>MQTT Host</strong></td>
+            <td>Alamat IP atau domain dari broker MQTT aktif yang ingin dituju.</td>
+          </tr>
+          <tr>
+            <td><strong>MQTT Port</strong></td>
+            <td>Port koneksi broker (standard non-TLS: 1883, secure TLS: 8883).</td>
+          </tr>
+          <tr>
+            <td><strong>MQTT Username</strong></td>
+            <td>Nama pengguna autentikasi broker (kosongkan jika tanpa autentikasi).</td>
+          </tr>
+          <tr>
+            <td><strong>MQTT Password</strong></td>
+            <td>Kata sandi autentikasi broker (kosongkan jika tanpa autentikasi).</td>
+          </tr>
+          <tr>
+            <td><strong>Enable SSL/TLS Connection</strong></td>
+            <td>Centang untuk mengaktifkan enkripsi SSL/TLS (wajib untuk HiveMQ Cloud).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h5 style="margin-top: 20px; font-weight: bold; color: #1e3a8a;">Panduan Pemilihan & Cara Mengganti Broker MQTT
+      </h5>
+
+      <h6 style="font-weight: bold; margin-top: 10px; color: #374151;">Pilihan 1: Broker MQTT Lokal (Docker Compose
+        Mosquitto)</h6>
+      <p>Gunakan opsi ini jika ingin data telemetri disimpan dalam jaringan lokal yang sama dengan VPS/Server tanpa
+        bergantung koneksi internet luar.</p>
+      <ul>
+        <li><strong>MQTT Host</strong>: <span class="mono">mqtt</span> (jika Laravel berjalan di dalam Docker Compose
+          yang sama) atau IP Publik VPS Anda.</li>
+        <li><strong>MQTT Port</strong>: <span class="mono">1883</span></li>
+        <li><strong>MQTT Username &amp; Password</strong>: Masukkan kredensial lokal yang dibuat oleh <span
+            class="mono">install.sh</span> (dapat dilihat di file host <span class="mono">.env</span>).</li>
+        <li><strong>SSL/TLS Connection</strong>: Jangan centang (Disabled).</li>
+      </ul>
+
+      <h6 style="font-weight: bold; margin-top: 10px; color: #374151;">Pilihan 2: Broker Cloud (HiveMQ Cloud)</h6>
+      <p>Gunakan opsi ini jika server berada di cloud terdistribusi dengan enkripsi tinggi tanpa membebani performa VPS
+        lokal.</p>
+      <ul>
+        <li><strong>MQTT Host</strong>: Alamat host HiveMQ Anda (contoh: <span
+            class="mono">25b7768b96d642e28fab356da906f103.s1.eu.hivemq.cloud</span>).</li>
+        <li><strong>MQTT Port</strong>: <span class="mono">8883</span> (wajib TLS).</li>
+        <li><strong>MQTT Username &amp; Password</strong>: Kredensial cluster yang Anda daftarkan di dashboard HiveMQ
+          Cloud Anda.</li>
+        <li><strong>SSL/TLS Connection</strong>: Centang (Enabled).</li>
+      </ul>
+
+      <h6 style="font-weight: bold; margin-top: 10px; color: #374151;">Pilihan 3: Enterprise Broker (EMQX Cluster)</h6>
+      <p>Gunakan jika sistem Anda menskalakan hingga jutaan perangkat dan membutuhkan clustering failover performa
+        tinggi.</p>
+      <ul>
+        <li><strong>MQTT Host</strong>: Domain atau IP Server EMQX Cluster Anda.</li>
+        <li><strong>MQTT Port</strong>: <span class="mono">1883</span> (Non-TLS) atau <span class="mono">8883</span>
+          (TLS).</li>
+        <li><strong>MQTT Username &amp; Password</strong>: Kredensial klien EMQX Anda.</li>
+        <li><strong>SSL/TLS Connection</strong>: Sesuaikan dengan konfigurasi listener SSL/TLS di EMQX Dashboard.</li>
+      </ul>
+
+      <div class="alert warning" style="margin-top: 15px;">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-content">
+          <h5>Langkah Penting Setelah Mengganti Broker</h5>
+          <p>1. <strong>Simpan Pengaturan</strong>: Klik tombol <em>Save Settings</em>.<br>
+            2. <strong>Upload Ulang ESP32</strong>: Kode Arduino ESP32 pada menu <strong>Devices ->
+              Provisioning</strong> akan ter-generate ulang secara otomatis. Copy dan upload ulang kode tersebut ke
+            microcontroller Anda.<br>
+            3. <strong>Restart Worker</strong>: Di VPS, jalankan <span class="mono">docker compose restart app</span>
+            agar background worker Laravel mendengarkan di broker yang baru.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BAB 16: OTA FIRMWARE -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">📡</div>
+      <div class="chapter-text">
+        <small>Bab 16</small>
+        <h2>Update Firmware <span>OTA (Over-the-Air)</span></h2>
+      </div>
+    </div>
+    <p>Fitur OTA memungkinkan pembaruan firmware ESP32 dari jarak jauh tanpa perlu menghubungkan kabel USB ke perangkat.
+      Dashboard mengirim URL firmware melalui MQTT, dan ESP32 mengunduh serta mem-flash sendiri.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon blue">🔄</div>
+        <div>
+          <div class="card-title">Alur Proses OTA Update</div>
+        </div>
+      </div>
+      <ul class="steps">
+        <li class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Compile Firmware Terbaru</h4>
+            <p>Di Arduino IDE, pilih menu <strong>Sketch → Export Compiled Binary</strong>. Akan menghasilkan file <span
+                class="mono">.bin</span> di folder project.</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Upload Firmware ke Dashboard</h4>
+            <p>Buka detail perangkat di dashboard → tab <strong>OTA Update</strong> → klik <strong>Upload Firmware
+                (.bin)</strong>. File disimpan di <span class="mono">storage/app/public/firmwares/</span>.</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Kirim Perintah OTA</h4>
+            <p>Klik tombol <strong>Trigger OTA Update</strong>. Dashboard akan mengirim perintah via MQTT ke topic <span
+                class="mono">cmd/{device_id}</span> berisi URL download firmware.</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>ESP32 Mengunduh &amp; Flash Otomatis</h4>
+            <p>ESP32 menerima perintah, mengunduh file <span class="mono">.bin</span> dari URL, mem-flash ke partisi
+              firmware baru, lalu restart otomatis dengan firmware terbaru. Progress ditampilkan di dashboard melalui
+              WebSocket.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon orange">📋</div>
+        <div>
+          <div class="card-title">Format Perintah OTA via MQTT</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="comment">// Topic: cmd/{device_id}</span><br>
+        {<br>
+        &nbsp;&nbsp;<span class="string">"cmd"</span>: <span class="string">"update_firmware"</span>,<br>
+        &nbsp;&nbsp;<span class="string">"url"</span>: <span
+          class="string">"http://&lt;VPS_IP&gt;/storage/firmwares/firmware_dev_xxx_1234567890.bin"</span><br>
+        }
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon green">📊</div>
+        <div>
+          <div class="card-title">Monitoring Progress OTA (Real-time)</div>
+        </div>
+      </div>
+      <p>ESP32 mengirim laporan progress ke topic <span class="mono">telemetry/ota_status/{device_id}</span> yang
+        kemudian di-broadcast ke dashboard via WebSocket.</p>
+      <div class="cmd-block">
+        <span class="comment">// Progress update dari ESP32</span><br>
+        {<br>
+        &nbsp;&nbsp;<span class="string">"progress"</span>: <span class="keyword">75</span>, <span class="comment">//
+          Persentase download</span><br>
+        &nbsp;&nbsp;<span class="string">"status"</span>: <span class="string">"downloading"</span>, <span
+          class="comment">// Status: downloading / flashing / done / error</span><br>
+        &nbsp;&nbsp;<span class="string">"message"</span>: <span class="string">"75% downloaded"</span><br>
+        }
+      </div>
+      <div class="alert warning">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-content">
+          <h5>Syarat OTA Berhasil</h5>
+          <p>ESP32 harus dapat mengakses URL firmware (pastikan port 80 VPS terbuka). Firmware <span
+              class="mono">.bin</span> harus di-compile untuk board yang sama. Proses OTA membutuhkan free heap memory
+            &gt; 50KB.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BAB 17: KEAMANAN & MANAJEMEN USER -->
+  <div class="page">
+    <div class="chapter-banner">
+      <div class="chapter-icon">🔐</div>
+      <div class="chapter-text">
+        <small>Bab 17</small>
+        <h2>Keamanan <span>&amp; Manajemen User</span></h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon blue">👤</div>
+        <div>
+          <div class="card-title">Sistem Role &amp; Hak Akses</div>
+          <div class="card-subtitle">Dua level otorisasi pengguna</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Fitur / Halaman</th>
+            <th>Admin</th>
+            <th>User Biasa</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Lihat Dashboard Utama</td>
+            <td><span class="badge green">✅ Ya</span></td>
+            <td><span class="badge green">✅ Ya</span></td>
+          </tr>
+          <tr>
+            <td>Lihat Detail &amp; Grafik Perangkat</td>
+            <td><span class="badge green">✅ Ya</span></td>
+            <td><span class="badge green">✅ Ya</span></td>
+          </tr>
+          <tr>
+            <td>Export CSV Data Perangkat</td>
+            <td><span class="badge green">✅ Ya</span></td>
+            <td><span class="badge green">✅ Ya</span></td>
+          </tr>
+          <tr>
+            <td>Tambah / Edit / Hapus Perangkat</td>
+            <td><span class="badge green">✅ Ya</span></td>
+            <td><span class="badge gray">❌ Tidak</span></td>
+          </tr>
+          <tr>
+            <td>Kirim Perintah Remote &amp; OTA</td>
+            <td><span class="badge green">✅ Ya</span></td>
+            <td><span class="badge gray">❌ Tidak</span></td>
+          </tr>
+          <tr>
+            <td>Reset Energi &amp; Restart Perangkat</td>
+            <td><span class="badge green">✅ Ya</span></td>
+            <td><span class="badge gray">❌ Tidak</span></td>
+          </tr>
+          <tr>
+            <td>Konfigurasi Tarif &amp; Alert</td>
+            <td><span class="badge green">✅ Ya</span></td>
+            <td><span class="badge gray">❌ Tidak</span></td>
+          </tr>
+          <tr>
+            <td>Manajemen User</td>
+            <td><span class="badge green">✅ Ya</span></td>
+            <td><span class="badge gray">❌ Tidak</span></td>
+          </tr>
+          <tr>
+            <td>Lihat Log Sistem</td>
+            <td><span class="badge green">✅ Ya</span></td>
+            <td><span class="badge gray">❌ Tidak</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon green">➕</div>
+        <div>
+          <div class="card-title">Menambah User Baru</div>
+          <div class="card-subtitle">Hanya bisa dilakukan oleh Admin</div>
+        </div>
+      </div>
+      <p>Buka <strong>Pengaturan → Tab Users</strong> → klik <strong>Tambah User</strong>. Isi form:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Nama</strong></td>
+            <td>Nama lengkap pengguna</td>
+          </tr>
+          <tr>
+            <td><strong>Email</strong></td>
+            <td>Digunakan sebagai username login (harus unik)</td>
+          </tr>
+          <tr>
+            <td><strong>Password</strong></td>
+            <td>Minimal 8 karakter, dikonfirmasi ulang</td>
+          </tr>
+          <tr>
+            <td><strong>Role</strong></td>
+            <td><span class="badge blue">admin</span> atau <span class="badge gray">user</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert info">
+        <div class="alert-icon">🔒</div>
+        <div class="alert-content">
+          <h5>Admin tidak dapat menghapus akun sendiri</h5>
+          <p>Sistem secara otomatis mencegah Admin menghapus akun yang sedang aktif digunakan untuk login, mencegah
+            sistem terkunci tanpa akun admin.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon orange">🛡️</div>
+        <div>
+          <div class="card-title">Rekomendasi Keamanan</div>
+        </div>
+      </div>
+      <ul>
+        <li>🔑 Ganti password default (<span class="mono">admin@admin.com / password</span>) segera setelah deployment
+          pertama</li>
+        <li>🌐 Gunakan domain dengan <strong>HTTPS</strong> (SSL/TLS) di produksi — tambahkan reverse proxy Nginx dengan
+          Let's Encrypt</li>
+        <li>🔒 Jangan expose port <strong>8082 (phpMyAdmin)</strong> ke internet publik — akses via SSH tunnel</li>
+        <li>🔐 Gunakan password MQTT yang kuat dan unik — di-generate otomatis oleh <span class="mono">install.sh</span>
+        </li>
+        <li>🚫 Nonaktifkan <span class="mono">APP_DEBUG=true</span> di lingkungan produksi (set ke <span
+            class="mono">false</span>)</li>
+        <li>🔄 Rotasi <span class="mono">APP_KEY</span> secara berkala dengan <span class="mono">php artisan
+            key:generate</span></li>
+        <li>📋 Aktifkan logging dan pantau <span class="mono">storage/logs/laravel.log</span> secara rutin</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon blue">🔑</div>
+        <div>
+          <div class="card-title">Mengubah Password Database MySQL</div>
+          <div class="card-subtitle">Panduan memperbarui kata sandi MySQL Docker</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="comment"># OPSI 1: Jika database kosong / ingin dimulai dari awal (Hapus Volume)</span><br>
+        <span class="comment"># 1. Edit file .env dan ubah nilai DB_PASSWORD</span><br>
+        <span class="prompt">$</span> nano .env<br>
+        <span class="comment"># 2. Hentikan container dan bersihkan volume lama</span><br>
+        <span class="prompt">$</span> docker compose down -v<br>
+        <span class="comment"># 3. Jalankan kembali script installer</span><br>
+        <span class="prompt">$</span> ./install.sh<br><br>
+
+        <span class="comment"># OPSI 2: Jika ingin mempertahankan data yang sudah ada (Tanpa Hapus Data)</span><br>
+        <span class="comment"># 1. Jalankan perintah ALTER USER di kontainer MySQL</span><br>
+        <span class="prompt">$</span> docker exec -it iot_dashboard_mysql mysql -u root -p -e "ALTER USER 'root'@'%'
+        IDENTIFIED BY 'PasswordBaruAnda';"<br>
+        <span class="comment"># 2. Edit file .env dan sesuaikan nilai DB_PASSWORD Anda</span><br>
+        <span class="prompt">$</span> nano .env<br>
+        <span class="comment"># 3. Restart kontainer aplikasi agar memuat konfigurasi baru</span><br>
+        <span class="prompt">$</span> docker compose restart app phpmyadmin
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon purple">🔐</div>
+        <div>
+          <div class="card-title">HTTPS dengan Nginx Reverse Proxy</div>
+          <div class="card-subtitle">Contoh konfigurasi untuk domain publik</div>
+        </div>
+      </div>
+      <div class="cmd-block">
+        <span class="comment"># Install Certbot untuk Let's Encrypt</span><br>
+        <span class="prompt">$</span> sudo apt install certbot python3-certbot-nginx<br>
+        <span class="prompt">$</span> sudo certbot --nginx -d dashboard.domain-anda.com<br><br>
+        <span class="comment"># Nginx akan auto-diperbarui dengan HTTPS</span><br>
+        <span class="comment"># Pastikan REVERB_SCHEME=https dan VITE_REVERB_SCHEME=https</span><br>
+        <span class="comment"># Ubah WebSocket ke wss:// (port 443 atau custom)</span>
+      </div>
+    </div>
+
+    <!-- BAB 18: DOKUMENTASI INTERAKTIF API -->
+    <div class="page">
+      <div class="chapter-banner">
+        <div class="chapter-icon">📚</div>
+        <div class="chapter-text">
+          <small>Bab 18</small>
+          <h2>Dokumentasi <span>Interaktif API (Scribe)</span></h2>
+        </div>
+      </div>
+      <p>Untuk mempermudah integrasi pihak ketiga dan pengembangan perangkat baru, dashboard ini dilengkapi dengan
+        dokumentasi API interaktif menggunakan <strong>Scribe</strong> dengan tema premium <strong>Stoplight
+          Elements</strong>.</p>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon blue">🌐</div>
+          <div>
+            <div class="card-title">Akses Dokumentasi API</div>
+            <div class="card-subtitle">Dapat diakses langsung via browser</div>
+          </div>
+        </div>
+        <p>Dokumentasi API disajikan secara statis untuk performa maksimal dan 100% bebas dari kendala routing atau
+          database Laravel:</p>
+        <ul>
+          <li>📍 <strong>URL Akses</strong>: <span
+              class="mono">http://&lt;IP_VPS_ATAU_LOCALHOST&gt;/api-docs/index.html</span></li>
+          <li>🔗 <strong>Integrasi UI</strong>: Tombol <strong>API Docs</strong> pada bilah navigasi (Navbar) admin.
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon green">🛠️</div>
+          <div>
+            <div class="card-title">Perintah Regenerasi Dokumentasi</div>
+            <div class="card-subtitle">Gunakan saat Anda memodifikasi atau menambah API baru</div>
+          </div>
+        </div>
+        <p>Jika Anda melakukan perubahan rute atau menambahkan controller API baru, jalankan perintah berikut untuk
+          memperbarui dokumentasi:</p>
+        <div class="cmd-block">
+          <span class="comment"># Jika berjalan secara lokal (Host PC/Mac)</span><br>
+          <span class="prompt">$</span> php artisan scribe:generate<br><br>
+          <span class="comment"># Jika berjalan di lingkungan VPS (Docker Compose)</span><br>
+          <span class="prompt">$</span> docker compose exec app php artisan scribe:generate
+        </div>
+        <p>Perintah tersebut akan otomatis men-generate file HTML statis di folder <span
+            class="mono">public/api-docs/</span> beserta spesifikasi OpenAPI (<span class="mono">openapi.yaml</span>)
+          dan Postman Collection (<span class="mono">collection.json</span>).</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <p style="text-align:center; color:#94a3b8; font-size:9pt; margin-top:20px;">
+      📄 Jamkrida Energy IoT Dashboard — Panduan Infrastruktur v2.1 &nbsp;|&nbsp; 18 Bab &nbsp;|&nbsp; Lengkap<br>
+      Dibangun dengan ❤️ menggunakan Laravel 12, Docker, Eclipse Mosquitto &amp; ESP32
+    </p>
+  </div>
 
 </body>
+
 </html>
