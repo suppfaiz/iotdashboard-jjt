@@ -464,7 +464,7 @@
 
 <script src="{{ asset('js/qrcode.min.js') }}"></script>
 
-<script type="module">
+<script>
     window.logDebug = function(message) {
         const log = document.getElementById('debug-log');
         const time = new Date().toLocaleTimeString('en-US', {hour12:false});

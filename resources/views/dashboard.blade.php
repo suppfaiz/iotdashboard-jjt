@@ -707,8 +707,7 @@
         }
     }
 
-    // Initialize Laravel Echo to listen to the global channel
-    window.addEventListener('DOMContentLoaded', () => {
+    const initDashboardEcho = () => {
         // Initial warnings render
         renderWarningsUI();
 
@@ -782,7 +781,13 @@
                 renderWarningsUI();
             }
         }, 5000); // Check every 5 seconds
-    });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDashboardEcho);
+    } else {
+        initDashboardEcho();
+    }
 </script>
 
 <script>
