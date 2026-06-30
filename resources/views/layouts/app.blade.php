@@ -629,7 +629,9 @@
                                 $elWa = \App\Models\SystemConfig::where('key', 'electrician_whatsapp')->value('value');
                             @endphp
                             @if(!empty($elWa))
-                                <a href="https://wa.me/{{ $elWa }}?text=Halo%20Tukang%20Listrik%2C%20ada%20masalah%20pada%20sistem%20listrik%20IoT%20Jamkrida." target="_blank" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 text-[10px] font-bold rounded-lg border border-emerald-100 transition-colors inline-flex items-center gap-1">📞 Hubungi Teknisi</a>
+                                <a href="https://wa.me/{{ $elWa }}?text=Halo%20Bapak%2FIbu%2C%20kami%20ingin%20melaporkan%20adanya%20masalah%20kelistrikan%20pada%20sistem%20pemantauan%20daya%20IoT%20Jamkrida%20Jateng.%20Mohon%20bantuannya%20untuk%20memeriksa.%20Terima%20kasih." target="_blank" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 text-[10px] font-bold rounded-lg border border-emerald-100 transition-colors inline-flex items-center gap-1">📞 Hubungi Teknisi</a>
+                            @else
+                                <button onclick="alert('Nomor WhatsApp tukang listrik belum diatur oleh Administrator di menu Settings.')" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 text-[10px] font-bold rounded-lg border border-emerald-100 transition-colors inline-flex items-center gap-1">📞 Hubungi Teknisi</button>
                             @endif
                         </div>
                     </div>
@@ -805,7 +807,7 @@
                     if (electricianWhatsapp) {
                         return `📞 <b>Hubungi Tukang Listrik:</b><br><br>
                             Terjadi masalah listrik atau alarm menyala? Anda dapat langsung mengirimkan chat WhatsApp ke teknisi listrik resmi:<br><br>
-                            👉 <a href="https://wa.me/${electricianWhatsapp}?text=Halo%20Tukang%20Listrik%2C%20ada%20masalah%20pada%20sistem%20daya%20IoT%20Jamkrida." target="_blank" class="inline-block px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs shadow-sm transition-colors">Hubungi via WhatsApp</a>`;
+                            👉 <a href="https://wa.me/${electricianWhatsapp}?text=Halo%20Bapak%2FIbu%2C%20kami%20ingin%20melaporkan%20adanya%20masalah%20kelistrikan%20pada%20sistem%20pemantauan%20daya%20IoT%20Jamkrida%20Jateng.%20Mohon%20bantuannya%20untuk%20memeriksa.%20Terima%20kasih." target="_blank" class="inline-block px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs shadow-sm transition-colors">Hubungi via WhatsApp</a>`;
                     } else {
                         return `📞 Nomor kontak tukang listrik belum dikonfigurasi oleh Administrator di menu Settings.`;
                     }
