@@ -3,13 +3,10 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 window.Pusher = Pusher;
 
-const reverbHost = import.meta.env.VITE_REVERB_HOST;
-const useConfiguredEnv = (reverbHost && reverbHost !== 'localhost');
-
-const wsHost = useConfiguredEnv ? reverbHost : window.location.hostname;
-const wsPort = useConfiguredEnv ? (import.meta.env.VITE_REVERB_PORT ?? 8085) : (window.location.port || 80);
-const wssPort = useConfiguredEnv ? (import.meta.env.VITE_REVERB_PORT ?? 8085) : (window.location.port || 443);
-const forceTLS = useConfiguredEnv ? ((import.meta.env.VITE_REVERB_SCHEME ?? 'http') === 'https') : (window.location.protocol === 'https:');
+const wsHost = window.location.hostname;
+const wsPort = window.location.port || 80;
+const wssPort = window.location.port || 443;
+const forceTLS = window.location.protocol === 'https:';
 
 window.Echo = new Echo({
     broadcaster: 'reverb',
