@@ -26,6 +26,7 @@
                     <th scope="col" class="px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">Device & ID</th>
                     <th scope="col" class="hidden sm:table-cell px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">Group Area</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">Status</th>
+                    <th scope="col" class="hidden sm:table-cell px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">IP Address</th>
                     <th scope="col" class="hidden md:table-cell px-6 py-3 text-right text-xs font-extrabold text-gray-500 uppercase tracking-wider">Indicators (V/A/W)</th>
                     <th scope="col" class="px-6 py-3 text-right text-xs font-extrabold text-gray-500 uppercase tracking-wider">Total Energy</th>
                     <th scope="col" class="px-6 py-3 text-right text-xs font-extrabold text-gray-500 uppercase tracking-wider">Actions</th>
@@ -61,6 +62,11 @@
                             </span>
                         @endif
                     </td>
+                    <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex items-center rounded-lg bg-slate-50 px-2.5 py-1 text-xs font-bold text-slate-700 ring-1 ring-inset ring-slate-600/20 font-mono">
+                            {{ $metrics[$device->id]['ip'] }}
+                        </span>
+                    </td>
                     <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-right">
                         <div class="text-sm text-gray-900 space-x-2 font-mono">
                             <span class="font-semibold text-blue-600" title="Voltage">{{ number_format($metrics[$device->id]['voltage'], 1) }}V</span>
@@ -81,7 +87,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-12 text-center text-sm font-medium text-gray-500">
+                    <td colspan="7" class="px-6 py-12 text-center text-sm font-medium text-gray-500">
                         <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>

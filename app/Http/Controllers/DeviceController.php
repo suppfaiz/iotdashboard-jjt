@@ -24,6 +24,7 @@ class DeviceController extends Controller
                 'current' => \Illuminate\Support\Facades\Cache::get("current:{$device->device_id}", 0),
                 'power' => \Illuminate\Support\Facades\Cache::get("power:{$device->device_id}", 0),
                 'energy' => \Illuminate\Support\Facades\Cache::get("daily_energy:{$device->device_id}", 0),
+                'ip' => \Illuminate\Support\Facades\Cache::get("ip:{$device->device_id}", 'N/A'),
                 'status' => $isOnline ? 'Online' : 'Offline',
                 'last_seen' => $lastSeen,
             ];
