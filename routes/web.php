@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('admin')->group(function () {
         // Device Management and Remote Controls
         Route::post('/devices', [DeviceController::class, 'store'])->name('devices.store');
+        Route::post('/groups', [DeviceController::class, 'storeGroup'])->name('groups.store');
         Route::patch('/devices/{device}', [DeviceController::class, 'update'])->name('devices.update');
         Route::post('/devices/{device}/console', [DeviceController::class, 'sendCustomCommand'])->name('devices.console');
         Route::get('/devices/{device}/provisioning', [DeviceController::class, 'provisioning'])->name('devices.provisioning');

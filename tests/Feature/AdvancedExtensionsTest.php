@@ -341,4 +341,31 @@ class AdvancedExtensionsTest extends TestCase
     {
         $this->assertFileExists(public_path('api-docs/index.html'));
     }
+
+    public function test_admin_can_store_new_group(): void
+    {
+        $response = $this->actingAs($this->admin)->post('/groups', [
+            'name' => 'New Area X',
+            'description' => 'Brand new testing operational area'
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('groups', [
+            'name' => 'New Area X',
+            'description' => 'Brand new testing operational area'
+        ]);
+    }
+
+    public function test_non_admin_cannot_store_new_group(): void
+    {
+        $response = $this->actingAs($this->user)->post('/groups', [
+            'name' => 'Unauthorised Area',
+            'description' => 'Should fail'
+        ]);
+
+        $response->assertStatus(403);
+        $this->assertDatabaseMissing('groups', [
+            'name' => 'Unauthorised Area'
+        ]);
+    }
 }

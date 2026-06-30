@@ -334,4 +334,19 @@ class DeviceController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Failed to schedule MQTT command: ' . $e->getMessage()], 500);
         }
     }
+
+    public function storeGroup(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:groups,name',
+            'description' => 'nullable|string|max:500',
+        ]);
+
+        Group::create([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->back()->with('success', 'Group created successfully!');
+    }
 }

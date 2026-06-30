@@ -11,12 +11,20 @@
     <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-gray-50 to-white">
         <h3 class="text-base font-bold leading-6 text-gray-900">Active Devices List</h3>
         @if(auth()->user()->role === 'admin')
-            <button type="button" onclick="document.getElementById('add-device-modal').classList.remove('hidden')" class="relative inline-flex items-center gap-x-1.5 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors">
-                <svg class="-ml-0.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                </svg>
-                Add New Device
-            </button>
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="document.getElementById('add-group-modal').classList.remove('hidden')" class="relative inline-flex items-center gap-x-1.5 rounded-lg bg-indigo-650 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-650 transition-colors">
+                    <svg class="-ml-0.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Add New Group
+                </button>
+                <button type="button" onclick="document.getElementById('add-device-modal').classList.remove('hidden')" class="relative inline-flex items-center gap-x-1.5 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors">
+                    <svg class="-ml-0.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                    </svg>
+                    Add New Device
+                </button>
+            </div>
         @endif
     </div>
     <div class="overflow-x-auto">
@@ -210,6 +218,76 @@
                     <button type="submit" 
                         class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xs font-bold text-white shadow-md shadow-blue-500/10 transition-colors duration-200">
                         Register & Get Code
+                    </button>
+                </div>
+            </form>
+        </div>
+</div>
+@endif
+
+<!-- Add Group Modal -->
+@if(auth()->user()->role === 'admin')
+<div id="add-group-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title-group" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background backdrop -->
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" aria-hidden="true" onclick="document.getElementById('add-group-modal').classList.add('hidden')"></div>
+
+        <!-- Spacer to center modal -->
+        <span class="hidden sm:inline-block sm:align-middle sm:min-h-screen" aria-hidden="true">&#8203;</span>
+
+        <!-- Modal Panel -->
+        <div class="inline-block align-middle bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full border border-slate-200/60">
+            <form action="{{ route('groups.store') }}" method="POST">
+                @csrf
+                
+                <!-- Modal Header -->
+                <div class="px-6 py-5 border-b border-slate-100 flex items-start gap-3.5 bg-slate-50/50">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900" id="modal-title-group">Add New Operational Group</h3>
+                        <p class="text-xs text-slate-500 mt-0.5 font-medium">Create a new organizational area for IoT monitoring nodes.</p>
+                    </div>
+                </div>
+
+                <!-- Form Fields -->
+                <div class="px-6 py-5 space-y-4">
+                    <!-- Group Name -->
+                    <div class="relative group">
+                        <label for="group_name" class="block text-xs font-semibold text-slate-600 mb-1.5 group-focus-within:text-indigo-600 transition-colors">Group Name</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-indigo-500 transition-colors">
+                                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg>
+                            </div>
+                            <input type="text" name="name" id="group_name" required placeholder="e.g. Server Room B" 
+                                class="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-250 rounded-xl text-slate-900 text-sm font-medium placeholder-slate-405 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 hover:border-slate-300 transition-all duration-200">
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="relative group">
+                        <label for="group_description" class="block text-xs font-semibold text-slate-600 mb-1.5 group-focus-within:text-indigo-600 transition-colors">Description (Optional)</label>
+                        <div class="relative">
+                            <textarea name="description" id="group_description" rows="3" placeholder="Describe the operational area..." 
+                                class="w-full px-4 py-2.5 bg-white border border-slate-250 rounded-xl text-slate-900 text-sm font-medium placeholder-slate-405 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 hover:border-slate-300 transition-all duration-200"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Actions -->
+                <div class="bg-slate-50/60 px-6 py-4 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                    <button type="button" onclick="document.getElementById('add-group-modal').classList.add('hidden')" 
+                        class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors duration-200">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                        class="px-5 py-2.5 rounded-xl bg-indigo-650 hover:bg-indigo-600 active:bg-indigo-750 text-xs font-bold text-white shadow-md shadow-indigo-500/10 transition-colors duration-200">
+                        Create Group
                     </button>
                 </div>
             </form>
