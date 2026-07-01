@@ -33,22 +33,22 @@ $testData = [
 // Test cases
 $tests = [
     'Test 1: v1beta with query param' => [
-        'url' => 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=' . $geminiKey,
+        'url' => 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' . $geminiKey,
         'headers' => ['Content-Type: application/json']
     ],
     'Test 2: v1 with query param' => [
-        'url' => 'https://generativelanguage.googleapis.com/v1/models/gemini-flash-latest:generateContent?key=' . $geminiKey,
+        'url' => 'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=' . $geminiKey,
         'headers' => ['Content-Type: application/json']
     ],
     'Test 3: v1beta with header x-goog-api-key' => [
-        'url' => 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent',
+        'url' => 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
         'headers' => [
             'Content-Type: application/json',
             'x-goog-api-key: ' . $geminiKey
         ]
     ],
     'Test 4: v1 with header x-goog-api-key' => [
-        'url' => 'https://generativelanguage.googleapis.com/v1/models/gemini-flash-latest:generateContent',
+        'url' => 'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent',
         'headers' => [
             'Content-Type: application/json',
             'x-goog-api-key: ' . $geminiKey
