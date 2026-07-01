@@ -119,14 +119,19 @@
                 },
                 body: JSON.stringify({ message: text })
             })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+                }
+                return res.json();
+            })
             .then(data => {
                 removeTypingIndicator(typingId);
                 appendMessage('bot', data.text || data.reply || 'Maaf, saya tidak dapat memproses pesan Anda.');
             })
             .catch(err => {
                 removeTypingIndicator(typingId);
-                appendMessage('bot', 'Terjadi kesalahan koneksi. Silakan coba kembali.');
+                appendMessage('bot', 'Terjadi kesalahan koneksi: ' + err.message);
             });
         }
 
@@ -142,14 +147,19 @@
                 },
                 body: JSON.stringify({ message: text })
             })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+                }
+                return res.json();
+            })
             .then(data => {
                 removeTypingIndicator(typingId);
                 appendMessage('bot', data.text || data.reply || 'Maaf, saya tidak dapat memproses pesan Anda.');
             })
             .catch(err => {
                 removeTypingIndicator(typingId);
-                appendMessage('bot', 'Terjadi kesalahan koneksi. Silakan coba kembali.');
+                appendMessage('bot', 'Terjadi kesalahan koneksi: ' + err.message);
             });
         };
 
