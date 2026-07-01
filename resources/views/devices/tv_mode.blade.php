@@ -52,9 +52,156 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+
+        /* --- 3D Door Pre-loader Styling --- */
+        #door-preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: flex;
+            perspective: 1600px;
+            overflow: hidden;
+            background: #020617; /* Slate-950 background behind the doors */
+            transition: opacity 1s ease;
+        }
+
+        .door {
+            position: relative;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            transition: transform 2.2s cubic-bezier(0.7, 0, 0.3, 1);
+            z-index: 10001;
+            overflow: hidden;
+        }
+
+        .door-left {
+            transform-origin: left center;
+            border-right: 4px solid #3b82f6; /* glowing blue seam */
+            justify-content: flex-end;
+            padding-right: 40px;
+        }
+
+        .door-right {
+            transform-origin: right center;
+            border-left: 4px solid #3b82f6;
+            justify-content: flex-start;
+            padding-left: 40px;
+        }
+
+        /* Door decorative panels to look like a house door */
+        .door-panel-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 55%;
+            height: 75%;
+            justify-content: space-around;
+        }
+
+        .door-panel {
+            flex: 1;
+            border: 3px solid rgba(59, 130, 246, 0.15);
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 8px;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Golden Door handles */
+        .door-handle-left {
+            width: 10px;
+            height: 90px;
+            background: linear-gradient(to right, #fbbf24, #d97706);
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.4), inset 0 0 5px rgba(0,0,0,0.3);
+            margin-right: -45px;
+            z-index: 10002;
+        }
+
+        .door-handle-right {
+            width: 10px;
+            height: 90px;
+            background: linear-gradient(to left, #fbbf24, #d97706);
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.4), inset 0 0 5px rgba(0,0,0,0.3);
+            margin-left: -45px;
+            z-index: 10002;
+        }
+
+        /* Glowing center badge */
+        .loader-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10003;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 1s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .loader-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #0f172a;
+            border: 4px solid #3b82f6;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+            }
+            50% {
+                transform: scale(1.08);
+                box-shadow: 0 0 45px rgba(59, 130, 246, 0.8);
+            }
+        }
     </style>
 </head>
 <body class="h-full flex flex-col p-6">
+
+    <!-- 3D Door Pre-loader -->
+    <div id="door-preloader">
+        <!-- Left Door -->
+        <div class="door door-left">
+            <div class="door-panel-container">
+                <div class="door-panel"></div>
+                <div class="door-panel"></div>
+            </div>
+            <div class="door-handle-left"></div>
+        </div>
+
+        <!-- Center Glowing Icon -->
+        <div id="loader-center" class="loader-center">
+            <div class="loader-circle">⚡</div>
+            <div id="loader-text" class="text-center mt-6 transition-all duration-700">
+                <h2 class="text-lg font-black tracking-widest text-slate-100 glowing-value uppercase">Loading Telemetry</h2>
+                <p class="text-[9px] text-slate-400 font-bold tracking-widest uppercase mt-2">Opening Jamkrida Smart Kiosk...</p>
+            </div>
+        </div>
+
+        <!-- Right Door -->
+        <div class="door door-right">
+            <div class="door-handle-right"></div>
+            <div class="door-panel-container">
+                <div class="door-panel"></div>
+                <div class="door-panel"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- Top Navigation Header -->
     <header class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-200 flex-shrink-0">
@@ -213,6 +360,32 @@
         const alertConfig = @json($alertConfig);
 
         document.addEventListener('DOMContentLoaded', () => {
+            // --- 3D Door Pre-loader Animation Trigger ---
+            setTimeout(() => {
+                const preloader = document.getElementById('door-preloader');
+                const leftDoor = document.querySelector('.door-left');
+                const rightDoor = document.querySelector('.door-right');
+                const loaderCenter = document.getElementById('loader-center');
+
+                if (loaderCenter) {
+                    loaderCenter.style.opacity = '0';
+                    loaderCenter.style.transform = 'translate(-50%, -50%) scale(0.6)';
+                }
+                
+                if (leftDoor) leftDoor.style.transform = 'rotateY(-90deg)';
+                if (rightDoor) rightDoor.style.transform = 'rotateY(90deg)';
+
+                setTimeout(() => {
+                    if (preloader) {
+                        preloader.style.opacity = '0';
+                        preloader.style.pointerEvents = 'none';
+                        setTimeout(() => {
+                            preloader.style.display = 'none';
+                        }, 1000);
+                    }
+                }, 2200); // Wait for doors to fully rotate open
+            }, 1200); // Show door closed for 1.2s before swinging open
+
             // Live Real-Time Clock
             function updateClock() {
                 const clockEl = document.getElementById('tv-clock');
