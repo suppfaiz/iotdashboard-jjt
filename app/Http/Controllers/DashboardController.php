@@ -355,7 +355,10 @@ Berikut adalah data sensor real-time saat ini:
 Berikan laporan analisis singkat, sebutkan jika ada pemborosan (pemakaian hari ini di atas rata-rata) atau alat offline, dan berikan 2-3 rekomendasi penghematan praktis. 
 Tuliskan jawaban langsung dalam format HTML/Blade bersih yang rapi (gunakan tag seperti <b>, <ul>, <li>, ⚠️, 💡, ✅, 🔮, ⚡) agar nyaman dibaca di chat widget. Jawab secara ringkas (maksimal 250 kata) dan mulailah dengan sapaan hormat.";
 
-        $geminiKey = config('services.gemini.key') ?: SystemConfig::where('key', 'gemini_api_key')->value('value');
+        $geminiKey = SystemConfig::where('key', 'gemini_api_key')->value('value');
+        if (empty($geminiKey)) {
+            $geminiKey = config('services.gemini.key');
+        }
         if (!empty($geminiKey)) {
             try {
                 $response = \Illuminate\Support\Facades\Http::withHeaders([
@@ -528,7 +531,10 @@ Pertanyaan Pengguna: \"{$userMessage}\"
 
 Jawablah langsung menggunakan format HTML/Blade bersih (tag seperti <b>, <ul>, <li>, 💡, ⚡, ✅) untuk kenyamanan membaca di chat widget. Jawab secara ringkas (maksimal 200 kata) dan bersahabat.";
 
-        $geminiKey = config('services.gemini.key') ?: SystemConfig::where('key', 'gemini_api_key')->value('value');
+        $geminiKey = SystemConfig::where('key', 'gemini_api_key')->value('value');
+        if (empty($geminiKey)) {
+            $geminiKey = config('services.gemini.key');
+        }
         if (!empty($geminiKey)) {
             try {
                 $response = \Illuminate\Support\Facades\Http::withHeaders([

@@ -649,7 +649,12 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const electricianWhatsapp = "{{ \App\Models\SystemConfig::where('key', 'electrician_whatsapp')->value('value') ?? '' }}";
-            const isAiEnabled = {{ !empty(\App\Models\SystemConfig::where('key', 'gemini_api_key')->value('value') ?? config('services.gemini.key')) ? 'true' : 'false' }};
+            @php
+                $dbKey = \App\Models\SystemConfig::where('key', 'gemini_api_key')->value('value');
+                $envKey = config('services.gemini.key');
+                $hasKey = (!empty(trim($dbKey ?? '')) || !empty(trim($envKey ?? '')));
+            @endphp
+            const isAiEnabled = {{ $hasKey ? 'true' : 'false' }};
             const toggleBtn = document.getElementById('chatbot-toggle-btn');
             const closeBtn = document.getElementById('chatbot-close-btn');
             const chatWindow = document.getElementById('chatbot-window');
