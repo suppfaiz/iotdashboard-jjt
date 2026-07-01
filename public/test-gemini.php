@@ -17,7 +17,7 @@ echo "<h1>Gemini API Diagnostics</h1>";
 echo "Database key exists: " . (empty($dbKey) ? "NO" : "YES (" . substr($dbKey, 0, 8) . "...)") . "<br>";
 echo "Services config key exists: " . (empty($envKey) ? "NO" : "YES (" . substr($envKey, 0, 8) . "...)") . "<br>";
 
-$geminiKey = $dbKey ?: $envKey;
+$geminiKey = trim(($dbKey ?: $envKey) ?? '');
 
 if (empty($geminiKey)) {
     echo "<span style='color: red;'>ERROR: No API Key found in database or config!</span><br>";

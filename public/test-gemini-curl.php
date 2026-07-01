@@ -10,7 +10,7 @@ use App\Models\SystemConfig;
 
 $dbKey = SystemConfig::where('key', 'gemini_api_key')->value('value');
 $envKey = config('services.gemini.key');
-$geminiKey = $dbKey ?: $envKey;
+$geminiKey = trim(($dbKey ?: $envKey) ?? '');
 
 echo "<h1>Gemini API Curl Diagnostics</h1>";
 echo "Using Key: " . (empty($geminiKey) ? "EMPTY" : substr($geminiKey, 0, 8) . "...") . "<br><br>";

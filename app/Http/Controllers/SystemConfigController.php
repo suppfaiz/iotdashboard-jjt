@@ -58,7 +58,7 @@ class SystemConfigController extends Controller
         ];
 
         foreach ($keys as $key) {
-            $value = $request->input($key) ?? '';
+            $value = trim($request->input($key) ?? '');
             if ($key === 'mqtt_use_tls') {
                 $value = $request->has('mqtt_use_tls') ? '1' : '0';
             }
