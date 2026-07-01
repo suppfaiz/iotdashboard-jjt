@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/changelog', [DashboardController::class, 'changelog'])->name('changelog');
     Route::get('/chatbot/analysis', [DashboardController::class, 'chatbotAnalysis'])->name('chatbot.analysis');
     Route::post('/chatbot/chat', [DashboardController::class, 'chatbotChat'])->name('chatbot.chat');
+    Route::get('/tv-mode', [DashboardController::class, 'tvMode'])->name('tv_mode');
 
 
     // Profile routes (Standard Breeze)

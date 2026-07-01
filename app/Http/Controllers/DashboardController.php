@@ -631,5 +631,66 @@ Jawablah langsung menggunakan format HTML/Blade bersih (tag seperti <b>, <ul>, <
             * 🔋 <i>\"Bagaimana tarif PLN WBP/LWBP dihitung?\"</i><br>
             * ⚠️ <i>\"Bagaimana cara kerja notifikasi Telegram?\"</i>";
     }
+
+    public function tvMode()
+    {
+        $devices = \App\Models\Device::where('status', true)->get();
+        $plnTariff = SystemConfig::where('key', 'pln_tariff')->value('value') ?? 1444.70;
+        
+        $totalPower = 0.0;
+        $totalTodayCost = 0.0;
+        $totalActiveCount = 0;
+        $now = now()->timestamp;
+
+        foreach ($devices as $device) {
+            $energy = Cache::get("daily_energy:{$device->device_id}");
+            $voltage = Cache::get("voltage:{$device->device_id}");
+            $current = Cache::get("current:{$device->device_id}");
+            $power = Cache::get("power:{$device->device_id}");
+
+            if ($energy === null || $voltage === null || $current === null || $power === null) {
+                $lastLog = \App\Models\HourlyEnergyLog::where('device_id', $device->id)
+                    ->orderBy('logged_at', 'desc')
+                    ->first();
+                if ($lastLog) {
+                    $energy = $energy ?? $lastLog->energy;
+                    $voltage = $voltage ?? $lastLog->voltage;
+                    $current = $current ?? $lastLog->current;
+                    $power = $power ?? $lastLog->power;
+                }
+            }
+
+            $device->voltage = floatval($voltage ?? 0.0);
+            $device->current = floatval($current ?? 0.0);
+            $device->power = floatval($power ?? 0.0);
+            $device->energy = floatval($energy ?? 0.0);
+
+            $lastSeen = Cache::get("last_seen:{$device->device_id}", 0);
+            $device->last_seen = $lastSeen;
+            $diff = $now - $lastSeen;
+            
+            if ($lastSeen > 0 && $diff < 15) {
+                $device->is_online = true;
+                $totalActiveCount++;
+                $totalPower += $device->power;
+            } else {
+                $device->is_online = false;
+            }
+
+            $deviceCost = Cache::get("daily_cost:{$device->device_id}");
+            if ($deviceCost === null) {
+                $deviceCost = $device->energy * $plnTariff;
+            }
+            $totalTodayCost += $deviceCost;
+        }
+
+        $alertConfig = [
+            'voltage_min' => SystemConfig::where('key', 'alert_voltage_min')->value('value') ?? 200,
+            'voltage_max' => SystemConfig::where('key', 'alert_voltage_max')->value('value') ?? 240,
+            'power_max' => SystemConfig::where('key', 'alert_power_max')->value('value') ?? 5000,
+        ];
+
+        return view('devices.tv_mode', compact('devices', 'totalPower', 'totalTodayCost', 'totalActiveCount', 'alertConfig', 'plnTariff'));
+    }
 }
 

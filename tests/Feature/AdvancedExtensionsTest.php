@@ -368,4 +368,20 @@ class AdvancedExtensionsTest extends TestCase
             'name' => 'Unauthorised Area'
         ]);
     }
+
+    public function test_tv_mode_route_security_and_access(): void
+    {
+        // 1. Guest is redirected
+        $response = $this->get('/tv-mode');
+        $response->assertRedirect('/login');
+
+        // 2. Auth user is allowed
+        $response = $this->actingAs($this->user)->get('/tv-mode');
+        $response->assertStatus(200);
+        $response->assertViewIs('devices.tv_mode');
+
+        // 3. Admin is allowed
+        $response = $this->actingAs($this->admin)->get('/tv-mode');
+        $response->assertStatus(200);
+    }
 }

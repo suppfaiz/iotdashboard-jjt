@@ -136,6 +136,13 @@
                                     class="{{ request()->routeIs('devices.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Devices</a>
                                 <a href="{{ route('changelog') }}"
                                     class="{{ request()->routeIs('changelog') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Changelog</a>
+                                <a href="{{ route('tv_mode') }}" target="_blank"
+                                    class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap flex items-center gap-1">
+                                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                    TV Mode
+                                </a>
                                 @if(auth()->user()->role === 'admin')
                                     <a href="{{ route('logs.index') }}"
                                         class="{{ request()->routeIs('logs.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Historical Logs</a>
