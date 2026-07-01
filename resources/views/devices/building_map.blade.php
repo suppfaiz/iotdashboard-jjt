@@ -71,7 +71,7 @@
                              id="slab-{{ $f }}" 
                              data-floor-index="{{ $f }}"
                              onclick="clickFloor({{ $f }})"
-                             style="--floor-index: {{ $f }}; transform: translateZ({{ $f * 75 }}px);">
+                             style="--floor-index: {{ $f }}; transform: translateZ({{ ($f - 1) * 75 }}px);">
                             
                             <!-- Internal 3D details styling -->
                             <div class="flex justify-between items-center w-full">
@@ -88,27 +88,35 @@
                                         <span id="slab-alert-{{ $f }}" class="w-3.5 h-3.5 rounded-full bg-red-500 animate-ping flex items-center justify-center"></span>
                                         <span class="text-[8px] font-black text-red-600 uppercase tracking-widest">ALERT</span>
                                     @elseif($onlineCount > 0)
-                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/20"></span>
                                     @else
-                                        <span class="w-2.5 h-2.5 rounded-full bg-slate-350"></span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-slate-355"></span>
                                     @endif
                                 </div>
                             </div>
 
-                            <!-- Simplified Clean Zones Visual Grid (To Prevent Squishing) -->
+                            <!-- Simplified Clean 2-Letter Abbreviation Zones (Blue-print Grid style) -->
                             @if($hasGroups)
-                                <div class="mt-4 flex flex-wrap items-center gap-1.5 pointer-events-none">
+                                <div class="mt-4 flex flex-wrap items-center gap-2 pointer-events-none">
                                     @foreach($floorGroups as $group)
                                         @php
                                             $anyOnline = $group->devices->where('is_online', true)->count() > 0;
+                                            
+                                            // Extract 2-letter abbreviation
+                                            $words = preg_split("/[\s\-_&]+/", $group->name);
+                                            if (count($words) >= 2) {
+                                                $abbr = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                                            } else {
+                                                $abbr = strtoupper(substr($group->name, 0, 2));
+                                            }
                                         @endphp
-                                        <div class="w-6 h-6 rounded-lg flex items-center justify-center text-[9px] font-black tracking-tight {{ $anyOnline ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-200/60 shadow-sm' : 'bg-slate-100/80 text-slate-450 border border-slate-200/50' }}">
-                                            {{ substr($group->name, 0, 1) }}
+                                        <div class="w-7 h-7 rounded-lg flex items-center justify-center text-[9px] font-black tracking-tighter {{ $anyOnline ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-250/70 shadow-sm' : 'bg-slate-100/90 text-slate-450 border border-slate-200/60' }}" title="{{ $group->name }}">
+                                            {{ $abbr }}
                                         </div>
                                     @endforeach
                                 </div>
                             @else
-                                <div class="mt-4 text-[9px] text-slate-400 italic font-semibold pointer-events-none text-center py-2 bg-slate-50/50 rounded-xl border border-dashed border-slate-200/40">
+                                <div class="mt-4 text-[9px] text-slate-400 italic font-semibold pointer-events-none text-center py-2.5 bg-slate-50/50 rounded-xl border border-dashed border-slate-200/40 w-full">
                                     Empty Floor
                                 </div>
                             @endif
@@ -151,7 +159,7 @@
                 </div>
 
                 <div class="border-t border-slate-100 pt-4 mt-6 flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-widest flex-shrink-0">
-                    <span>Target PLN Tariff: {{ number_format($plnTariff, 2) }}/kWh</span>
+                    <span>Target PLN Tariff: Rp {{ number_format($plnTariff, 2, ',', '.') }}/kWh</span>
                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Live Syncing</span>
                 </div>
             </div>
@@ -167,11 +175,14 @@
         width: 100%;
         height: 580px;
         perspective: 1600px;
-        perspective-origin: 50% 28%;
+        perspective-origin: 50% 25%;
         display: flex;
         align-items: center;
         justify-content: center;
         position: relative;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+        background-size: 20px 20px;
+        border-radius: 24px;
     }
     
     /* 3D Isometric building box */
@@ -189,24 +200,24 @@
         position: absolute;
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.75) 100%);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(248, 250, 252, 0.78) 100%);
         backdrop-filter: blur(8px);
         border: 2px solid rgba(148, 163, 184, 0.4);
-        box-shadow: 0 10px 30px -10px rgba(148, 163, 184, 0.12), inset 0 0 15px rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 25px -8px rgba(148, 163, 184, 0.15), inset 0 0 15px rgba(255, 255, 255, 0.7);
         border-radius: 18px;
-        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         transform-style: preserve-3d;
         cursor: pointer;
         display: flex;
         flex-direction: column;
-        padding: 18px;
+        padding: 16px;
         justify-content: flex-start;
     }
 
     .floor-slab:hover {
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(255, 255, 255, 0.96);
         border-color: rgba(59, 130, 246, 0.6);
-        box-shadow: 0 15px 35px -5px rgba(59, 130, 246, 0.15), inset 0 0 20px rgba(255, 255, 255, 0.8);
+        box-shadow: 0 15px 30px -5px rgba(59, 130, 246, 0.15), inset 0 0 20px rgba(255, 255, 255, 0.9);
     }
 
     .floor-slab.active {
@@ -218,7 +229,11 @@
     /* Red flashing glowing alert style for floor slab */
     .floor-slab.alert-active {
         border-color: #ef4444 !important;
-        box-shadow: 0 15px 35px -5px rgba(239, 68, 68, 0.2), inset 0 0 20px rgba(239, 68, 68, 0.05) !important;
+        box-shadow: 0 15px 30px -5px rgba(239, 68, 68, 0.2), inset 0 0 20px rgba(239, 68, 68, 0.05) !important;
+    }
+
+    .bg-slate-355 {
+        background-color: #cbd5e1;
     }
 </style>
 
@@ -258,7 +273,8 @@
                 lift = -30; // slide lower floors down
             }
 
-            slab.style.transform = `translateZ(${idx * spacing + lift}px)`;
+            // Using (idx - 1) shifts Floor 1 to baseline Z=0, preventing top floor cut-off
+            slab.style.transform = `translateZ(${(idx - 1) * spacing + lift}px)`;
         });
 
         // Show Inspector Details Panel
@@ -275,7 +291,7 @@
         slabs.forEach(slab => {
             const idx = parseInt(slab.getAttribute('data-floor-index'));
             slab.classList.remove('active');
-            slab.style.transform = `translateZ(${idx * 75}px)`;
+            slab.style.transform = `translateZ(${(idx - 1) * 75}px)`;
         });
 
         // Hide Inspector
@@ -537,9 +553,9 @@
                     if (hasFloorAnomalies) {
                         alertBadge.className = "w-3.5 h-3.5 rounded-full bg-red-500 animate-ping flex items-center justify-center";
                     } else if (onlineCount > 0) {
-                        alertBadge.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
+                        alertBadge.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/20";
                     } else {
-                        alertBadge.className = "w-2.5 h-2.5 rounded-full bg-slate-350";
+                        alertBadge.className = "w-2.5 h-2.5 rounded-full bg-slate-355";
                     }
                 }
             });
