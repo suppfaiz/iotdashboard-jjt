@@ -144,16 +144,37 @@
                                     TV Mode
                                 </a>
                                 @if(auth()->user()->role === 'admin')
-                                    <a href="{{ route('logs.index') }}"
-                                        class="{{ request()->routeIs('logs.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Historical Logs</a>
-                                    <a href="{{ route('reports.index') }}"
-                                        class="{{ request()->routeIs('reports.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Reports</a>
-                                    <a href="{{ route('settings.edit') }}"
-                                        class="{{ request()->routeIs('settings.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Settings</a>
-                                    <a href="{{ route('docs.index') }}"
-                                        class="{{ request()->routeIs('docs.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Docs</a>
-                                    <a href="/api-docs/index.html" target="_blank"
-                                        class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">API Docs</a>
+                                    <div class="relative group">
+                                        <button type="button" 
+                                            class="{{ request()->routeIs(['logs.*', 'reports.*', 'settings.*', 'docs.*']) ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap flex items-center gap-1 cursor-pointer">
+                                            <span>Admin Menu</span>
+                                            <svg class="w-4 h-4 text-slate-400 group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+                                        <div class="absolute left-0 mt-1 w-52 rounded-xl bg-white border border-slate-200/80 shadow-[0_10px_30px_rgba(0,0,0,0.08)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-1.5 flex flex-col gap-0.5">
+                                            <a href="{{ route('logs.index') }}"
+                                                class="flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg {{ request()->routeIs('logs.*') ? 'bg-blue-600/5 text-blue-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }} transition-colors">
+                                                <span>📋</span> Historical Logs
+                                            </a>
+                                            <a href="{{ route('reports.index') }}"
+                                                class="flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg {{ request()->routeIs('reports.*') ? 'bg-blue-600/5 text-blue-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }} transition-colors">
+                                                <span>📊</span> Reports
+                                            </a>
+                                            <a href="{{ route('settings.edit') }}"
+                                                class="flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg {{ request()->routeIs('settings.*') ? 'bg-blue-600/5 text-blue-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }} transition-colors">
+                                                <span>⚙️</span> Settings
+                                            </a>
+                                            <a href="{{ route('docs.index') }}"
+                                                class="flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg {{ request()->routeIs('docs.*') ? 'bg-blue-600/5 text-blue-600' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }} transition-colors">
+                                                <span>📖</span> Docs
+                                            </a>
+                                            <a href="/api-docs/index.html" target="_blank"
+                                                class="flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                                                <span>🔌</span> API Docs ↗
+                                            </a>
+                                        </div>
+                                    </div>
                                 @endif
                             </div>
                         @endauth
