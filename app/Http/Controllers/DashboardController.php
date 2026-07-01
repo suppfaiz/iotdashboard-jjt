@@ -434,10 +434,11 @@ Tuliskan jawaban langsung dalam format HTML/Blade bersih yang rapi (gunakan tag 
     public function chatbotChat(Request $request)
     {
         $request->validate([
-            'message' => 'required|string|max:1000',
+            'message' => 'nullable|string|max:1000',
+            'chatInput' => 'nullable|string|max:1000',
         ]);
 
-        $userMessage = $request->input('message');
+        $userMessage = $request->input('message') ?? $request->input('chatInput') ?? '';
 
         $plnTariff = floatval(SystemConfig::where('key', 'pln_tariff')->value('value') ?? 1444.70);
         $devices = Device::where('status', true)->get();
@@ -556,7 +557,8 @@ Jawablah langsung menggunakan format HTML/Blade bersih (tag seperti <b>, <ul>, <
                         $aiResponse = preg_replace('/^```(?:html)?|```$/i', '', trim($aiResponse));
                         return response()->json([
                             'status' => 'success',
-                            'reply' => $aiResponse
+                            'reply' => $aiResponse,
+                            'output' => $aiResponse
                         ]);
                     }
                 }
@@ -565,10 +567,67 @@ Jawablah langsung menggunakan format HTML/Blade bersih (tag seperti <b>, <ul>, <
             }
         }
 
+        // Return static fallback response if Gemini is not configured/offline
+        $staticReply = $this->getStaticBotResponse($userMessage);
         return response()->json([
-            'status' => 'error',
-            'message' => 'AI is currently offline or not configured.'
+            'status' => 'success',
+            'reply' => $staticReply,
+            'output' => $staticReply
         ]);
+    }
+
+    private function getStaticBotResponse($input)
+    {
+        $text = strtolower($input);
+        $electricianWhatsapp = SystemConfig::where('key', 'electrician_whatsapp')->value('value') ?? '';
+
+        if (str_contains($text, 'hubungi') || str_contains($text, 'tukang') || str_contains($text, 'teknisi') || str_contains($text, 'listrik')) {
+            if ($electricianWhatsapp) {
+                return "📞 <b>Hubungi Tukang Listrik:</b><br><br>
+                    Terjadi masalah listrik atau alarm menyala? Anda dapat langsung mengirimkan chat WhatsApp ke teknisi listrik resmi:<br><br>
+                    👉 <a href=\"https://wa.me/{$electricianWhatsapp}?text=Halo%20Bapak%2FIbu%2C%20kami%20ingin%20melaporkan%20adanya%20masalah%20kelistrikan%20pada%20sistem%20pemantauan%20daya%20IoT%20Jamkrida%20Jateng.%20Mohon%20bantuannya%20untuk%20memeriksa.%20Terima%20kasih.\" target=\"_blank\" class=\"inline-block px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs shadow-sm transition-colors\">Hubungi via WhatsApp</a>";
+            } else {
+                return "📞 Nomor kontak tukang listrik belum dikonfigurasi oleh Administrator di menu Settings.";
+            }
+        }
+
+        if (str_contains($text, 'tips') || str_contains($text, 'hemat')) {
+            return "💡 <b>Berikut Tips Praktis Menghemat Listrik Anda:</b><br><br>
+                1. <b>Matikan Beban Standby</b>: Cabut colokan TV, komputer, atau charger HP yang tidak dipakai. Beban standby berkontribusi hingga 10% tagihan bulanan.<br>
+                2. <b>Gunakan LED Berkualitas</b>: Ganti lampu pijar Anda dengan LED. Lampu LED menggunakan daya 80% lebih sedikit untuk tingkat kecerahan yang sama.<br>
+                3. <b>Atur Limit Alarm Anggaran</b>: Gunakan fitur <b>Monthly Cost/Kwh Budget</b> di menu Settings pada dashboard ini untuk memantau konsumsi agar tidak melebihi anggaran bulanan Anda.";
+        }
+
+        if (str_contains($text, 'grafik') || str_contains($text, 'baca')) {
+            return "📊 <b>Cara Membaca Grafik Sensor Dashboard:</b><br><br>
+                * <b>Grafik Voltase (V)</b>: Memantau kestabilan tegangan listrik. Normalnya berkisar di <b>220V</b>. Jika turun di bawah 200V atau di atas 240V, instalasi Anda berisiko merusak peralatan elektronik.<br>
+                * <b>Grafik Arus (A)</b>: Menampilkan besarnya arus listrik yang mengalir ke beban Anda.<br>
+                * <b>Grafik Daya (W)</b>: Menunjukkan daya aktif nyata yang sedang disedot alat listrik Anda saat ini (V x A).<br>
+                * <b>Grafik Energi (kWh)</b>: Menampilkan akumulasi total pemakaian listrik harian Anda.";
+        }
+
+        if (str_contains($text, 'tarif') || str_contains($text, 'pln') || str_contains($text, 'biaya') || str_contains($text, 'wbp')) {
+            return "🔋 <b>Estimasi Tarif PLN (Time of Use - ToU):</b><br><br>
+                Sistem di dashboard ini menghitung estimasi biaya harian Anda berdasarkan dua tarif:<br>
+                * <b>WBP (Waktu Beban Puncak)</b>: Berlaku pukul <b>17:00 - 22:00</b> dengan tarif lebih tinggi (misal Rp2.000/kWh) karena beban puncak jaringan listrik.<br>
+                * <b>LWBP (Luar Waktu Beban Puncak)</b>: Berlaku pukul <b>22:00 - 17:00</b> dengan tarif standar (misal Rp1.444,70/kWh).<br><br>
+                Anda bisa mengubah nilai tarif ini kapan saja di menu <b>Settings</b>.";
+        }
+
+        if (str_contains($text, 'telegram') || str_contains($text, 'notif') || str_contains($text, 'mati') || str_contains($text, 'offline')) {
+            return "⚠️ <b>Fitur Notifikasi Telegram Alert:</b><br><br>
+                * Bot akan otomatis mengirimkan chat ke Telegram Anda jika voltase berada di luar batas aman (di bawah 200V / di atas 240V).<br>
+                * Jika alat sensor ESP32 terputus (mati listrik atau Wi-Fi mati) selama <b>5 menit</b>, Anda akan mendapat chat peringatan <b>DEVICE OFFLINE</b>.<br>
+                * Ketika alat menyala lagi, bot mengirimkan chat pemulihan <b>DEVICE ONLINE RECOVERY</b>.";
+        }
+
+        return "🤖 <b>Halo! Saya YukAnalisaListrikmu.</b><br><br>
+            Ada yang bisa saya bantu tentang pemantauan energi Anda?<br>
+            Silakan tanyakan hal berikut:<br>
+            * 💡 <i>\"Tips hemat listrik\"</i><br>
+            * 📊 <i>\"Cara membaca grafik\"</i><br>
+            * 🔋 <i>\"Bagaimana tarif PLN WBP/LWBP dihitung?\"</i><br>
+            * ⚠️ <i>\"Bagaimana cara kerja notifikasi Telegram?\"</i>";
     }
 }
 
