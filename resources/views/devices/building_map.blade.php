@@ -42,7 +42,7 @@
                 @php
                     $maxFloor = max(3, $floors->keys()->max() ?? 1);
                 @endphp
-                <div id="building-model" class="building">
+                <div id="building-model" class="building auto-rotate">
                     <!-- Floor Slabs stacked from bottom (1) to top (max) -->
                     @for($f = 1; $f <= $maxFloor; $f++)
                         @php
@@ -73,8 +73,14 @@
                              onclick="clickFloor({{ $f }})"
                              style="--floor-index: {{ $f }}; transform: translateZ({{ ($f - 1) * 75 }}px);">
                             
+                            <!-- 3D Walls for the house/building structure -->
+                            <div class="wall wall-back"></div>
+                            <div class="wall wall-front"></div>
+                            <div class="wall wall-left"></div>
+                            <div class="wall wall-right"></div>
+
                             <!-- Internal 3D details styling -->
-                            <div class="flex justify-between items-center w-full">
+                            <div class="flex justify-between items-center w-full z-10 relative">
                                 <div class="flex flex-col">
                                     <span class="text-xs font-black text-slate-800 tracking-wide">LANTAI {{ $f }}</span>
                                     <span class="text-[8px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">
@@ -90,14 +96,14 @@
                                     @elseif($onlineCount > 0)
                                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/20"></span>
                                     @else
-                                        <span class="w-2.5 h-2.5 rounded-full bg-slate-355"></span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
                                     @endif
                                 </div>
                             </div>
 
                             <!-- Simplified Clean 2-Letter Abbreviation Zones (Blue-print Grid style) -->
                             @if($hasGroups)
-                                <div class="mt-4 flex flex-wrap items-center gap-2 pointer-events-none">
+                                <div class="mt-4 flex flex-wrap items-center gap-2 pointer-events-none z-10 relative">
                                     @foreach($floorGroups as $group)
                                         @php
                                             $anyOnline = $group->devices->where('is_online', true)->count() > 0;
@@ -116,12 +122,20 @@
                                     @endforeach
                                 </div>
                             @else
-                                <div class="mt-4 text-[9px] text-slate-400 italic font-semibold pointer-events-none text-center py-2.5 bg-slate-50/50 rounded-xl border border-dashed border-slate-200/40 w-full">
+                                <div class="mt-4 text-[9px] text-slate-400 italic font-semibold pointer-events-none text-center py-2.5 bg-slate-50/50 rounded-xl border border-dashed border-slate-200/40 w-full z-10 relative">
                                     Empty Floor
                                 </div>
                             @endif
                         </div>
                     @endfor
+
+                    <!-- Pitched Roof on top floor slab -->
+                    <div id="roof-model" class="roof" style="transform: translateZ({{ $maxFloor * 75 }}px);">
+                        <div class="roof-panel roof-front"></div>
+                        <div class="roof-panel roof-back"></div>
+                        <div class="roof-gable roof-gable-left"></div>
+                        <div class="roof-gable roof-gable-right"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -180,9 +194,10 @@
         align-items: center;
         justify-content: center;
         position: relative;
-        background: radial-gradient(circle, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
-        background-size: 20px 20px;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.05) 1.5px, transparent 1.5px);
+        background-size: 24px 24px;
         border-radius: 24px;
+        overflow: hidden;
     }
     
     /* 3D Isometric building box */
@@ -195,6 +210,16 @@
         transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
+    /* Auto-spin animation for holographic presentation */
+    .building.auto-rotate {
+        animation: auto-spin 25s linear infinite;
+    }
+
+    @keyframes auto-spin {
+        0% { transform: rotateX(60deg) rotateZ(0deg) translateY(20px); }
+        100% { transform: rotateX(60deg) rotateZ(360deg) translateY(20px); }
+    }
+
     /* Floating Floor slabs */
     .floor-slab {
         position: absolute;
@@ -204,8 +229,8 @@
         backdrop-filter: blur(8px);
         border: 2px solid rgba(148, 163, 184, 0.4);
         box-shadow: 0 8px 25px -8px rgba(148, 163, 184, 0.15), inset 0 0 15px rgba(255, 255, 255, 0.7);
-        border-radius: 18px;
-        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        border-radius: 12px;
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         transform-style: preserve-3d;
         cursor: pointer;
         display: flex;
@@ -232,8 +257,136 @@
         box-shadow: 0 15px 30px -5px rgba(239, 68, 68, 0.2), inset 0 0 20px rgba(239, 68, 68, 0.05) !important;
     }
 
-    .bg-slate-355 {
-        background-color: #cbd5e1;
+    /* --- 3D Walls for House Shape --- */
+    .wall {
+        position: absolute;
+        background: rgba(59, 130, 246, 0.05);
+        border: 1.5px solid rgba(148, 163, 184, 0.3);
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.5s ease;
+        pointer-events: none;
+    }
+
+    .wall-back {
+        width: 320px;
+        height: 60px;
+        left: 0;
+        top: 0;
+        transform-origin: top center;
+        transform: rotateX(-90deg);
+        border-bottom: none;
+    }
+
+    .wall-front {
+        width: 320px;
+        height: 60px;
+        left: 0;
+        bottom: 0;
+        transform-origin: bottom center;
+        transform: rotateX(90deg);
+        border-top: none;
+        /* Draw a small main entrance gate look */
+        background: radial-gradient(circle at 50% 100%, rgba(59, 130, 246, 0.1) 20px, rgba(59, 130, 246, 0.03) 21px);
+    }
+
+    .wall-left {
+        width: 220px;
+        height: 60px;
+        left: 0;
+        top: 0;
+        transform-origin: left top;
+        transform: rotateY(90deg) rotateZ(-90deg);
+        border-right: none;
+    }
+
+    .wall-right {
+        width: 220px;
+        height: 60px;
+        right: 0;
+        top: 0;
+        transform-origin: right top;
+        transform: rotateY(-90deg) rotateZ(90deg);
+        border-left: none;
+    }
+
+    /* Wall folding animation when floor is clicked */
+    .floor-slab.active .wall-back {
+        transform: rotateX(-180deg);
+        background: rgba(59, 130, 246, 0.01);
+    }
+    .floor-slab.active .wall-front {
+        transform: rotateX(180deg);
+        background: rgba(59, 130, 246, 0.01);
+    }
+    .floor-slab.active .wall-left {
+        transform: rotateY(180deg) rotateZ(-90deg);
+        background: rgba(59, 130, 246, 0.01);
+    }
+    .floor-slab.active .wall-right {
+        transform: rotateY(-180deg) rotateZ(90deg);
+        background: rgba(59, 130, 246, 0.01);
+    }
+
+    /* Red flashing anomaly walls */
+    .floor-slab.alert-active .wall {
+        border-color: rgba(239, 68, 68, 0.4) !important;
+        background-color: rgba(239, 68, 68, 0.03) !important;
+    }
+
+    /* --- Pitched Roof on Top --- */
+    .roof {
+        position: absolute;
+        width: 320px;
+        height: 220px;
+        transform-style: preserve-3d;
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+        pointer-events: none;
+    }
+
+    .roof-panel {
+        position: absolute;
+        width: 320px;
+        height: 140px;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.05) 100%);
+        border: 2px solid rgba(148, 163, 184, 0.5);
+        box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.4);
+    }
+
+    .roof-front {
+        left: 0;
+        top: 0;
+        transform-origin: bottom center;
+        transform: translate3d(0, -30px, 60px) rotateX(38deg);
+    }
+
+    .roof-back {
+        left: 0;
+        bottom: 0;
+        transform-origin: top center;
+        transform: translate3d(0, 30px, 60px) rotateX(-38deg);
+    }
+
+    /* Gable walls for roof side coverage */
+    .roof-gable {
+        position: absolute;
+        width: 220px;
+        height: 86px;
+        background: rgba(59, 130, 246, 0.08);
+        border: 1.5px solid rgba(148, 163, 184, 0.45);
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+
+    .roof-gable-left {
+        left: 0;
+        top: 0;
+        transform-origin: left top;
+        transform: rotateY(90deg) rotateZ(-90deg) translate3d(0, 0, 60px);
+    }
+
+    .roof-gable-right {
+        right: 0;
+        top: 0;
+        transform-origin: right top;
+        transform: rotateY(-90deg) rotateZ(90deg) translate3d(0, 0, 60px);
     }
 </style>
 
@@ -242,6 +395,7 @@
     const floorsData = @json($floors);
     const alertConfig = @json($alertConfig);
     const plnTariff = {{ $plnTariff }};
+    const maxFloor = {{ $maxFloor }};
     
     let activeFloor = null;
 
@@ -251,7 +405,7 @@
 
         // Toggle building exploded class
         const building = document.getElementById('building-model');
-        building.classList.add('exploded');
+        building.classList.remove('auto-rotate'); // Pause auto-rotation on click
 
         // Adjust rotations based on select
         building.style.transform = `rotateX(55deg) rotateZ(-20deg) translateY(50px)`;
@@ -277,6 +431,13 @@
             slab.style.transform = `translateZ(${(idx - 1) * spacing + lift}px)`;
         });
 
+        // Explode roof model upward and make it semi-transparent
+        const roof = document.getElementById('roof-model');
+        if (roof) {
+            roof.style.transform = `translateZ(${maxFloor * 95 + 90}px)`;
+            roof.style.opacity = '0.3';
+        }
+
         // Show Inspector Details Panel
         showInspector(floorNum);
     }
@@ -284,8 +445,10 @@
     // Reset layout view back to compact stacked setting
     function resetBuildingView() {
         activeFloor = null;
+        
         const building = document.getElementById('building-model');
         building.style.transform = `rotateX(60deg) rotateZ(-30deg) translateY(20px)`;
+        building.classList.add('auto-rotate'); // Resume auto-rotation
         
         const slabs = document.querySelectorAll('.floor-slab');
         slabs.forEach(slab => {
@@ -293,6 +456,13 @@
             slab.classList.remove('active');
             slab.style.transform = `translateZ(${(idx - 1) * 75}px)`;
         });
+
+        // Reset roof
+        const roof = document.getElementById('roof-model');
+        if (roof) {
+            roof.style.transform = `translateZ(${maxFloor * 75}px)`;
+            roof.style.opacity = '1';
+        }
 
         // Hide Inspector
         document.getElementById('inspector-panel').classList.add('hidden');
@@ -555,7 +725,7 @@
                     } else if (onlineCount > 0) {
                         alertBadge.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/20";
                     } else {
-                        alertBadge.className = "w-2.5 h-2.5 rounded-full bg-slate-355";
+                        alertBadge.className = "w-2.5 h-2.5 rounded-full bg-slate-300";
                     }
                 }
             });
