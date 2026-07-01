@@ -63,13 +63,8 @@ class DeviceController extends Controller
         $wifi_ssid = $request->wifi_ssid;
         $wifi_password = $request->wifi_password;
         $mqtt_host = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value');
-        if (empty($mqtt_host)) {
-            $envHost = env('MQTT_HOST');
-            if (empty($envHost) || $envHost === 'broker.emqx.io' || $envHost === 'mqtt') {
-                $mqtt_host = app()->runningInConsole() ? '127.0.0.1' : request()->getHost();
-            } else {
-                $mqtt_host = $envHost;
-            }
+        if (empty($mqtt_host) || $mqtt_host === 'mqtt' || $mqtt_host === 'localhost' || $mqtt_host === '127.0.0.1') {
+            $mqtt_host = app()->runningInConsole() ? '127.0.0.1' : request()->getHost();
         }
         $mqtt_port = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? env('MQTT_PORT', 1883);
         $mqtt_user = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME', '');
@@ -115,13 +110,8 @@ class DeviceController extends Controller
         }
 
         $mqtt_host = \App\Models\SystemConfig::where('key', 'mqtt_host')->value('value');
-        if (empty($mqtt_host)) {
-            $envHost = config('mqtt.host');
-            if (empty($envHost) || $envHost === 'broker.emqx.io' || $envHost === 'mqtt') {
-                $mqtt_host = app()->runningInConsole() ? '127.0.0.1' : request()->getHost();
-            } else {
-                $mqtt_host = $envHost;
-            }
+        if (empty($mqtt_host) || $mqtt_host === 'mqtt' || $mqtt_host === 'localhost' || $mqtt_host === '127.0.0.1') {
+            $mqtt_host = app()->runningInConsole() ? '127.0.0.1' : request()->getHost();
         }
         $mqtt_port = \App\Models\SystemConfig::where('key', 'mqtt_port')->value('value') ?? config('mqtt.port', 1883);
         $mqtt_user = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? config('mqtt.username', '');
