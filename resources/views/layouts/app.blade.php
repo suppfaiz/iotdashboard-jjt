@@ -101,7 +101,7 @@
             display: none;
             position: absolute;
             left: 0;
-            margin-top: 4px;
+            margin-top: 8px;
             min-width: 200px;
             background-color: #ffffff;
             border: 1px solid rgba(226, 232, 240, 0.8);
@@ -109,6 +109,17 @@
             box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
             z-index: 9999;
             padding: 6px;
+        }
+
+        /* Invisible bridge to prevent hover loss between button and menu */
+        .nav-dropdown-content::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 0;
+            right: 0;
+            height: 12px;
+            background: transparent;
         }
 
         .nav-dropdown:hover .nav-dropdown-content {
