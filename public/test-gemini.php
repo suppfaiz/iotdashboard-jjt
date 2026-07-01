@@ -28,7 +28,7 @@ try {
     $response = Http::withHeaders([
         'Content-Type' => 'application/json',
         'x-goog-api-key' => $geminiKey,
-    ])->post("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent", [
+    ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent", [
         'contents' => [
             [
                 'parts' => [
