@@ -17,6 +17,7 @@ class DashboardController extends Controller
         }])->get();
 
         $plnTariff = SystemConfig::where('key', 'pln_tariff')->value('value') ?? 1444.70;
+        $electricianWhatsapp = SystemConfig::where('key', 'electrician_whatsapp')->value('value') ?? '';
 
         // Fetch current month daily log sums grouped by device
         $monthlyLogsGrouped = \Illuminate\Support\Facades\DB::table('daily_energy_logs')
@@ -252,7 +253,7 @@ class DashboardController extends Controller
             ],
         ];
 
-        return view('dashboard', compact('groups', 'plnTariff', 'totalVolatileKwh', 'estimatedCost', 'chartData', 'topDevices', 'projectedBilling', 'activeWarnings', 'vMin', 'vMax', 'pMax'));
+        return view('dashboard', compact('groups', 'plnTariff', 'totalVolatileKwh', 'estimatedCost', 'chartData', 'topDevices', 'projectedBilling', 'activeWarnings', 'vMin', 'vMax', 'pMax', 'electricianWhatsapp'));
     }
 
     public function changelog()
@@ -338,17 +339,27 @@ class DashboardController extends Controller
         }
 
         // Generate dynamic advice
-        $analysisText = "Berikut adalah rangkuman analisis penggunaan listrik Anda berdasarkan data sensor real-time saat ini:<br><br>";
-        $analysisText .= "⚡ <b>Penggunaan Hari Ini</b>: <b>" . number_format($totalKwhToday, 3) . " kWh</b> (Estimasi Biaya: Rp " . number_format($totalKwhToday * $plnTariff, 0, ',', '.') . ")<br>";
-        $analysisText .= "📈 <b>Rata-rata 7 Hari Terakhir</b>: <b>" . number_format($avgDailyKwh, 3) . " kWh/hari</b><br>";
-        $analysisText .= "🔮 <b>Proyeksi Akhir Bulan</b>: <b>" . number_format($projectedKwh, 2) . " kWh</b> (Estimasi Tagihan: <b>Rp " . number_format($projectedBilling, 0, ',', '.') . "</b>)<br>";
-        $analysisText .= "🖥️ <b>Status Alat</b>: <b>{$onlineDevices} Online</b>, <b>{$offlineDevices} Offline</b> (Terdeteksi {$warningsCount} peringatan aktif)<br>";
-        
+        $analysisText = "📊 <b>LAPORAN ANALISIS ENERGI KELISTRIKAN</b><br>";
+        $analysisText .= "<b>PT JAMKRIDA JATENG</b><br><br>";
+        $analysisText .= "Yth. Manajemen / Administrator,<br><br>";
+        $analysisText .= "Berikut adalah laporan ringkas pemantauan dan analisis penggunaan energi listrik real-time:<br><br>";
+
+        $analysisText .= "⚡ <b>1. KONDISI KONSUMSI DAYA HARI INI</b><br>";
+        $analysisText .= "• Akumulasi Energi: <b>" . number_format($totalKwhToday, 3) . " kWh</b><br>";
+        $analysisText .= "• Estimasi Biaya Harian: <b>Rp " . number_format($totalKwhToday * $plnTariff, 0, ',', '.') . "</b><br>";
+        $analysisText .= "• Rata-rata Harian (7 Hari Terakhir): <b>" . number_format($avgDailyKwh, 3) . " kWh/hari</b><br><br>";
+
+        $analysisText .= "🔮 <b>2. PROYEKSI AKHIR BULAN</b><br>";
+        $analysisText .= "• Estimasi Total Energi: <b>" . number_format($projectedKwh, 2) . " kWh</b><br>";
+        $analysisText .= "• Proyeksi Tagihan Listrik: <b>Rp " . number_format($projectedBilling, 0, ',', '.') . "</b><br><br>";
+
+        $analysisText .= "🖥️ <b>3. STATUS INFRASTRUKTUR & PERANGKAT</b><br>";
+        $analysisText .= "• Total Perangkat: <b>{$totalDevices} Unit</b> ({$onlineDevices} Online / {$offlineDevices} Offline)<br>";
         if ($topConsumer && $topConsumer['energy'] > 0) {
-            $analysisText .= "🔥 <b>Konsumen Terbesar Hari Ini</b>: Perangkat <b>{$topConsumer['name']}</b> dengan pemakaian <b>" . number_format($topConsumer['energy'], 3) . " kWh</b>.<br>";
+            $analysisText .= "• Konsumen Terbesar Hari Ini: Perangkat <b>{$topConsumer['name']}</b> (" . number_format($topConsumer['energy'], 3) . " kWh)<br>";
         }
 
-        $analysisText .= "<br>📢 <b>Analisis & Rekomendasi Pintar</b>:<br>";
+        $analysisText .= "<br>📢 <b>4. ANALISIS & REKOMENDASI PINTAR</b><br>";
         if ($avgDailyKwh > 0 && $totalKwhToday > ($avgDailyKwh * 1.2)) {
             $analysisText .= "⚠️ Pemakaian listrik hari ini terdeteksi <b>di atas rata-rata biasanya (naik " . round((($totalKwhToday - $avgDailyKwh) / $avgDailyKwh) * 100) . "%)</b>. Mohon periksa apakah ada perangkat cadangan atau AC yang menyala tidak terpakai.<br>";
         } else {
@@ -356,8 +367,12 @@ class DashboardController extends Controller
         }
 
         if ($offlineDevices > 0) {
-            $analysisText .= "❌ Terdeteksi ada <b>{$offlineDevices} perangkat mati/offline</b>. Segera cek koneksi Wi-Fi atau catu daya pada perangkat tersebut agar pemantauan tidak terputus.<br>";
+            $analysisText .= "❌ Terdeteksi ada <b>{$offlineDevices} perangkat mati/offline</b>. Segera lakukan pengecekan pada koneksi daya/Wi-Fi perangkat.<br>";
+        } else {
+            $analysisText .= "✅ Seluruh perangkat IoT berfungsi dengan baik.<br>";
         }
+
+        $analysisText .= "<br>Semoga laporan ini membantu dalam pengelolaan efisiensi energi kantor. Terima kasih.";
 
         return response()->json([
             'status' => 'success',
