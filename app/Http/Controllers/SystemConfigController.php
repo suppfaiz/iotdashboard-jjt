@@ -34,6 +34,7 @@ class SystemConfigController extends Controller
             'alert_voltage_max' => 'required|numeric|min:0',
             'alert_power_max' => 'required|numeric|min:0',
             'electrician_whatsapp' => 'nullable|string',
+            'gemini_api_key' => 'nullable|string',
         ]);
 
         $keys = [
@@ -53,6 +54,7 @@ class SystemConfigController extends Controller
             'alert_voltage_max',
             'alert_power_max',
             'electrician_whatsapp',
+            'gemini_api_key',
         ];
 
         foreach ($keys as $key) {

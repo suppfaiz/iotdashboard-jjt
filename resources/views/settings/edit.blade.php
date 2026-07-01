@@ -276,6 +276,23 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Section 5: AI Chatbot (Google Gemini API Key) -->
+                    <div class="border-t border-gray-100 pt-6 mt-6">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 .364l-.707 .707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                            <h2 class="text-base font-bold text-gray-900">AI Chatbot Integration Settings</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="gemini_api_key" class="block text-sm font-semibold text-gray-700 mb-2">Google Gemini API Key (Optional)</label>
+                                <input type="password" name="gemini_api_key" id="gemini_api_key" placeholder="e.g. AIzaSy..." value="{{ old('gemini_api_key', $configs['gemini_api_key'] ?? '') }}" class="block w-full rounded-xl bg-white border-gray-300 py-3 px-4 text-gray-900 focus:border-blue-500 focus:ring-blue-500 text-sm font-semibold">
+                                <p class="mt-1.5 text-xs text-gray-500">Provide Google Gemini API Key from Google AI Studio (Free Tier available) to power the chatbot with interactive AI. Leave empty to fallback to standard template analysis reports.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="flex justify-end pt-4 border-t border-gray-200 px-6 pb-6 bg-gray-50">

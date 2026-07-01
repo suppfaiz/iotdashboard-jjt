@@ -337,8 +337,56 @@ class DashboardController extends Controller
                 }
             }
         }
+        // Generate prompt for AI
+        $prompt = "Kamu adalah YukAnalisaListrikmu, asisten AI profesional untuk sistem IoT pemantauan energi kelistrikan PT Jamkrida Jateng.
+Tugasmu adalah memberikan analisis dan saran penghematan listrik yang ramah, sopan, ringkas, dan profesional.
 
-        // Generate dynamic advice
+Berikut adalah data sensor real-time saat ini:
+- PLN Tariff: Rp " . number_format($plnTariff, 2, ',', '.') . " per kWh
+- Total konsumsi energi hari ini: " . number_format($totalKwhToday, 3) . " kWh
+- Estimasi biaya listrik hari ini: Rp " . number_format($totalKwhToday * $plnTariff, 0, ',', '.') . "
+- Rata-rata konsumsi harian (7 hari terakhir): " . number_format($avgDailyKwh, 3) . " kWh
+- Proyeksi total konsumsi energi akhir bulan ini: " . number_format($projectedKwh, 2) . " kWh
+- Proyeksi estimasi tagihan listrik akhir bulan ini: Rp " . number_format($projectedBilling, 0, ',', '.') . "
+- Jumlah perangkat aktif: " . $totalDevices . " perangkat (" . $onlineDevices . " Online, " . $offlineDevices . " Offline)
+- Jumlah peringatan (alerts/warnings) aktif saat ini: " . $warningsCount . " peringatan.
+" . ($topConsumer && $topConsumer['energy'] > 0 ? "- Konsumen listrik terbesar hari ini: " . $topConsumer['name'] . " dengan pemakaian " . number_format($topConsumer['energy'], 3) . " kWh." : "") . "
+
+Berikan laporan analisis singkat, sebutkan jika ada pemborosan (pemakaian hari ini di atas rata-rata) atau alat offline, dan berikan 2-3 rekomendasi penghematan praktis. 
+Tuliskan jawaban langsung dalam format HTML/Blade bersih yang rapi (gunakan tag seperti <b>, <ul>, <li>, ⚠️, 💡, ✅, 🔮, ⚡) agar nyaman dibaca di chat widget. Jawab secara ringkas (maksimal 250 kata) dan mulailah dengan sapaan hormat.";
+
+        $geminiKey = env('GEMINI_API_KEY') ?: SystemConfig::where('key', 'gemini_api_key')->value('value');
+        if (!empty($geminiKey)) {
+            try {
+                $response = \Illuminate\Support\Facades\Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $geminiKey, [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt]
+                            ]
+                        ]
+                    ]
+                ]);
+
+                if ($response->successful()) {
+                    $result = $response->json();
+                    $aiResponse = $result['candidates'][0]['content']['parts'][0]['text'] ?? null;
+                    if (!empty($aiResponse)) {
+                        $aiResponse = preg_replace('/^```(?:html)?|```$/i', '', trim($aiResponse));
+                        return response()->json([
+                            'status' => 'success',
+                            'analysis' => $aiResponse
+                        ]);
+                    }
+                }
+            } catch (\Exception $e) {
+                // Fallback to static template
+            }
+        }
+
+        // Generate dynamic fallback advice
         $analysisText = "📊 <b>LAPORAN ANALISIS ENERGI KELISTRIKAN</b><br>";
         $analysisText .= "<b>PT JAMKRIDA JATENG</b><br><br>";
         $analysisText .= "Yth. Manajemen / Administrator,<br><br>";
