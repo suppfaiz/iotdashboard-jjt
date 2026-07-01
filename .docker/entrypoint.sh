@@ -28,6 +28,10 @@ else
     echo "Database already has records. Skipping seeding."
 fi
 
+# Generate Scribe API Docs
+echo "Generating Scribe API Documentation..."
+php artisan scribe:generate --force || echo "[!] Warning: Scribe API docs generation failed."
+
 # Cache config/routes
 echo "Optimizing application cache..."
 php artisan package:discover --ansi
