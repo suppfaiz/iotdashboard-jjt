@@ -363,7 +363,8 @@ Tuliskan jawaban langsung dalam format HTML/Blade bersih yang rapi (gunakan tag 
             try {
                 $response = \Illuminate\Support\Facades\Http::withHeaders([
                     'Content-Type' => 'application/json',
-                ])->post("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" . $geminiKey, [
+                    'x-goog-api-key' => $geminiKey,
+                ])->post("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent", [
                     'contents' => [
                         [
                             'parts' => [
@@ -540,7 +541,8 @@ Jawablah langsung menggunakan format HTML/Blade bersih (tag seperti <b>, <ul>, <
             try {
                 $response = \Illuminate\Support\Facades\Http::withHeaders([
                     'Content-Type' => 'application/json',
-                ])->post("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" . $geminiKey, [
+                    'x-goog-api-key' => $geminiKey,
+                ])->post("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent", [
                     'contents' => [
                         [
                             'parts' => [
