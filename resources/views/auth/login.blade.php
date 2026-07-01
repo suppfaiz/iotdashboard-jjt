@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Jamkrida Energy</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         html, body {
             font-family: 'Inter', sans-serif;
@@ -17,42 +17,6 @@
             padding: 0;
             position: fixed;
             inset: 0;
-        }
-
-        /* Preloader Styles */
-        #preloader {
-            position: fixed;
-            inset: 0;
-            background: #ffffff;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 1;
-            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        #preloader.fade-out {
-            opacity: 0;
-            transform: scale(1.08);
-            pointer-events: none;
-        }
-
-        .preloader-logo-container {
-            position: relative;
-            animation: pulse-logo 2s infinite ease-in-out;
-        }
-
-        @keyframes pulse-logo {
-            0%, 100% {
-                transform: scale(1);
-                filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.2));
-            }
-            50% {
-                transform: scale(1.05);
-                filter: drop-shadow(0 0 25px rgba(16, 185, 129, 0.4));
-            }
         }
 
         /* Floating background elements */
@@ -134,59 +98,152 @@
             }
         }
 
-        /* Fullscreen exit transition screen */
-        #transition-overlay {
+        /* --- 3D Light Door Pre-loader Styling --- */
+        #door-preloader {
             position: fixed;
             inset: 0;
-            background: #ffffff;
-            z-index: 100;
+            z-index: 10000;
+            display: flex;
+            perspective: 1600px;
+            overflow: hidden;
+            background: #f1f5f9; /* slate-100 background behind the doors */
+            transition: opacity 0.8s ease;
+        }
+
+        .door {
+            position: relative;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            box-shadow: inset 0 0 80px rgba(148, 163, 184, 0.3);
+            display: flex;
+            align-items: center;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+            z-index: 10001;
+            overflow: hidden;
+        }
+
+        .door-left {
+            transform-origin: left center;
+            border-right: 4px solid #3b82f6; /* glowing blue seam */
+            justify-content: flex-end;
+            padding-right: 40px;
+        }
+
+        .door-right {
+            transform-origin: right center;
+            border-left: 4px solid #3b82f6;
+            justify-content: flex-start;
+            padding-left: 40px;
+        }
+
+        /* Door decorative panels to look like a house door */
+        .door-panel-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 55%;
+            height: 75%;
+            justify-content: space-around;
+        }
+
+        .door-panel {
+            flex: 1;
+            border: 3px solid rgba(59, 130, 246, 0.1);
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            box-shadow: inset 0 0 20px rgba(148, 163, 184, 0.2);
+        }
+
+        /* Silver/Chrome Door handles */
+        .door-handle-left {
+            width: 10px;
+            height: 90px;
+            background: linear-gradient(to right, #e2e8f0, #94a3b8);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(148, 163, 184, 0.3), inset 0 0 3px rgba(0,0,0,0.15);
+            margin-right: -45px;
+            z-index: 10002;
+        }
+
+        .door-handle-right {
+            width: 10px;
+            height: 90px;
+            background: linear-gradient(to left, #e2e8f0, #94a3b8);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(148, 163, 184, 0.3), inset 0 0 3px rgba(0,0,0,0.15);
+            margin-left: -45px;
+            z-index: 10002;
+        }
+
+        /* Glowing center badge */
+        .loader-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10003;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        #transition-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
+            transition: all 0.8s cubic-bezier(0.7, 0, 0.3, 1);
         }
 
-        .spinner-ring {
-            width: 64px;
-            height: 64px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3b82f6;
-            border-bottom: 4px solid #10b981;
+        .loader-circle {
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            background: #ffffff;
+            border: 4px solid #3b82f6;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            animation: pulse-glow 2s infinite ease-in-out;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes pulse-glow {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+            }
+            50% {
+                transform: scale(1.06);
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+            }
         }
     </style>
 </head>
 <body class="relative flex items-center justify-center h-full p-4 select-none">
 
-    <!-- Preloader -->
-    <div id="preloader">
-        <div class="preloader-logo-container flex flex-col items-center">
-            <img src="{{ asset('logo.png') }}" alt="Jamkrida Energy Logo" class="h-28 w-auto object-contain mb-6">
-            <h1 class="text-xl font-bold text-gray-800 tracking-wider">JAMKRIDA ENERGY</h1>
-            <p class="text-xs text-gray-400 font-semibold tracking-widest mt-1 uppercase">Smart Grid Management Portal</p>
-        </div>
-        
-        <!-- Progress Indicator -->
-        <div class="mt-10 flex flex-col items-center">
-            <div class="w-56 h-1 bg-gray-100 rounded-full overflow-hidden relative shadow-inner">
-                <div id="preloader-progress" class="h-full bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-500 w-0 transition-all duration-100 ease-out"></div>
+    <!-- 3D Light Door Pre-loader & Transition Overlay -->
+    <div id="door-preloader">
+        <!-- Left Door -->
+        <div class="door door-left">
+            <div class="door-panel-container">
+                <div class="door-panel"></div>
+                <div class="door-panel"></div>
             </div>
-            <div class="flex items-center gap-1.5 mt-3 text-xs font-semibold text-gray-500">
-                <span id="preloader-status">Initializing security protocols</span>
-                <span class="text-blue-600 font-bold" id="preloader-percentage">0%</span>
+            <div class="door-handle-left"></div>
+        </div>
+
+        <!-- Center Glowing Icon -->
+        <div id="loader-center" class="loader-center">
+            <div class="loader-circle">⚡</div>
+            <div id="loader-text" class="text-center mt-6 transition-all duration-700">
+                <h2 id="transition-status" class="text-lg font-black tracking-widest text-slate-800 uppercase" style="font-family: 'Orbitron', sans-serif;">Loading System</h2>
+                <p id="transition-sub" class="text-[9px] text-slate-400 font-bold tracking-widest uppercase mt-2">Opening Jamkrida Energy...</p>
+            </div>
+        </div>
+
+        <!-- Right Door -->
+        <div class="door door-right">
+            <div class="door-handle-right"></div>
+            <div class="door-panel-container">
+                <div class="door-panel"></div>
+                <div class="door-panel"></div>
             </div>
         </div>
     </div>
@@ -272,82 +329,78 @@
         </div>
     </div>
 
-    <!-- Transition Loader Overlay -->
-    <div id="transition-overlay">
-        <div class="spinner-ring mb-6"></div>
-        <div id="transition-status" class="text-lg font-bold text-gray-800 tracking-tight transition-all duration-300">Authenticating...</div>
-        <div class="text-xs text-gray-400 mt-2 font-medium">Jamkrida Energy Gateway</div>
-    </div>
-
     <script>
-        // Preloader script
+        // Preloader script: Swing doors open at startup
         window.addEventListener('DOMContentLoaded', () => {
-            const progress = document.getElementById('preloader-progress');
-            const percent = document.getElementById('preloader-percentage');
-            const status = document.getElementById('preloader-status');
-            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                const preloader = document.getElementById('door-preloader');
+                const leftDoor = document.querySelector('#door-preloader .door-left');
+                const rightDoor = document.querySelector('#door-preloader .door-right');
+                const loaderCenter = document.getElementById('loader-center');
 
-            const statusStages = [
-                { limit: 25, text: 'Connecting to main grid...' },
-                { limit: 55, text: 'Synchronizing MQTT broker...' },
-                { limit: 80, text: 'Securing administrative shell...' },
-                { limit: 100, text: 'Ready!' }
-            ];
-
-            let count = 0;
-            const interval = setInterval(() => {
-                count += Math.floor(Math.random() * 8) + 4; // increment random step
-                if (count >= 100) {
-                    count = 100;
-                    clearInterval(interval);
-                    
-                    status.innerText = 'Ready!';
-                    percent.innerText = '100%';
-                    progress.style.width = '100%';
-
-                    setTimeout(() => {
-                        preloader.classList.add('fade-out');
-                        setTimeout(() => {
-                            preloader.remove();
-                        }, 800);
-                    }, 400);
-                } else {
-                    progress.style.width = count + '%';
-                    percent.innerText = count + '%';
-                    
-                    const stage = statusStages.find(s => count <= s.limit);
-                    if (stage) {
-                        status.innerText = stage.text;
-                    }
+                if (loaderCenter) {
+                    loaderCenter.style.opacity = '0';
+                    loaderCenter.style.transform = 'translate(-50%, -50%) scale(0.6)';
                 }
-            }, 35);
+                
+                if (leftDoor) leftDoor.style.transform = 'rotateY(-90deg)';
+                if (rightDoor) rightDoor.style.transform = 'rotateY(90deg)';
+
+                setTimeout(() => {
+                    if (preloader) {
+                        preloader.style.opacity = '0';
+                        preloader.style.pointerEvents = 'none';
+                    }
+                }, 2200);
+            }, 600);
         });
 
-        // Form submit transition script
+        // Form submit transition script: Swing doors closed on submit
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const overlay = document.getElementById('transition-overlay');
+            const preloader = document.getElementById('door-preloader');
+            const leftDoor = document.querySelector('#door-preloader .door-left');
+            const rightDoor = document.querySelector('#door-preloader .door-right');
+            const loaderCenter = document.getElementById('loader-center');
             const statusText = document.getElementById('transition-status');
+            const statusSub = document.getElementById('transition-sub');
             const form = this;
 
-            overlay.classList.add('active');
+            // Display preloader overlay
+            if (preloader) {
+                preloader.style.display = 'flex';
+                preloader.style.opacity = '1';
+                preloader.style.pointerEvents = 'auto';
+            }
+
+            // Swing doors closed
+            setTimeout(() => {
+                if (leftDoor) leftDoor.style.transform = 'rotateY(0deg)';
+                if (rightDoor) rightDoor.style.transform = 'rotateY(0deg)';
+                
+                if (loaderCenter) {
+                    loaderCenter.style.opacity = '1';
+                    loaderCenter.style.transform = 'translate(-50%, -50%) scale(1)';
+                }
+
+                if (statusText) statusText.innerText = 'AUTHENTICATING...';
+                if (statusSub) statusSub.innerText = 'Verifying credentials...';
+            }, 50);
 
             setTimeout(() => {
-                statusText.innerText = 'Verifying credentials...';
-            }, 600);
+                if (statusSub) statusSub.innerText = 'Loading operational nodes...';
+            }, 1000);
 
             setTimeout(() => {
-                statusText.innerText = 'Loading operational nodes...';
-            }, 1200);
-
-            setTimeout(() => {
-                statusText.innerText = 'Welcome to Jamkrida Energy!';
+                if (statusSub) statusSub.innerText = 'Welcome to Jamkrida Energy!';
             }, 1800);
 
             setTimeout(() => {
+                // Clear layout session storage since we are logging in fresh!
+                sessionStorage.removeItem('has_seen_preloader');
                 form.submit();
-            }, 2300);
+            }, 2400);
         });
     </script>
 </body>
