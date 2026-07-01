@@ -150,10 +150,159 @@
             transform: rotate(180deg);
             color: #1e293b;
         }
+
+        /* --- 3D Light Door Pre-loader Styling --- */
+        #door-preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: flex;
+            perspective: 1600px;
+            overflow: hidden;
+            background: #f1f5f9; /* slate-100 background behind the doors */
+            transition: opacity 0.8s ease;
+        }
+
+        .door {
+            position: relative;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            box-shadow: inset 0 0 80px rgba(148, 163, 184, 0.3);
+            display: flex;
+            align-items: center;
+            transition: transform 1.8s cubic-bezier(0.7, 0, 0.3, 1);
+            z-index: 10001;
+            overflow: hidden;
+        }
+
+        .door-left {
+            transform-origin: left center;
+            border-right: 4px solid #3b82f6; /* glowing blue seam */
+            justify-content: flex-end;
+            padding-right: 40px;
+        }
+
+        .door-right {
+            transform-origin: right center;
+            border-left: 4px solid #3b82f6;
+            justify-content: flex-start;
+            padding-left: 40px;
+        }
+
+        /* Door decorative panels to look like a house door */
+        .door-panel-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 55%;
+            height: 75%;
+            justify-content: space-around;
+        }
+
+        .door-panel {
+            flex: 1;
+            border: 3px solid rgba(59, 130, 246, 0.1);
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            box-shadow: inset 0 0 20px rgba(148, 163, 184, 0.2);
+        }
+
+        /* Silver/Chrome Door handles */
+        .door-handle-left {
+            width: 10px;
+            height: 90px;
+            background: linear-gradient(to right, #e2e8f0, #94a3b8);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(148, 163, 184, 0.3), inset 0 0 3px rgba(0,0,0,0.15);
+            margin-right: -45px;
+            z-index: 10002;
+        }
+
+        .door-handle-right {
+            width: 10px;
+            height: 90px;
+            background: linear-gradient(to left, #e2e8f0, #94a3b8);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(148, 163, 184, 0.3), inset 0 0 3px rgba(0,0,0,0.15);
+            margin-left: -45px;
+            z-index: 10002;
+        }
+
+        /* Glowing center badge */
+        .loader-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10003;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .loader-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 4px solid #3b82f6;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+            }
+            50% {
+                transform: scale(1.06);
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+            }
+        }
     </style>
 </head>
 
 <body class="antialiased relative pb-20 md:pb-0 overflow-x-hidden">
+
+    @auth
+        <!-- 3D Light Door Pre-loader -->
+        <div id="door-preloader">
+            <!-- Left Door -->
+            <div class="door door-left">
+                <div class="door-panel-container">
+                    <div class="door-panel"></div>
+                    <div class="door-panel"></div>
+                </div>
+                <div class="door-handle-left"></div>
+            </div>
+
+            <!-- Center Glowing Icon -->
+            <div id="loader-center" class="loader-center">
+                <div class="loader-circle">⚡</div>
+                <div id="loader-text" class="text-center mt-6 transition-all duration-700">
+                    <h2 class="text-lg font-black tracking-widest text-slate-800 uppercase" style="font-family: 'Inter', sans-serif;">Loading System</h2>
+                    <p class="text-[9px] text-slate-400 font-bold tracking-widest uppercase mt-2">Opening Jamkrida Energy...</p>
+                </div>
+            </div>
+
+            <!-- Right Door -->
+            <div class="door door-right">
+                <div class="door-handle-right"></div>
+                <div class="door-panel-container">
+                    <div class="door-panel"></div>
+                    <div class="door-panel"></div>
+                </div>
+            </div>
+        </div>
+    @endauth
 
     <!-- Ambient Background Orbs -->
     <div class="orb orb-1"></div>
@@ -475,6 +624,39 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Door Preloader logic using sessionStorage
+            const hasSeenLoader = sessionStorage.getItem('has_seen_preloader');
+            const preloader = document.getElementById('door-preloader');
+            
+            if (preloader) {
+                if (hasSeenLoader) {
+                    preloader.style.display = 'none';
+                } else {
+                    setTimeout(() => {
+                        const leftDoor = document.querySelector('#door-preloader .door-left');
+                        const rightDoor = document.querySelector('#door-preloader .door-right');
+                        const loaderCenter = document.getElementById('loader-center');
+
+                        if (loaderCenter) {
+                            loaderCenter.style.opacity = '0';
+                            loaderCenter.style.transform = 'translate(-50%, -50%) scale(0.6)';
+                        }
+                        
+                        if (leftDoor) leftDoor.style.transform = 'rotateY(-90deg)';
+                        if (rightDoor) rightDoor.style.transform = 'rotateY(90deg)';
+
+                        setTimeout(() => {
+                            preloader.style.opacity = '0';
+                            preloader.style.pointerEvents = 'none';
+                            sessionStorage.setItem('has_seen_preloader', 'true');
+                            setTimeout(() => {
+                                preloader.style.display = 'none';
+                            }, 800);
+                        }, 1800); // Door swing duration
+                    }, 500); // Preload delay
+                }
+            }
+
             updateRealtimeClock();
             setInterval(updateRealtimeClock, 1000);
 
