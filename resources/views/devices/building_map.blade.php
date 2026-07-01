@@ -29,11 +29,11 @@
         <div class="lg:col-span-7 bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center relative overflow-hidden" style="min-height: 620px;">
             <!-- Subtle backdrop info -->
             <div class="absolute top-6 left-6 z-20 text-slate-400 font-bold text-[10px] uppercase tracking-widest pointer-events-none">
-                Interactive 3D Hologram viewport
+                Interactive 3D Hologram Viewport
             </div>
 
-            <div class="absolute bottom-6 left-6 z-20 text-slate-400/90 text-xs font-semibold pointer-events-none flex flex-col gap-1.5">
-                <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Click a floor to explode & inspect</div>
+            <div class="absolute bottom-6 left-6 z-20 text-slate-400/90 text-[10px] font-bold tracking-wider uppercase pointer-events-none flex flex-col gap-2">
+                <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm shadow-blue-500/30"></span> Click a floor to explode & inspect</div>
                 <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span> Flashing red indicates voltage/load anomaly</div>
             </div>
 
@@ -71,19 +71,15 @@
                              id="slab-{{ $f }}" 
                              data-floor-index="{{ $f }}"
                              onclick="clickFloor({{ $f }})"
-                             style="--floor-index: {{ $f }}; transform: translateZ({{ $f * 110 }}px);">
+                             style="--floor-index: {{ $f }}; transform: translateZ({{ $f * 75 }}px);">
                             
                             <!-- Internal 3D details styling -->
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <span class="text-sm font-extrabold text-slate-800 tracking-wide">LANTAI {{ $f }}</span>
-                                    @if($hasGroups)
-                                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
-                                            {{ $floorGroups->count() }} Area ({{ $onlineCount }} Active Sensors)
-                                        </p>
-                                    @else
-                                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">No Active Areas</p>
-                                    @endif
+                            <div class="flex justify-between items-center w-full">
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-black text-slate-800 tracking-wide">LANTAI {{ $f }}</span>
+                                    <span class="text-[8px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">
+                                        {{ $floorGroups->count() }} Zones
+                                    </span>
                                 </div>
 
                                 <!-- Flashing indicator badge -->
@@ -94,23 +90,26 @@
                                     @elseif($onlineCount > 0)
                                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                                     @else
-                                        <span class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-slate-350"></span>
                                     @endif
                                 </div>
                             </div>
 
-                            <!-- Groups/Areas Preview on the floor plate -->
+                            <!-- Simplified Clean Zones Visual Grid (To Prevent Squishing) -->
                             @if($hasGroups)
-                                <div class="mt-4 flex flex-wrap gap-2 pointer-events-none">
+                                <div class="mt-4 flex flex-wrap items-center gap-1.5 pointer-events-none">
                                     @foreach($floorGroups as $group)
-                                        <span class="text-[8px] font-extrabold px-2 py-0.5 bg-slate-100/90 border border-slate-200/50 rounded-md text-slate-600 uppercase">
-                                            🏢 {{ $group->name }}
-                                        </span>
+                                        @php
+                                            $anyOnline = $group->devices->where('is_online', true)->count() > 0;
+                                        @endphp
+                                        <div class="w-6 h-6 rounded-lg flex items-center justify-center text-[9px] font-black tracking-tight {{ $anyOnline ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-200/60 shadow-sm' : 'bg-slate-100/80 text-slate-450 border border-slate-200/50' }}">
+                                            {{ substr($group->name, 0, 1) }}
+                                        </div>
                                     @endforeach
                                 </div>
                             @else
-                                <div class="mt-4 text-[9px] text-slate-350 italic font-medium pointer-events-none">
-                                    Empty Floor Slabs
+                                <div class="mt-4 text-[9px] text-slate-400 italic font-semibold pointer-events-none text-center py-2 bg-slate-50/50 rounded-xl border border-dashed border-slate-200/40">
+                                    Empty Floor
                                 </div>
                             @endif
                         </div>
@@ -166,8 +165,9 @@
     /* Scene Settings */
     .scene {
         width: 100%;
-        height: 550px;
-        perspective: 1500px;
+        height: 580px;
+        perspective: 1600px;
+        perspective-origin: 50% 28%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -177,10 +177,10 @@
     /* 3D Isometric building box */
     .building {
         position: relative;
-        width: 380px;
-        height: 280px;
+        width: 320px;
+        height: 220px;
         transform-style: preserve-3d;
-        transform: rotateX(60deg) rotateZ(-30deg) translateY(-80px);
+        transform: rotateX(60deg) rotateZ(-30deg) translateY(20px);
         transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -189,36 +189,36 @@
         position: absolute;
         width: 100%;
         height: 100%;
-        background: rgba(255, 255, 255, 0.75);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.75) 100%);
         backdrop-filter: blur(8px);
-        border: 2.5px solid rgba(203, 213, 225, 0.7);
-        box-shadow: 0 10px 25px rgba(148, 163, 184, 0.08), inset 0 0 15px rgba(255, 255, 255, 0.6);
-        border-radius: 20px;
+        border: 2px solid rgba(148, 163, 184, 0.4);
+        box-shadow: 0 10px 30px -10px rgba(148, 163, 184, 0.12), inset 0 0 15px rgba(255, 255, 255, 0.6);
+        border-radius: 18px;
         transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         transform-style: preserve-3d;
         cursor: pointer;
         display: flex;
         flex-direction: column;
-        padding: 20px;
-        justify-content: space-between;
+        padding: 18px;
+        justify-content: flex-start;
     }
 
     .floor-slab:hover {
-        background: rgba(255, 255, 255, 0.9);
-        border-color: rgba(59, 130, 246, 0.5);
-        box-shadow: 0 20px 40px rgba(59, 130, 246, 0.12), inset 0 0 20px rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.95);
+        border-color: rgba(59, 130, 246, 0.6);
+        box-shadow: 0 15px 35px -5px rgba(59, 130, 246, 0.15), inset 0 0 20px rgba(255, 255, 255, 0.8);
     }
 
     .floor-slab.active {
         background: rgba(255, 255, 255, 0.98);
         border-color: #2563eb;
-        box-shadow: 0 25px 50px rgba(37, 99, 235, 0.18), inset 0 0 20px rgba(255, 255, 255, 1);
+        box-shadow: 0 20px 45px -5px rgba(37, 99, 235, 0.2), inset 0 0 20px rgba(255, 255, 255, 1);
     }
 
     /* Red flashing glowing alert style for floor slab */
     .floor-slab.alert-active {
         border-color: #ef4444 !important;
-        box-shadow: 0 20px 40px rgba(239, 68, 68, 0.18), inset 0 0 20px rgba(239, 68, 68, 0.05) !important;
+        box-shadow: 0 15px 35px -5px rgba(239, 68, 68, 0.2), inset 0 0 20px rgba(239, 68, 68, 0.05) !important;
     }
 </style>
 
@@ -239,23 +239,23 @@
         building.classList.add('exploded');
 
         // Adjust rotations based on select
-        building.style.transform = `rotateX(55deg) rotateZ(-20deg) translateY(0px)`;
+        building.style.transform = `rotateX(55deg) rotateZ(-20deg) translateY(50px)`;
 
         const slabs = document.querySelectorAll('.floor-slab');
         slabs.forEach(slab => {
             const idx = parseInt(slab.getAttribute('data-floor-index'));
             slab.classList.remove('active');
 
-            let spacing = 135;
+            let spacing = 95;
             let lift = 0;
 
             if (idx > floorNum) {
-                lift = 120; // lift upper floors high
+                lift = 90; // lift upper floors high
             } else if (idx === floorNum) {
-                lift = 40;  // hover select slab
+                lift = 25;  // hover select slab
                 slab.classList.add('active');
             } else {
-                lift = -40; // slide lower floors down
+                lift = -30; // slide lower floors down
             }
 
             slab.style.transform = `translateZ(${idx * spacing + lift}px)`;
@@ -269,13 +269,13 @@
     function resetBuildingView() {
         activeFloor = null;
         const building = document.getElementById('building-model');
-        building.style.transform = `rotateX(60deg) rotateZ(-30deg) translateY(-80px)`;
+        building.style.transform = `rotateX(60deg) rotateZ(-30deg) translateY(20px)`;
         
         const slabs = document.querySelectorAll('.floor-slab');
         slabs.forEach(slab => {
             const idx = parseInt(slab.getAttribute('data-floor-index'));
             slab.classList.remove('active');
-            slab.style.transform = `translateZ(${idx * 110}px)`;
+            slab.style.transform = `translateZ(${idx * 75}px)`;
         });
 
         // Hide Inspector
@@ -337,7 +337,7 @@
                         if (hasVoltAlert || hasPowerAlert) {
                             cardBorderClass = 'border-red-300 bg-red-50/20';
                             alertWarningBadge = `
-                                <span class="text-[8px] font-black text-red-600 bg-red-150 px-2 py-0.5 rounded border border-red-200 animate-pulse">
+                                <span class="text-[8px] font-black text-red-600 bg-red-100 px-2 py-0.5 rounded border border-red-200 animate-pulse">
                                     ⚠️ ANOMALY
                                 </span>
                             `;
@@ -539,7 +539,7 @@
                     } else if (onlineCount > 0) {
                         alertBadge.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
                     } else {
-                        alertBadge.className = "w-2.5 h-2.5 rounded-full bg-slate-300";
+                        alertBadge.className = "w-2.5 h-2.5 rounded-full bg-slate-350";
                     }
                 }
             });
