@@ -346,13 +346,15 @@ class AdvancedExtensionsTest extends TestCase
     {
         $response = $this->actingAs($this->admin)->post('/groups', [
             'name' => 'New Area X',
-            'description' => 'Brand new testing operational area'
+            'description' => 'Brand new testing operational area',
+            'floor' => 2
         ]);
 
         $response->assertRedirect();
         $this->assertDatabaseHas('groups', [
             'name' => 'New Area X',
-            'description' => 'Brand new testing operational area'
+            'description' => 'Brand new testing operational area',
+            'floor' => 2
         ]);
     }
 
@@ -360,7 +362,8 @@ class AdvancedExtensionsTest extends TestCase
     {
         $response = $this->actingAs($this->user)->post('/groups', [
             'name' => 'Unauthorised Area',
-            'description' => 'Should fail'
+            'description' => 'Should fail',
+            'floor' => 2
         ]);
 
         $response->assertStatus(403);
@@ -382,6 +385,22 @@ class AdvancedExtensionsTest extends TestCase
 
         // 3. Admin is allowed
         $response = $this->actingAs($this->admin)->get('/tv-mode');
+        $response->assertStatus(200);
+    }
+
+    public function test_building_map_route_security_and_access(): void
+    {
+        // 1. Guest is redirected
+        $response = $this->get('/building-map');
+        $response->assertRedirect('/login');
+
+        // 2. Auth user is allowed
+        $response = $this->actingAs($this->user)->get('/building-map');
+        $response->assertStatus(200);
+        $response->assertViewIs('devices.building_map');
+
+        // 3. Admin is allowed
+        $response = $this->actingAs($this->admin)->get('/building-map');
         $response->assertStatus(200);
     }
 }

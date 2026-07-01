@@ -330,11 +330,13 @@ class DeviceController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|unique:groups,name',
             'description' => 'nullable|string|max:500',
+            'floor' => 'required|integer|min:1|max:50',
         ]);
 
         Group::create([
             'name' => $request->name,
             'description' => $request->description,
+            'floor' => $request->floor,
         ]);
 
         return redirect()->back()->with('success', 'Group created successfully!');

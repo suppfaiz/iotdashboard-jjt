@@ -269,6 +269,24 @@
                         </div>
                     </div>
 
+                    <!-- Floor Number -->
+                    <div class="relative group">
+                        <label for="group_floor" class="block text-xs font-semibold text-slate-600 mb-1.5 group-focus-within:text-indigo-600 transition-colors">Floor / Lantai</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-indigo-500 transition-colors">
+                                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5" />
+                                </svg>
+                            </div>
+                            <select name="floor" id="group_floor" required 
+                                class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-250 rounded-xl text-slate-900 text-sm font-medium focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 hover:border-slate-300 transition-all duration-200">
+                                @for($i = 1; $i <= 10; $i++)
+                                    <option value="{{ $i }}">Lantai {{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+
                     <!-- Description -->
                     <div class="relative group">
                         <label for="group_description" class="block text-xs font-semibold text-slate-600 mb-1.5 group-focus-within:text-indigo-600 transition-colors">Description (Optional)</label>

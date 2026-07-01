@@ -348,6 +348,10 @@
                                     class="{{ request()->routeIs('dashboard') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Dashboard</a>
                                 <a href="{{ route('devices.index') }}"
                                     class="{{ request()->routeIs('devices.*') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Devices</a>
+                                <a href="{{ route('building.map') }}"
+                                    class="{{ request()->routeIs('building.map') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap flex items-center gap-1.5">
+                                    <span>🏢</span> 3D Map
+                                </a>
                                 <a href="{{ route('changelog') }}"
                                     class="{{ request()->routeIs('changelog') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Changelog</a>
                                 <a href="{{ route('tv_mode') }}" target="_blank"
@@ -695,6 +699,12 @@
                             d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
                     </svg>
                     <span class="text-[9px] tracking-wide whitespace-nowrap truncate w-full text-center">Devices</span>
+                </a>
+
+                <a href="{{ route('building.map') }}"
+                    class="flex flex-col items-center justify-center py-2 flex-1 rounded-xl {{ request()->routeIs('building.map') ? 'text-blue-600 font-bold bg-blue-600/5' : 'text-slate-500 hover:text-slate-800' }}">
+                    <span class="text-[18px] leading-none mb-1">🏢</span>
+                    <span class="text-[9px] tracking-wide whitespace-nowrap truncate w-full text-center">3D Map</span>
                 </a>
 
                 @if(auth()->user()->role === 'admin')

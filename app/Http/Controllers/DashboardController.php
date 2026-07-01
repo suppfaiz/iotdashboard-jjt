@@ -692,5 +692,53 @@ Jawablah langsung menggunakan format HTML/Blade bersih (tag seperti <b>, <ul>, <
 
         return view('devices.tv_mode', compact('devices', 'totalPower', 'totalTodayCost', 'totalActiveCount', 'alertConfig', 'plnTariff'));
     }
+
+    public function buildingMap()
+    {
+        $groups = Group::with(['devices' => function($q) {
+            $q->where('status', true);
+        }])->orderBy('floor', 'desc')->get();
+
+        $plnTariff = SystemConfig::where('key', 'pln_tariff')->value('value') ?? 1444.70;
+
+        foreach ($groups as $group) {
+            foreach ($group->devices as $device) {
+                $energy = Cache::get("daily_energy:{$device->device_id}");
+                $voltage = Cache::get("voltage:{$device->device_id}");
+                $current = Cache::get("current:{$device->device_id}");
+                $power = Cache::get("power:{$device->device_id}");
+                $lastSeen = Cache::get("last_seen:{$device->device_id}");
+
+                if ($energy === null || $voltage === null || $current === null || $power === null) {
+                    $lastLog = \App\Models\HourlyEnergyLog::where('device_id', $device->id)
+                        ->orderBy('logged_at', 'desc')
+                        ->first();
+                    if ($lastLog) {
+                        $energy = $energy ?? $lastLog->energy;
+                        $voltage = $voltage ?? $lastLog->voltage;
+                        $current = $current ?? $lastLog->current;
+                        $power = $power ?? $lastLog->power;
+                    }
+                }
+
+                $device->voltage = floatval($voltage ?? 0.0);
+                $device->current = floatval($current ?? 0.0);
+                $device->power = floatval($power ?? 0.0);
+                $device->energy = floatval($energy ?? 0.0);
+                $device->last_seen = $lastSeen ? intval($lastSeen) : null;
+                $device->is_online = $lastSeen ? (time() - intval($lastSeen) < 15) : false;
+            }
+        }
+
+        $floors = $groups->groupBy('floor');
+
+        $alertConfig = [
+            'voltage_min' => SystemConfig::where('key', 'alert_voltage_min')->value('value') ?? 200,
+            'voltage_max' => SystemConfig::where('key', 'alert_voltage_max')->value('value') ?? 240,
+            'power_max' => SystemConfig::where('key', 'alert_power_max')->value('value') ?? 5000,
+        ];
+
+        return view('devices.building_map', compact('floors', 'plnTariff', 'alertConfig'));
+    }
 }
 

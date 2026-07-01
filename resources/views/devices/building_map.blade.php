@@ -1,0 +1,549 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-200 pb-5 mb-8 gap-4">
+        <div>
+            <h1 class="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-2">
+                🏢 3D BUILDING SENSOR MAP
+            </h1>
+            <p class="text-xs text-slate-500 font-medium tracking-wide mt-1 uppercase">Holographic 3D Building Floor & Real-time Sensor Locations</p>
+        </div>
+        
+        <!-- Controls -->
+        <div class="flex items-center gap-3">
+            <button onclick="resetBuildingView()" class="px-4 py-2 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 transition-colors shadow-sm flex items-center gap-1.5">
+                🔄 Reset View
+            </button>
+            <a href="{{ route('dashboard') }}" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition-colors shadow-sm">
+                ← Dashboard Home
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Column: 3D Scene Viewport (Col 7) -->
+        <div class="lg:col-span-7 bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center relative overflow-hidden" style="min-height: 620px;">
+            <!-- Subtle backdrop info -->
+            <div class="absolute top-6 left-6 z-20 text-slate-400 font-bold text-[10px] uppercase tracking-widest pointer-events-none">
+                Interactive 3D Hologram viewport
+            </div>
+
+            <div class="absolute bottom-6 left-6 z-20 text-slate-400/90 text-xs font-semibold pointer-events-none flex flex-col gap-1.5">
+                <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Click a floor to explode & inspect</div>
+                <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span> Flashing red indicates voltage/load anomaly</div>
+            </div>
+
+            <!-- The 3D Scene Container -->
+            <div class="scene">
+                @php
+                    $maxFloor = max(3, $floors->keys()->max() ?? 1);
+                @endphp
+                <div id="building-model" class="building">
+                    <!-- Floor Slabs stacked from bottom (1) to top (max) -->
+                    @for($f = 1; $f <= $maxFloor; $f++)
+                        @php
+                            $hasGroups = $floors->has($f);
+                            $floorGroups = $hasGroups ? $floors->get($f) : collect();
+                            $onlineCount = 0;
+                            $offlineCount = 0;
+                            $hasAnomalies = false;
+
+                            foreach($floorGroups as $group) {
+                                foreach($group->devices as $dev) {
+                                    if ($dev->is_online) {
+                                        $onlineCount++;
+                                        if ($dev->voltage < $alertConfig['voltage_min'] || $dev->voltage > $alertConfig['voltage_max'] || $dev->power > $alertConfig['power_max']) {
+                                            $hasAnomalies = true;
+                                        }
+                                    } else {
+                                        $offlineCount++;
+                                    }
+                                }
+                            }
+                        @endphp
+
+                        <!-- Isometric Floor Plate -->
+                        <div class="floor-slab" 
+                             id="slab-{{ $f }}" 
+                             data-floor-index="{{ $f }}"
+                             onclick="clickFloor({{ $f }})"
+                             style="--floor-index: {{ $f }}; transform: translateZ({{ $f * 110 }}px);">
+                            
+                            <!-- Internal 3D details styling -->
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="text-sm font-extrabold text-slate-800 tracking-wide">LANTAI {{ $f }}</span>
+                                    @if($hasGroups)
+                                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                                            {{ $floorGroups->count() }} Area ({{ $onlineCount }} Active Sensors)
+                                        </p>
+                                    @else
+                                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">No Active Areas</p>
+                                    @endif
+                                </div>
+
+                                <!-- Flashing indicator badge -->
+                                <div class="flex items-center gap-1.5">
+                                    @if($hasAnomalies)
+                                        <span id="slab-alert-{{ $f }}" class="w-3.5 h-3.5 rounded-full bg-red-500 animate-ping flex items-center justify-center"></span>
+                                        <span class="text-[8px] font-black text-red-600 uppercase tracking-widest">ALERT</span>
+                                    @elseif($onlineCount > 0)
+                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                                    @else
+                                        <span class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Groups/Areas Preview on the floor plate -->
+                            @if($hasGroups)
+                                <div class="mt-4 flex flex-wrap gap-2 pointer-events-none">
+                                    @foreach($floorGroups as $group)
+                                        <span class="text-[8px] font-extrabold px-2 py-0.5 bg-slate-100/90 border border-slate-200/50 rounded-md text-slate-600 uppercase">
+                                            🏢 {{ $group->name }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="mt-4 text-[9px] text-slate-350 italic font-medium pointer-events-none">
+                                    Empty Floor Slabs
+                                </div>
+                            @endif
+                        </div>
+                    @endfor
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Inspector Details Panel (Col 5) -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+            
+            <!-- Instructions / Placeholder Panel -->
+            <div id="inspector-placeholder" class="bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-3xl p-8 shadow-sm flex flex-col items-center justify-center text-center transition-all duration-300" style="min-height: 620px;">
+                <span class="text-5xl mb-4 block animate-bounce">🏢</span>
+                <h3 class="text-lg font-black text-slate-800">Select a Building Floor</h3>
+                <p class="text-xs text-slate-500 max-w-sm mt-2 leading-relaxed">
+                    Click on any of the 3D floor slabs in the holographic building blueprint to inspect active groups, check sensor locations, and view real-time telemetry details.
+                </p>
+            </div>
+
+            <!-- Active Floor Panel (Hidden by default) -->
+            <div id="inspector-panel" class="hidden bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-3xl p-6 shadow-sm flex flex-col justify-between transition-all duration-300" style="min-height: 620px;">
+                <div class="flex-grow">
+                    <!-- Floor Title -->
+                    <div class="border-b border-slate-100 pb-4 mb-6 flex justify-between items-center">
+                        <div>
+                            <h2 id="inspect-title" class="text-xl font-black text-slate-800">Lantai 2 Details</h2>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Floor Operational Inspector</p>
+                        </div>
+                        <button onclick="resetBuildingView()" class="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors">
+                            Close ×
+                        </button>
+                    </div>
+
+                    <!-- Groups & Sensors List container -->
+                    <div id="inspect-groups-container" class="space-y-6 max-h-[460px] overflow-y-auto pr-1">
+                        <!-- Loaded dynamically via JS -->
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-4 mt-6 flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-widest flex-shrink-0">
+                    <span>Target PLN Tariff: {{ number_format($plnTariff, 2) }}/kWh</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Live Syncing</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<style>
+    /* Scene Settings */
+    .scene {
+        width: 100%;
+        height: 550px;
+        perspective: 1500px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+    
+    /* 3D Isometric building box */
+    .building {
+        position: relative;
+        width: 380px;
+        height: 280px;
+        transform-style: preserve-3d;
+        transform: rotateX(60deg) rotateZ(-30deg) translateY(-80px);
+        transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Floating Floor slabs */
+    .floor-slab {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(8px);
+        border: 2.5px solid rgba(203, 213, 225, 0.7);
+        box-shadow: 0 10px 25px rgba(148, 163, 184, 0.08), inset 0 0 15px rgba(255, 255, 255, 0.6);
+        border-radius: 20px;
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        transform-style: preserve-3d;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        justify-content: space-between;
+    }
+
+    .floor-slab:hover {
+        background: rgba(255, 255, 255, 0.9);
+        border-color: rgba(59, 130, 246, 0.5);
+        box-shadow: 0 20px 40px rgba(59, 130, 246, 0.12), inset 0 0 20px rgba(255, 255, 255, 0.8);
+    }
+
+    .floor-slab.active {
+        background: rgba(255, 255, 255, 0.98);
+        border-color: #2563eb;
+        box-shadow: 0 25px 50px rgba(37, 99, 235, 0.18), inset 0 0 20px rgba(255, 255, 255, 1);
+    }
+
+    /* Red flashing glowing alert style for floor slab */
+    .floor-slab.alert-active {
+        border-color: #ef4444 !important;
+        box-shadow: 0 20px 40px rgba(239, 68, 68, 0.18), inset 0 0 20px rgba(239, 68, 68, 0.05) !important;
+    }
+</style>
+
+<script>
+    // Building structure passed from Laravel PHP
+    const floorsData = @json($floors);
+    const alertConfig = @json($alertConfig);
+    const plnTariff = {{ $plnTariff }};
+    
+    let activeFloor = null;
+
+    // Explode/Adjust building slabs view
+    function clickFloor(floorNum) {
+        activeFloor = floorNum;
+
+        // Toggle building exploded class
+        const building = document.getElementById('building-model');
+        building.classList.add('exploded');
+
+        // Adjust rotations based on select
+        building.style.transform = `rotateX(55deg) rotateZ(-20deg) translateY(0px)`;
+
+        const slabs = document.querySelectorAll('.floor-slab');
+        slabs.forEach(slab => {
+            const idx = parseInt(slab.getAttribute('data-floor-index'));
+            slab.classList.remove('active');
+
+            let spacing = 135;
+            let lift = 0;
+
+            if (idx > floorNum) {
+                lift = 120; // lift upper floors high
+            } else if (idx === floorNum) {
+                lift = 40;  // hover select slab
+                slab.classList.add('active');
+            } else {
+                lift = -40; // slide lower floors down
+            }
+
+            slab.style.transform = `translateZ(${idx * spacing + lift}px)`;
+        });
+
+        // Show Inspector Details Panel
+        showInspector(floorNum);
+    }
+
+    // Reset layout view back to compact stacked setting
+    function resetBuildingView() {
+        activeFloor = null;
+        const building = document.getElementById('building-model');
+        building.style.transform = `rotateX(60deg) rotateZ(-30deg) translateY(-80px)`;
+        
+        const slabs = document.querySelectorAll('.floor-slab');
+        slabs.forEach(slab => {
+            const idx = parseInt(slab.getAttribute('data-floor-index'));
+            slab.classList.remove('active');
+            slab.style.transform = `translateZ(${idx * 110}px)`;
+        });
+
+        // Hide Inspector
+        document.getElementById('inspector-panel').classList.add('hidden');
+        document.getElementById('inspector-placeholder').classList.remove('hidden');
+    }
+
+    // Load and build Inspector Sidebar details
+    function showInspector(floorNum) {
+        document.getElementById('inspector-placeholder').classList.add('hidden');
+        
+        const panel = document.getElementById('inspector-panel');
+        panel.classList.remove('hidden');
+
+        document.getElementById('inspect-title').textContent = `Lantai ${floorNum} Details`;
+        
+        const container = document.getElementById('inspect-groups-container');
+        container.innerHTML = '';
+
+        // Get groups for this floor
+        const floorGroups = floorsData[floorNum] || [];
+
+        if (floorGroups.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-12 text-slate-400 font-medium text-xs">
+                    No active monitoring groups registered on this floor.
+                </div>
+            `;
+            return;
+        }
+
+        // Loop and render groups
+        floorGroups.forEach(group => {
+            const groupEl = document.createElement('div');
+            groupEl.className = "bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm";
+            
+            let devicesHtml = '';
+            
+            if (group.devices.length === 0) {
+                devicesHtml = `
+                    <div class="text-[10px] text-slate-400 italic font-medium py-1.5 pl-2">
+                        No telemetry sensors paired with this group yet.
+                    </div>
+                `;
+            } else {
+                group.devices.forEach(device => {
+                    const isOnline = device.is_online;
+                    const statusText = isOnline ? 'ONLINE' : 'OFFLINE';
+                    const statusClass = isOnline ? 'text-emerald-600 bg-emerald-50 border-emerald-100' : 'text-slate-400 bg-slate-50 border-slate-100';
+                    
+                    // Check warning anomalies
+                    let cardBorderClass = 'border-slate-100';
+                    let alertWarningBadge = '';
+
+                    if (isOnline) {
+                        const hasVoltAlert = device.voltage < alertConfig.voltage_min || device.voltage > alertConfig.voltage_max;
+                        const hasPowerAlert = device.power > alertConfig.power_max;
+                        
+                        if (hasVoltAlert || hasPowerAlert) {
+                            cardBorderClass = 'border-red-300 bg-red-50/20';
+                            alertWarningBadge = `
+                                <span class="text-[8px] font-black text-red-600 bg-red-150 px-2 py-0.5 rounded border border-red-200 animate-pulse">
+                                    ⚠️ ANOMALY
+                                </span>
+                            `;
+                        }
+                    }
+
+                    devicesHtml += `
+                        <div id="sidebar-card-${device.device_id}" class="p-3 border ${cardBorderClass} rounded-xl bg-slate-50/40 flex items-center justify-between text-xs transition-all">
+                            <div>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="font-extrabold text-slate-800">${device.name}</span>
+                                    <span class="text-[9px] font-semibold text-slate-400">(${device.device_id})</span>
+                                </div>
+                                <div class="flex items-center gap-3 mt-1.5 text-slate-500 font-medium text-[10px] tracking-wide uppercase">
+                                    <span id="side-v-${device.device_id}">V: <strong>${device.voltage.toFixed(1)}V</strong></span>
+                                    <span id="side-a-${device.device_id}">A: <strong>${device.current.toFixed(3)}A</strong></span>
+                                    <span id="side-w-${device.device_id}">W: <strong>${device.power.toFixed(1)}W</strong></span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col items-end gap-1 flex-shrink-0">
+                                <span id="side-status-${device.device_id}" class="text-[9px] font-extrabold border rounded-md px-1.5 py-0.5 ${statusClass}">
+                                    ${statusText}
+                                </span>
+                                <div id="side-alert-badge-${device.device_id}">
+                                    ${alertWarningBadge}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            groupEl.innerHTML = `
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-3">
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-sm font-extrabold text-slate-800">🏢 ${group.name}</span>
+                    </div>
+                    <span class="text-[9px] font-bold text-slate-400 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full uppercase">
+                        Area
+                    </span>
+                </div>
+                <div class="space-y-2.5">
+                    ${devicesHtml}
+                </div>
+            `;
+            
+            container.appendChild(groupEl);
+        });
+    }
+
+    // Realtime Echo integration to update numbers dynamically on the Map and Sidebar
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.Echo) {
+            window.Echo.channel('telemetry')
+                .listen('TelemetryUpdated', (e) => {
+                    const deviceId = e.deviceId;
+                    const data = e.data; // { voltage, current, power, energy, cost }
+
+                    // 1. Locate and update sidebar visual elements
+                    const sideV = document.getElementById(`side-v-${deviceId}`);
+                    const sideA = document.getElementById(`side-a-${deviceId}`);
+                    const sideW = document.getElementById(`side-w-${deviceId}`);
+                    const sideStatus = document.getElementById(`side-status-${deviceId}`);
+                    const sideCard = document.getElementById(`sidebar-card-${deviceId}`);
+                    const sideAlert = document.getElementById(`side-alert-badge-${deviceId}`);
+
+                    // Sync online state
+                    if (sideStatus) {
+                        sideStatus.className = "text-[9px] font-extrabold border rounded-md px-1.5 py-0.5 text-emerald-600 bg-emerald-50 border-emerald-100";
+                        sideStatus.textContent = 'ONLINE';
+                    }
+
+                    // Update values
+                    if (sideV) sideV.innerHTML = `V: <strong>${parseFloat(data.voltage).toFixed(1)}V</strong>`;
+                    if (sideA) sideA.innerHTML = `A: <strong>${parseFloat(data.current).toFixed(3)}A</strong>`;
+                    if (sideW) sideW.innerHTML = `W: <strong>${parseFloat(data.power).toFixed(1)}W</strong>`;
+
+                    // Anomaly checks
+                    const hasVoltAlert = data.voltage < alertConfig.voltage_min || data.voltage > alertConfig.voltage_max;
+                    const hasPowerAlert = data.power > alertConfig.power_max;
+
+                    if (sideCard) {
+                        if (hasVoltAlert || hasPowerAlert) {
+                            sideCard.className = "p-3 border border-red-300 bg-red-50/20 rounded-xl flex items-center justify-between text-xs transition-all";
+                            if (sideAlert) {
+                                sideAlert.innerHTML = `
+                                    <span class="text-[8px] font-black text-red-600 bg-red-100 px-2 py-0.5 rounded border border-red-200 animate-pulse">
+                                        ⚠️ ANOMALY
+                                    </span>
+                                `;
+                            }
+                        } else {
+                            sideCard.className = "p-3 border border-slate-100 rounded-xl bg-slate-50/40 flex items-center justify-between text-xs transition-all";
+                            if (sideAlert) sideAlert.innerHTML = '';
+                        }
+                    }
+
+                    // Update local javascript data store
+                    updateLocalDataStore(deviceId, data);
+
+                    // Re-calculate the floor slab anomaly glow
+                    recheckFloorSlabStates();
+                });
+        }
+
+        // Periodically verify device timeouts and offline states (15s timeout)
+        setInterval(() => {
+            const now = Math.floor(Date.now() / 1000);
+            let stateChanged = false;
+
+            Object.keys(floorsData).forEach(floorNum => {
+                const groups = floorsData[floorNum];
+                groups.forEach(group => {
+                    group.devices.forEach(device => {
+                        if (device.is_online && device.last_seen && (now - device.last_seen >= 15)) {
+                            // Turn device offline
+                            device.is_online = false;
+                            stateChanged = true;
+
+                            // Update active sidebar elements if displaying current floor
+                            if (activeFloor == floorNum) {
+                                const sideStatus = document.getElementById(`side-status-${device.device_id}`);
+                                const sideCard = document.getElementById(`sidebar-card-${device.device_id}`);
+                                const sideAlert = document.getElementById(`side-alert-badge-${device.device_id}`);
+                                
+                                if (sideStatus) {
+                                    sideStatus.className = "text-[9px] font-extrabold border rounded-md px-1.5 py-0.5 text-slate-400 bg-slate-50 border-slate-100";
+                                    sideStatus.textContent = 'OFFLINE';
+                                }
+                                if (sideCard) {
+                                    sideCard.className = "p-3 border border-slate-100 rounded-xl bg-slate-50/40 flex items-center justify-between text-xs transition-all";
+                                }
+                                if (sideAlert) sideAlert.innerHTML = '';
+                            }
+                        }
+                    });
+                });
+            });
+
+            if (stateChanged) {
+                recheckFloorSlabStates();
+            }
+        }, 2000);
+
+        // Update local object states
+        function updateLocalDataStore(deviceId, data) {
+            Object.keys(floorsData).forEach(floorNum => {
+                const groups = floorsData[floorNum];
+                groups.forEach(group => {
+                    group.devices.forEach(device => {
+                        if (device.device_id == deviceId) {
+                            device.voltage = parseFloat(data.voltage);
+                            device.current = parseFloat(data.current);
+                            device.power = parseFloat(data.power);
+                            device.energy = parseFloat(data.energy);
+                            device.is_online = true;
+                            device.last_seen = Math.floor(Date.now() / 1000);
+                        }
+                    });
+                });
+            });
+        }
+
+        // Re-render slab anomalies glows red/green
+        function recheckFloorSlabStates() {
+            Object.keys(floorsData).forEach(floorNum => {
+                const groups = floorsData[floorNum];
+                let hasFloorAnomalies = false;
+                let onlineCount = 0;
+
+                groups.forEach(group => {
+                    group.devices.forEach(device => {
+                        if (device.is_online) {
+                            onlineCount++;
+                            const hasVoltAlert = device.voltage < alertConfig.voltage_min || device.voltage > alertConfig.voltage_max;
+                            const hasPowerAlert = device.power > alertConfig.power_max;
+                            if (hasVoltAlert || hasPowerAlert) {
+                                hasFloorAnomalies = true;
+                            }
+                        }
+                    });
+                });
+
+                const slab = document.getElementById(`slab-${floorNum}`);
+                const alertBadge = document.getElementById(`slab-alert-${floorNum}`);
+
+                if (slab) {
+                    if (hasFloorAnomalies) {
+                        slab.classList.add('alert-active');
+                    } else {
+                        slab.classList.remove('alert-active');
+                    }
+                }
+
+                if (alertBadge) {
+                    if (hasFloorAnomalies) {
+                        alertBadge.className = "w-3.5 h-3.5 rounded-full bg-red-500 animate-ping flex items-center justify-center";
+                    } else if (onlineCount > 0) {
+                        alertBadge.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
+                    } else {
+                        alertBadge.className = "w-2.5 h-2.5 rounded-full bg-slate-300";
+                    }
+                }
+            });
+        }
+    });
+</script>
+@endsection
