@@ -355,7 +355,7 @@ Berikut adalah data sensor real-time saat ini:
 Berikan laporan analisis singkat, sebutkan jika ada pemborosan (pemakaian hari ini di atas rata-rata) atau alat offline, dan berikan 2-3 rekomendasi penghematan praktis. 
 Tuliskan jawaban langsung dalam format HTML/Blade bersih yang rapi (gunakan tag seperti <b>, <ul>, <li>, ⚠️, 💡, ✅, 🔮, ⚡) agar nyaman dibaca di chat widget. Jawab secara ringkas (maksimal 250 kata) dan mulailah dengan sapaan hormat.";
 
-        $geminiKey = env('GEMINI_API_KEY') ?: SystemConfig::where('key', 'gemini_api_key')->value('value');
+        $geminiKey = config('services.gemini.key') ?: SystemConfig::where('key', 'gemini_api_key')->value('value');
         if (!empty($geminiKey)) {
             try {
                 $response = \Illuminate\Support\Facades\Http::withHeaders([
@@ -425,6 +425,143 @@ Tuliskan jawaban langsung dalam format HTML/Blade bersih yang rapi (gunakan tag 
         return response()->json([
             'status' => 'success',
             'analysis' => $analysisText
+        ]);
+    }
+
+    public function chatbotChat(Request $request)
+    {
+        $request->validate([
+            'message' => 'required|string|max:1000',
+        ]);
+
+        $userMessage = $request->input('message');
+
+        $plnTariff = floatval(SystemConfig::where('key', 'pln_tariff')->value('value') ?? 1444.70);
+        $devices = Device::where('status', true)->get();
+        
+        $totalDevices = $devices->count();
+        $onlineDevices = 0;
+        $offlineDevices = 0;
+        $totalKwhToday = 0.0;
+
+        $deviceEnergyList = collect();
+
+        foreach ($devices as $device) {
+            $lastSeen = Cache::get("last_seen:{$device->device_id}", 0);
+            $isOnline = $lastSeen > 0 && (now()->timestamp - $lastSeen) < 300;
+            if ($isOnline) {
+                $onlineDevices++;
+            } else {
+                $offlineDevices++;
+            }
+
+            $energy = floatval(Cache::get("daily_energy:{$device->device_id}", 0.0));
+            $totalKwhToday += $energy;
+
+            $deviceEnergyList->push([
+                'name' => $device->name,
+                'energy' => $energy
+            ]);
+        }
+
+        // Top Consumer today
+        $topConsumer = $deviceEnergyList->sortByDesc('energy')->first();
+
+        // Past 7 days logs
+        $past7DaysLogs = \Illuminate\Support\Facades\DB::table('daily_energy_logs')
+            ->selectRaw('date, SUM(total_kwh_harian) as daily_sum')
+            ->where('date', '>=', now()->subDays(7)->toDateString())
+            ->groupBy('date')
+            ->get();
+
+        $numDays = $past7DaysLogs->count();
+        $avgDailyKwh = $numDays > 0 ? $past7DaysLogs->sum('daily_sum') / $numDays : $totalKwhToday;
+        $avgDailyKwh = round($avgDailyKwh, 3);
+
+        $currentMonthStart = now()->startOfMonth()->toDateString();
+        $currentMonthKwh = \Illuminate\Support\Facades\DB::table('daily_energy_logs')
+            ->where('date', '>=', $currentMonthStart)
+            ->sum('total_kwh_harian') ?? 0.0;
+
+        $currentMonthCost = $currentMonthKwh * $plnTariff;
+        $remainingDays = max(0, now()->daysInMonth - now()->day);
+        $projectedKwh = $currentMonthKwh + ($avgDailyKwh * $remainingDays);
+        $projectedBilling = $projectedKwh * $plnTariff;
+
+        // Warnings count
+        $warningsCount = 0;
+        $vMin = floatval(SystemConfig::where('key', 'alert_voltage_min')->value('value') ?? 200.00);
+        $vMax = floatval(SystemConfig::where('key', 'alert_voltage_max')->value('value') ?? 240.00);
+        $pMax = floatval(SystemConfig::where('key', 'alert_power_max')->value('value') ?? 2200.00);
+
+        foreach ($devices as $device) {
+            $lastSeen = Cache::get("last_seen:{$device->device_id}", 0);
+            $isOffline = ($lastSeen === 0 || (now()->timestamp - $lastSeen) > 300);
+            if ($isOffline) {
+                $warningsCount++;
+            } else {
+                $voltage = floatval(Cache::get("voltage:{$device->device_id}", 0));
+                if ($voltage > 0 && ($voltage < $vMin || $voltage > $vMax)) {
+                    $warningsCount++;
+                }
+                $power = floatval(Cache::get("power:{$device->device_id}", 0));
+                if ($power > $pMax) {
+                    $warningsCount++;
+                }
+            }
+        }
+
+        $prompt = "Kamu adalah YukAnalisaListrikmu, asisten AI profesional untuk sistem IoT pemantauan energi kelistrikan PT Jamkrida Jateng.
+Kamu diajak mengobrol oleh pengguna. Jawablah pertanyaannya secara sopan, ramah, dan profesional berdasarkan konteks data listrik di bawah ini jika relevan. Jika pertanyaan tidak relevan dengan listrik atau sistem ini, jawablah secara umum dan sopan tetapi hubungkan kembali ke topik kelistrikan jika memungkinkan.
+
+Konteks Data Listrik Real-Time Saat Ini:
+- Tarif PLN: Rp " . number_format($plnTariff, 2, ',', '.') . "/kWh
+- Konsumsi listrik hari ini: " . number_format($totalKwhToday, 3) . " kWh
+- Estimasi biaya hari ini: Rp " . number_format($totalKwhToday * $plnTariff, 0, ',', '.') . "
+- Rata-rata harian (7 hari terakhir): " . number_format($avgDailyKwh, 3) . " kWh/hari
+- Proyeksi total konsumsi energi akhir bulan ini: " . number_format($projectedKwh, 2) . " kWh
+- Proyeksi tagihan akhir bulan: Rp " . number_format($projectedBilling, 0, ',', '.') . "
+- Perangkat: " . $totalDevices . " total (" . $onlineDevices . " Online, " . $offlineDevices . " Offline)
+" . ($topConsumer && $topConsumer['energy'] > 0 ? "- Konsumen terbesar hari ini: " . $topConsumer['name'] . " (" . number_format($topConsumer['energy'], 3) . " kWh)" : "") . "
+
+Pertanyaan Pengguna: \"{$userMessage}\"
+
+Jawablah langsung menggunakan format HTML/Blade bersih (tag seperti <b>, <ul>, <li>, 💡, ⚡, ✅) untuk kenyamanan membaca di chat widget. Jawab secara ringkas (maksimal 200 kata) dan bersahabat.";
+
+        $geminiKey = config('services.gemini.key') ?: SystemConfig::where('key', 'gemini_api_key')->value('value');
+        if (!empty($geminiKey)) {
+            try {
+                $response = \Illuminate\Support\Facades\Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $geminiKey, [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt]
+                            ]
+                        ]
+                    ]
+                ]);
+
+                if ($response->successful()) {
+                    $result = $response->json();
+                    $aiResponse = $result['candidates'][0]['content']['parts'][0]['text'] ?? null;
+                    if (!empty($aiResponse)) {
+                        $aiResponse = preg_replace('/^```(?:html)?|```$/i', '', trim($aiResponse));
+                        return response()->json([
+                            'status' => 'success',
+                            'reply' => $aiResponse
+                        ]);
+                    }
+                }
+            } catch (\Exception $e) {
+                // Fallback to local responder
+            }
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'AI is currently offline or not configured.'
         ]);
     }
 }
