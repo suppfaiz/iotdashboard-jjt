@@ -24,6 +24,15 @@
             <a href="#vps-setup" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
                 6. VPS Deployment Guide
             </a>
+            <a href="#tv-kiosk" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                7. TV Kiosk Mode
+            </a>
+            <a href="#floor-map" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                8. 3D Building Floor Map
+            </a>
+            <a href="#gemini-ai" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                9. Gemini AI Chatbot
+            </a>
         </nav>
     </aside>
 
@@ -315,6 +324,67 @@ sudo ufw enable</code></pre>
                             <strong>Mengapa port 8085 tidak perlu dibuka?</strong> Karena kita sudah menggunakan Nginx Reverse Proxy di port 443 (HTTPS) yang secara otomatis menyalurkan semua traffic WebSocket ke port internal 8085 di dalam Docker.
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <!-- Section 7: TV Kiosk Mode -->
+            <section id="tv-kiosk" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600 text-sm font-bold">7</span>
+                    TV Kiosk Monitoring Mode
+                </h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    Aplikasi ini dilengkapi dengan mode tampilan monitor Kiosk (TV Mode) di alamat <code>/tv-mode</code> yang dirancang khusus untuk layar TV lobi kantor atau ruang kontrol operasional.
+                </p>
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-4">
+                    <h4 class="text-sm font-bold text-gray-800 mb-1">Fitur Utama TV Kiosk Mode:</h4>
+                    <ul class="list-disc pl-5 space-y-2 text-sm text-gray-600">
+                        <li><strong>Tema Terang Berkekuatan Tinggi (High-Contrast Light Theme):</strong> Visibilitas optimal di ruangan kantor yang terang benderang.</li>
+                        <li><strong>Jam Digital Terintegrasi:</strong> Menampilkan waktu, hari, dan tanggal real-time di layar.</li>
+                        <li><strong>Mode Layar Penuh (Fullscreen):</strong> Tombol pintasan sekali klik untuk beralih ke mode layar penuh tanpa border browser.</li>
+                        <li><strong>Peringatan Anomali & Overload:</strong> Kotak alat sensor akan otomatis berkedip merah terang dan memicu alarm visual di layar jika voltase listrik tidak stabil atau terjadi beban berlebih (overload).</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 8: 3D Building Floor Map -->
+            <section id="floor-map" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600 text-sm font-bold">8</span>
+                    3D Building Floor Map
+                </h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    Fitur visualisasi spasial 3D interaktif yang memetakan letak sensor listrik berdasarkan lantai gedung Jamkrida di alamat <code>/building-map</code>.
+                </p>
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-4">
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 mb-2">Cara Kerja Pengelompokan & Rendering 3D:</h4>
+                        <ol class="list-decimal pl-5 space-y-2 text-sm text-gray-600">
+                            <li><strong>Konfigurasi Lantai:</strong> Saat membuat grup area operasional, Admin menentukan letak lantai grup tersebut (Lantai 1 s.d. 10).</li>
+                            <li><strong>Hologram Lempengan 3D (3D Slabs):</strong> Sistem akan otomatis menggambar tumpukan lantai gedung dalam bentuk lempengan 3D interaktif.</li>
+                            <li><strong>Exploded View:</strong> Ketika salah satu lantai di-klik, lantai-lantai lainnya akan bergeser menjauh secara visual (exploded view), dan panel detail sensor (Inspector) di sisi kanan akan terbuka.</li>
+                            <li><strong>Integrasi WebSocket:</strong> Setiap ada pembaruan data sensor, warna indikator zona di lempengan 3D dan data angka listrik di panel Inspector akan ter-update secara real-time.</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 9: Gemini AI Chatbot -->
+            <section id="gemini-ai" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600 text-sm font-bold">9</span>
+                    Gemini AI Chatbot Integration
+                </h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    Asisten pintar berbasis AI yang tertanam di sudut kanan bawah dashboard untuk membantu menganalisis pola penggunaan daya, memprediksi biaya, dan memberikan rekomendasi penghematan energi.
+                </p>
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-4">
+                    <h4 class="text-sm font-bold text-gray-800 mb-1">Rincian Teknis & Kuota:</h4>
+                    <ul class="list-disc pl-5 space-y-2 text-sm text-gray-600">
+                        <li><strong>Model:</strong> Menggunakan model stabil <code>gemini-2.5-flash</code> melalui Generative Language API Google.</li>
+                        <li><strong>Batas Kuota:</strong> Mendapatkan kuota gratis sebesar **1.500 panggilan per hari** (menggantikan model v1beta pratinjau yang memiliki limit ketat 20 panggilan/hari).</li>
+                        <li><strong>Konteks Telemetri:</strong> Setiap kali Anda mengobrol atau mengklik tombol "Analisis", sistem secara otomatis mengirimkan rangkuman data sensor terkini ke asisten Gemini agar analisis yang diberikan akurat sesuai kondisi riil.</li>
+                    </ul>
                 </div>
             </section>
         </div>
