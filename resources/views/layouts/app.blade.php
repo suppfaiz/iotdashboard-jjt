@@ -649,6 +649,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const electricianWhatsapp = "{{ \App\Models\SystemConfig::where('key', 'electrician_whatsapp')->value('value') ?? '' }}";
+            const isAiEnabled = {{ !empty(\App\Models\SystemConfig::where('key', 'gemini_api_key')->value('value') ?? env('GEMINI_API_KEY')) ? 'true' : 'false' }};
             const toggleBtn = document.getElementById('chatbot-toggle-btn');
             const closeBtn = document.getElementById('chatbot-close-btn');
             const chatWindow = document.getElementById('chatbot-window');
@@ -694,29 +695,56 @@
                 // Show typing indicator
                 const typingId = showTypingIndicator();
 
-                const textLower = text.toLowerCase();
-                if (textLower.includes('analis') || textLower.includes('prediksi') || textLower.includes('ramal') || textLower.includes('forecast') || textLower.includes('cek')) {
-                    fetch('/chatbot/analysis')
-                        .then(res => res.json())
-                        .then(data => {
-                            removeTypingIndicator(typingId);
-                            if (data.status === 'success') {
-                                appendMessage('bot', data.analysis);
-                            } else {
-                                appendMessage('bot', 'Maaf, saya gagal mengambil data analisis saat ini.');
-                            }
-                        })
-                        .catch(err => {
-                            removeTypingIndicator(typingId);
-                            appendMessage('bot', 'Maaf, terjadi kesalahan koneksi saat mengambil data analisis.');
-                        });
-                } else {
-                    // Get bot response
-                    setTimeout(() => {
+                if (isAiEnabled) {
+                    fetch('/chatbot/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ message: text })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        removeTypingIndicator(typingId);
+                        if (data.status === 'success') {
+                            appendMessage('bot', data.reply);
+                        } else {
+                            // Fallback to static response
+                            const response = getBotResponse(text);
+                            appendMessage('bot', response);
+                        }
+                    })
+                    .catch(err => {
                         removeTypingIndicator(typingId);
                         const response = getBotResponse(text);
                         appendMessage('bot', response);
-                    }, 1000);
+                    });
+                } else {
+                    const textLower = text.toLowerCase();
+                    if (textLower.includes('analis') || textLower.includes('prediksi') || textLower.includes('ramal') || textLower.includes('forecast') || textLower.includes('cek')) {
+                        fetch('/chatbot/analysis')
+                            .then(res => res.json())
+                            .then(data => {
+                                removeTypingIndicator(typingId);
+                                if (data.status === 'success') {
+                                    appendMessage('bot', data.analysis);
+                                } else {
+                                    appendMessage('bot', 'Maaf, saya gagal mengambil data analisis saat ini.');
+                                }
+                            })
+                            .catch(err => {
+                                removeTypingIndicator(typingId);
+                                appendMessage('bot', 'Maaf, terjadi kesalahan koneksi saat mengambil data analisis.');
+                            });
+                    } else {
+                        // Get bot response
+                        setTimeout(() => {
+                            removeTypingIndicator(typingId);
+                            const response = getBotResponse(text);
+                            appendMessage('bot', response);
+                        }, 1000);
+                    }
                 }
             }
 
@@ -724,28 +752,54 @@
                 appendMessage('user', text);
                 const typingId = showTypingIndicator();
                 
-                const textLower = text.toLowerCase();
-                if (textLower.includes('analis') || textLower.includes('prediksi') || textLower.includes('ramal') || textLower.includes('forecast') || textLower.includes('cek')) {
-                    fetch('/chatbot/analysis')
-                        .then(res => res.json())
-                        .then(data => {
-                            removeTypingIndicator(typingId);
-                            if (data.status === 'success') {
-                                appendMessage('bot', data.analysis);
-                            } else {
-                                appendMessage('bot', 'Maaf, saya gagal mengambil data analisis saat ini.');
-                            }
-                        })
-                        .catch(err => {
-                            removeTypingIndicator(typingId);
-                            appendMessage('bot', 'Maaf, terjadi kesalahan koneksi saat mengambil data analisis.');
-                        });
-                } else {
-                    setTimeout(() => {
+                if (isAiEnabled) {
+                    fetch('/chatbot/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ message: text })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        removeTypingIndicator(typingId);
+                        if (data.status === 'success') {
+                            appendMessage('bot', data.reply);
+                        } else {
+                            const response = getBotResponse(text);
+                            appendMessage('bot', response);
+                        }
+                    })
+                    .catch(err => {
                         removeTypingIndicator(typingId);
                         const response = getBotResponse(text);
                         appendMessage('bot', response);
-                    }, 1000);
+                    });
+                } else {
+                    const textLower = text.toLowerCase();
+                    if (textLower.includes('analis') || textLower.includes('prediksi') || textLower.includes('ramal') || textLower.includes('forecast') || textLower.includes('cek')) {
+                        fetch('/chatbot/analysis')
+                            .then(res => res.json())
+                            .then(data => {
+                                removeTypingIndicator(typingId);
+                                if (data.status === 'success') {
+                                    appendMessage('bot', data.analysis);
+                                } else {
+                                    appendMessage('bot', 'Maaf, saya gagal mengambil data analisis saat ini.');
+                                }
+                            })
+                            .catch(err => {
+                                removeTypingIndicator(typingId);
+                                appendMessage('bot', 'Maaf, terjadi kesalahan koneksi saat mengambil data analisis.');
+                            });
+                    } else {
+                        setTimeout(() => {
+                            removeTypingIndicator(typingId);
+                            const response = getBotResponse(text);
+                            appendMessage('bot', response);
+                        }, 1000);
+                    }
                 }
             };
 
