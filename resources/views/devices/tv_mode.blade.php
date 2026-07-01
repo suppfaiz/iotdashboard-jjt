@@ -16,78 +16,67 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #020617; /* Very dark slate-950 */
-            color: #f8fafc;
+            background: #f8fafc radial-gradient(circle, rgba(148, 163, 184, 0.15) 1.5px, transparent 1.5px) !important;
+            background-size: 24px 24px !important;
+            color: #1e293b; /* slate-800 */
             overflow-x: hidden;
-        }
-        .neon-text-blue {
-            text-shadow: 0 0 8px rgba(56, 189, 248, 0.4), 0 0 20px rgba(56, 189, 248, 0.2);
-            font-family: 'Orbitron', sans-serif;
-        }
-        .neon-text-green {
-            text-shadow: 0 0 8px rgba(34, 197, 94, 0.4), 0 0 20px rgba(34, 197, 94, 0.2);
-            font-family: 'Orbitron', sans-serif;
-        }
-        .neon-text-purple {
-            text-shadow: 0 0 8px rgba(168, 85, 247, 0.4), 0 0 20px rgba(168, 85, 247, 0.2);
-            font-family: 'Orbitron', sans-serif;
-        }
-        .neon-text-red {
-            text-shadow: 0 0 10px rgba(239, 68, 68, 0.7), 0 0 25px rgba(239, 68, 68, 0.4);
-            font-family: 'Orbitron', sans-serif;
+            min-height: 100vh;
         }
         .digital-mono {
             font-family: 'Share Tech Mono', monospace;
         }
+        .glowing-value {
+            font-family: 'Orbitron', sans-serif;
+        }
         .glow-card {
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 10px 30px -10px rgba(148, 163, 184, 0.12);
         }
         .glow-card-active {
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            box-shadow: 0 0 20px -5px rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 30px -5px rgba(59, 130, 246, 0.08);
         }
         /* Custom scrollbar for TV view */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #020617;
+            background: #f1f5f9;
         }
         ::-webkit-scrollbar-thumb {
-            background: #1e293b;
+            background: #cbd5e1;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #334155;
+            background: #94a3b8;
         }
     </style>
 </head>
-<body class="h-full flex flex-col p-6 min-h-screen">
+<body class="h-full flex flex-col p-6">
 
     <!-- Top Navigation Header -->
-    <header class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-900 flex-shrink-0">
+    <header class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-200 flex-shrink-0">
         <div class="flex items-center gap-4">
-            <a href="{{ route('dashboard') }}" class="p-2.5 rounded-xl bg-slate-900/60 hover:bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition-colors" title="Back to Dashboard">
+            <a href="{{ route('dashboard') }}" class="p-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-500 hover:text-slate-900 transition-colors shadow-sm" title="Back to Dashboard">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
             </a>
             <div>
-                <h1 class="text-xl sm:text-2xl font-extrabold tracking-wider text-slate-100 flex items-center gap-2">
-                    <span class="text-blue-500 animate-pulse">⚡</span> JAMKRIDA MONITORING KIOSK
+                <h1 class="text-xl sm:text-2xl font-extrabold tracking-wider text-slate-800 flex items-center gap-2">
+                    <span class="text-blue-600 animate-pulse">⚡</span> JAMKRIDA MONITORING KIOSK
                 </h1>
-                <p class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-widest mt-0.5">Real-time IoT Telemetry Display System</p>
+                <p class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mt-0.5">Real-time IoT Telemetry Display System</p>
             </div>
         </div>
 
         <!-- Realtime Digital Clock -->
         <div class="flex items-center gap-6">
             <div class="text-right">
-                <div id="tv-clock" class="text-2xl sm:text-3xl font-extrabold tracking-wider text-white neon-text-blue leading-none">00:00:00</div>
-                <div id="tv-date" class="text-[10px] sm:text-xs font-bold tracking-widest text-slate-400 uppercase mt-1">Kamis, 01 Juli 2026</div>
+                <div id="tv-clock" class="text-2xl sm:text-3xl font-black tracking-wider text-blue-600 glowing-value leading-none">00:00:00</div>
+                <div id="tv-date" class="text-[10px] sm:text-xs font-bold tracking-widest text-slate-500 uppercase mt-1">Kamis, 01 Juli 2026</div>
             </div>
             
             <!-- Fullscreen Button -->
@@ -105,40 +94,40 @@
         <!-- Card 1: Total Power -->
         <div class="glow-card rounded-2xl p-5 flex items-center justify-between">
             <div>
-                <p class="text-xs font-bold tracking-widest text-slate-500 uppercase mb-1">Total Active Load</p>
-                <h3 id="stat-total-power" class="text-3xl font-black text-emerald-400 neon-text-green">{{ number_format($totalPower, 1) }} <span class="text-lg">W</span></h3>
+                <p class="text-xs font-bold tracking-widest text-slate-400 uppercase mb-1">Total Active Load</p>
+                <h3 id="stat-total-power" class="text-3xl font-black text-emerald-600 glowing-value">{{ number_format($totalPower, 1) }} <span class="text-lg text-slate-400">W</span></h3>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-xl border border-emerald-500/20">⚡</div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 text-xl border border-emerald-100">⚡</div>
         </div>
 
         <!-- Card 2: Active Devices -->
         <div class="glow-card rounded-2xl p-5 flex items-center justify-between">
             <div>
-                <p class="text-xs font-bold tracking-widest text-slate-500 uppercase mb-1">Active Devices</p>
-                <h3 class="text-3xl font-black text-blue-400 neon-text-blue"><span id="stat-active-count">{{ $totalActiveCount }}</span><span class="text-lg text-slate-500 font-bold">/{{ $devices->count() }}</span></h3>
+                <p class="text-xs font-bold tracking-widest text-slate-400 uppercase mb-1">Active Devices</p>
+                <h3 class="text-3xl font-black text-blue-600 glowing-value"><span id="stat-active-count">{{ $totalActiveCount }}</span><span class="text-lg text-slate-400 font-bold">/{{ $devices->count() }}</span></h3>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 text-xl border border-blue-500/20">🖥️</div>
+            <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 text-xl border border-blue-100">🖥️</div>
         </div>
 
         <!-- Card 3: Est Cost Today -->
         <div class="glow-card rounded-2xl p-5 flex items-center justify-between">
             <div>
-                <p class="text-xs font-bold tracking-widest text-slate-500 uppercase mb-1">Estimated Cost Today</p>
-                <h3 id="stat-total-cost" class="text-2xl font-black text-amber-400 leading-none mt-1">Rp {{ number_format($totalTodayCost, 0, ',', '.') }}</h3>
+                <p class="text-xs font-bold tracking-widest text-slate-400 uppercase mb-1">Estimated Cost Today</p>
+                <h3 id="stat-total-cost" class="text-2xl font-black text-amber-600 leading-none mt-1">Rp {{ number_format($totalTodayCost, 0, ',', '.') }}</h3>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 text-xl border border-amber-500/20">💰</div>
+            <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 text-xl border border-amber-100">💰</div>
         </div>
 
         <!-- Card 4: System Safety Status -->
         <div class="glow-card rounded-2xl p-5 flex items-center justify-between">
             <div>
-                <p class="text-xs font-bold tracking-widest text-slate-500 uppercase mb-1">System Health</p>
-                <h3 id="stat-health-status" class="text-xl font-bold text-emerald-400 mt-1 flex items-center gap-1.5">
-                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <p class="text-xs font-bold tracking-widest text-slate-400 uppercase mb-1">System Health</p>
+                <h3 id="stat-health-status" class="text-lg font-extrabold text-emerald-600 mt-1 flex items-center gap-1.5">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
                     ALL STABLE
                 </h3>
             </div>
-            <div id="stat-health-icon" class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-xl border border-emerald-500/20">🛡️</div>
+            <div id="stat-health-icon" class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 text-xl border border-emerald-100">🛡️</div>
         </div>
     </section>
 
@@ -152,10 +141,10 @@
                  data-is-online="{{ $device->is_online ? '1' : '0' }}">
                 
                 <!-- Card Header -->
-                <div class="px-5 py-4 border-b border-slate-900 bg-slate-900/30 flex justify-between items-center flex-shrink-0">
+                <div class="px-5 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center flex-shrink-0">
                     <div>
-                        <h4 class="text-sm font-extrabold tracking-wide text-slate-100">{{ $device->name }}</h4>
-                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">{{ $device->group->name ?? 'Default Group' }} | {{ $device->device_id }}</p>
+                        <h4 class="text-sm font-extrabold tracking-wide text-slate-800">{{ $device->name }}</h4>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{{ $device->group->name ?? 'Default Group' }} | {{ $device->device_id }}</p>
                     </div>
                     
                     <!-- Online Status Badge -->
@@ -165,10 +154,10 @@
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                             </span>
-                            <span class="text-[10px] font-extrabold tracking-wider text-emerald-400 uppercase">ONLINE</span>
+                            <span class="text-[10px] font-extrabold tracking-wider text-emerald-600 uppercase">ONLINE</span>
                         @else
-                            <span class="h-2 w-2 rounded-full bg-slate-600"></span>
-                            <span class="text-[10px] font-extrabold tracking-wider text-slate-500 uppercase">OFFLINE</span>
+                            <span class="h-2 w-2 rounded-full bg-slate-400"></span>
+                            <span class="text-[10px] font-extrabold tracking-wider text-slate-400 uppercase">OFFLINE</span>
                         @endif
                     </div>
                 </div>
@@ -176,42 +165,42 @@
                 <!-- Card Body (Large Gauges/Metrics) -->
                 <div class="p-5 grid grid-cols-3 gap-4 flex-1">
                     <!-- Metric: Voltage -->
-                    <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-900/60 flex flex-col items-center justify-center text-center">
-                        <span class="text-[9px] font-bold tracking-widest text-slate-500 uppercase mb-2">VOLTAGE</span>
-                        <div id="val-v-{{ $device->device_id }}" class="text-xl sm:text-2xl font-black neon-text-blue flex items-baseline gap-0.5">
-                            {{ number_format($device->voltage, 1) }}<span class="text-xs text-slate-500 font-bold">V</span>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col items-center justify-center text-center">
+                        <span class="text-[9px] font-bold tracking-widest text-slate-400 uppercase mb-2">VOLTAGE</span>
+                        <div id="val-v-{{ $device->device_id }}" class="text-xl sm:text-2xl font-black text-blue-600 glowing-value flex items-baseline gap-0.5">
+                            {{ number_format($device->voltage, 1) }}<span class="text-xs text-slate-400 font-bold">V</span>
                         </div>
                         <div id="status-v-{{ $device->device_id }}" class="text-[8px] font-bold text-blue-500 uppercase tracking-widest mt-2">Normal</div>
                     </div>
 
                     <!-- Metric: Current -->
-                    <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-900/60 flex flex-col items-center justify-center text-center">
-                        <span class="text-[9px] font-bold tracking-widest text-slate-500 uppercase mb-2">CURRENT</span>
-                        <div id="val-a-{{ $device->device_id }}" class="text-xl sm:text-2xl font-black neon-text-purple flex items-baseline gap-0.5">
-                            {{ number_format($device->current, 3) }}<span class="text-xs text-slate-500 font-bold">A</span>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col items-center justify-center text-center">
+                        <span class="text-[9px] font-bold tracking-widest text-slate-400 uppercase mb-2">CURRENT</span>
+                        <div id="val-a-{{ $device->device_id }}" class="text-xl sm:text-2xl font-black text-purple-600 glowing-value flex items-baseline gap-0.5">
+                            {{ number_format($device->current, 3) }}<span class="text-xs text-slate-400 font-bold">A</span>
                         </div>
-                        <div class="text-[8px] font-bold text-purple-500 uppercase tracking-widest mt-2">Current Load</div>
+                        <div class="text-[8px] font-bold text-purple-500 uppercase tracking-widest mt-2">Load</div>
                     </div>
 
                     <!-- Metric: Power -->
-                    <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-900/60 flex flex-col items-center justify-center text-center">
-                        <span class="text-[9px] font-bold tracking-widest text-slate-500 uppercase mb-2">POWER</span>
-                        <div id="val-w-{{ $device->device_id }}" class="text-xl sm:text-2xl font-black neon-text-green flex items-baseline gap-0.5">
-                            {{ number_format($device->power, 1) }}<span class="text-xs text-slate-500 font-bold">W</span>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col items-center justify-center text-center">
+                        <span class="text-[9px] font-bold tracking-widest text-slate-400 uppercase mb-2">POWER</span>
+                        <div id="val-w-{{ $device->device_id }}" class="text-xl sm:text-2xl font-black text-emerald-600 glowing-value flex items-baseline gap-0.5">
+                            {{ number_format($device->power, 1) }}<span class="text-xs text-slate-400 font-bold">W</span>
                         </div>
                         <div id="status-w-{{ $device->device_id }}" class="text-[8px] font-bold text-emerald-500 uppercase tracking-widest mt-2">Active</div>
                     </div>
                 </div>
 
                 <!-- Card Footer (Energy and Cost Counters) -->
-                <div class="px-5 py-4 border-t border-slate-900/50 bg-slate-900/10 flex justify-between items-center text-xs tracking-wider flex-shrink-0">
-                    <div class="flex items-center gap-1.5 text-slate-400 font-medium">
+                <div class="px-5 py-4 border-t border-slate-100 bg-slate-50 flex justify-between items-center text-xs tracking-wider flex-shrink-0">
+                    <div class="flex items-center gap-1.5 text-slate-500 font-medium">
                         <span>🔋</span> Energy: 
-                        <strong id="val-kwh-{{ $device->device_id }}" class="text-slate-200 font-bold digital-mono">{{ number_format($device->energy, 4) }} kWh</strong>
+                        <strong id="val-kwh-{{ $device->device_id }}" class="text-slate-700 font-bold digital-mono">{{ number_format($device->energy, 4) }} kWh</strong>
                     </div>
-                    <div class="flex items-center gap-1.5 text-slate-400 font-medium">
+                    <div class="flex items-center gap-1.5 text-slate-500 font-medium">
                         <span>💰</span> Cost: 
-                        <strong id="val-cost-{{ $device->device_id }}" class="text-amber-400 font-black digital-mono">Rp {{ number_format($device->energy * $plnTariff, 0, ',', '.') }}</strong>
+                        <strong id="val-cost-{{ $device->device_id }}" class="text-amber-600 font-black digital-mono">Rp {{ number_format($device->energy * $plnTariff, 0, ',', '.') }}</strong>
                     </div>
                 </div>
             </div>
@@ -288,7 +277,7 @@
                                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                                         <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                                     </span>
-                                    <span class="text-[10px] font-extrabold tracking-wider text-emerald-400 uppercase">ONLINE</span>
+                                    <span class="text-[10px] font-extrabold tracking-wider text-emerald-600 uppercase">ONLINE</span>
                                 `;
                             }
                         }
@@ -301,36 +290,36 @@
                         const valCost = document.getElementById(`val-cost-${deviceId}`);
 
                         if (valV) {
-                            valV.innerHTML = `${parseFloat(data.voltage).toFixed(1)}<span class="text-xs text-slate-500 font-bold">V</span>`;
+                            valV.innerHTML = `${parseFloat(data.voltage).toFixed(1)}<span class="text-xs text-slate-400 font-bold">V</span>`;
                             const statusV = document.getElementById(`status-v-${deviceId}`);
                             
                             // Check voltage anomalies
                             if (data.voltage < alertConfig.voltage_min) {
-                                valV.className = "text-xl sm:text-2xl font-black neon-text-red flex items-baseline gap-0.5 animate-pulse";
+                                valV.className = "text-xl sm:text-2xl font-black text-red-600 glowing-value flex items-baseline gap-0.5 animate-pulse";
                                 if (statusV) statusV.innerHTML = `<span class="text-red-500">Under voltage</span>`;
                             } else if (data.voltage > alertConfig.voltage_max) {
-                                valV.className = "text-xl sm:text-2xl font-black neon-text-red flex items-baseline gap-0.5 animate-pulse";
+                                valV.className = "text-xl sm:text-2xl font-black text-red-600 glowing-value flex items-baseline gap-0.5 animate-pulse";
                                 if (statusV) statusV.innerHTML = `<span class="text-red-500">Over voltage</span>`;
                             } else {
-                                valV.className = "text-xl sm:text-2xl font-black neon-text-blue flex items-baseline gap-0.5";
+                                valV.className = "text-xl sm:text-2xl font-black text-blue-600 glowing-value flex items-baseline gap-0.5";
                                 if (statusV) statusV.innerHTML = "Normal";
                             }
                         }
 
                         if (valA) {
-                            valA.innerHTML = `${parseFloat(data.current).toFixed(3)}<span class="text-xs text-slate-500 font-bold">A</span>`;
+                            valA.innerHTML = `${parseFloat(data.current).toFixed(3)}<span class="text-xs text-slate-400 font-bold">A</span>`;
                         }
 
                         if (valW) {
-                            valW.innerHTML = `${parseFloat(data.power).toFixed(1)}<span class="text-xs text-slate-500 font-bold">W</span>`;
+                            valW.innerHTML = `${parseFloat(data.power).toFixed(1)}<span class="text-xs text-slate-400 font-bold">W</span>`;
                             const statusW = document.getElementById(`status-w-${deviceId}`);
                             
                             // Check power overload anomalies
                             if (data.power > alertConfig.power_max) {
-                                valW.className = "text-xl sm:text-2xl font-black neon-text-red flex items-baseline gap-0.5 animate-bounce";
+                                valW.className = "text-xl sm:text-2xl font-black text-red-600 glowing-value flex items-baseline gap-0.5 animate-bounce";
                                 if (statusW) statusW.innerHTML = `<span class="text-red-500 animate-pulse">⚠️ OVERLOAD</span>`;
                             } else {
-                                valW.className = "text-xl sm:text-2xl font-black neon-text-green flex items-baseline gap-0.5";
+                                valW.className = "text-xl sm:text-2xl font-black text-emerald-600 glowing-value flex items-baseline gap-0.5";
                                 if (statusW) statusW.innerHTML = "Active";
                             }
                         }
@@ -367,8 +356,8 @@
                         const badge = document.getElementById(`status-badge-${deviceId}`);
                         if (badge) {
                             badge.innerHTML = `
-                                <span class="h-2 w-2 rounded-full bg-slate-600"></span>
-                                <span class="text-[10px] font-extrabold tracking-wider text-slate-500 uppercase">OFFLINE</span>
+                                <span class="h-2 w-2 rounded-full bg-slate-400"></span>
+                                <span class="text-[10px] font-extrabold tracking-wider text-slate-400 uppercase">OFFLINE</span>
                             `;
                         }
                         
@@ -376,9 +365,9 @@
                         const valW = document.getElementById(`val-w-${deviceId}`);
                         const valA = document.getElementById(`val-a-${deviceId}`);
                         const valV = document.getElementById(`val-v-${deviceId}`);
-                        if (valW) valW.innerHTML = `0.0<span class="text-xs text-slate-500 font-bold">W</span>`;
-                        if (valA) valA.innerHTML = `0.000<span class="text-xs text-slate-500 font-bold">A</span>`;
-                        if (valV) valV.innerHTML = `0.0<span class="text-xs text-slate-500 font-bold">V</span>`;
+                        if (valW) valW.innerHTML = `0.0<span class="text-xs text-slate-400 font-bold">W</span>`;
+                        if (valA) valA.innerHTML = `0.000<span class="text-xs text-slate-400 font-bold">A</span>`;
+                        if (valV) valV.innerHTML = `0.0<span class="text-xs text-slate-400 font-bold">V</span>`;
                     }
                 });
 
@@ -435,26 +424,26 @@
                 const statHealth = document.getElementById('stat-health-status');
                 const statHealthIcon = document.getElementById('stat-health-icon');
 
-                if (statPower) statPower.innerHTML = `${totalPower.toFixed(1)} <span class="text-lg">W</span>`;
+                if (statPower) statPower.innerHTML = `${totalPower.toFixed(1)} <span class="text-lg text-slate-400">W</span>`;
                 if (statCount) statCount.textContent = activeCount;
                 if (statCost) statCost.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(Math.round(totalCost))}`;
 
                 if (statHealth && statHealthIcon) {
                     if (hasAlerts) {
-                        statHealth.className = "text-xl font-bold text-red-500 mt-1 flex items-center gap-1.5 animate-pulse";
+                        statHealth.className = "text-lg font-extrabold text-red-600 mt-1 flex items-center gap-1.5 animate-pulse";
                         statHealth.innerHTML = `
                             <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
                             VOLTAGE ALERT
                         `;
-                        statHealthIcon.className = "w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 text-xl border border-red-500/20";
+                        statHealthIcon.className = "w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center text-red-600 text-xl border border-red-100";
                         statHealthIcon.innerHTML = "⚠️";
                     } else {
-                        statHealth.className = "text-xl font-bold text-emerald-400 mt-1 flex items-center gap-1.5";
+                        statHealth.className = "text-lg font-extrabold text-emerald-600 mt-1 flex items-center gap-1.5";
                         statHealth.innerHTML = `
-                            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
                             ALL STABLE
                         `;
-                        statHealthIcon.className = "w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-xl border border-emerald-500/20";
+                        statHealthIcon.className = "w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 text-xl border border-emerald-100";
                         statHealthIcon.innerHTML = "🛡️";
                     }
                 }
