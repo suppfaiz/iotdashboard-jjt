@@ -387,8 +387,8 @@
 <div class="flex items-center justify-between mb-6 pb-2 border-b border-slate-200/50">
     <h2 class="text-xl font-bold text-slate-900 tracking-tight">Group Areas & Devices</h2>
     @if(auth()->user()->role === 'admin')
-        <button type="button" onclick="document.getElementById('add-group-modal-dashboard').classList.remove('hidden')" class="relative inline-flex items-center gap-x-1.5 rounded-xl bg-indigo-600 px-4.5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors">
-            <svg class="-ml-0.5 h-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button type="button" onclick="document.getElementById('add-group-modal-dashboard').classList.remove('hidden')" class="relative inline-flex items-center gap-x-1.5 rounded-xl bg-indigo-600 px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors">
+            <svg class="-ml-0.5 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Add New Group
