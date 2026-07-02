@@ -33,6 +33,9 @@
             <a href="#gemini-ai" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
                 9. Gemini AI Chatbot
             </a>
+            <a href="#office-control" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                10. Office IoT Control Hub
+            </a>
         </nav>
     </aside>
 
@@ -384,6 +387,25 @@ sudo ufw enable</code></pre>
                         <li><strong>Model:</strong> Menggunakan model stabil <code>gemini-2.5-flash</code> melalui Generative Language API Google.</li>
                         <li><strong>Batas Kuota:</strong> Mendapatkan kuota gratis sebesar **1.500 panggilan per hari** (menggantikan model v1beta pratinjau yang memiliki limit ketat 20 panggilan/hari).</li>
                         <li><strong>Konteks Telemetri:</strong> Setiap kali Anda mengobrol atau mengklik tombol "Analisis", sistem secara otomatis mengirimkan rangkuman data sensor terkini ke asisten Gemini agar analisis yang diberikan akurat sesuai kondisi riil.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 10: Office IoT Control Hub -->
+            <section id="office-control" class="scroll-mt-24">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600 text-sm font-bold">10</span>
+                    Office IoT Control Hub
+                </h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    Halaman antarmuka interaktif di rute <code>/office-control</code> yang digunakan untuk memonitor iklim ruangan (suhu dan kelembapan) serta mengontrol peralatan kantor bantu secara remote.
+                </p>
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-4">
+                    <h4 class="text-sm font-bold text-gray-800 mb-1">Rincian Saluran MQTT (Topics):</h4>
+                    <ul class="list-disc pl-5 space-y-2 text-sm text-gray-600">
+                        <li><strong>Inbound Temperature/Humidity:</strong> Menggunakan format topik <code>telemetry/office-env/{room_id}</code> dengan payload JSON <code>{"temperature": 23.4, "humidity": 55.0}</code>.</li>
+                        <li><strong>Outbound Switch Relay Commands:</strong> Saat sakelar ditekan, Laravel mempublikasikan payload JSON <code>{"appliance": "appliance_id", "state": 1}</code> ke topik <code>cmd/office-control</code>.</li>
+                        <li><strong>Audit logging:</strong> Setiap tindakan sakelar dicatat langsung dalam system log Laravel sebagai audit trail aktivitas pengguna.</li>
                     </ul>
                 </div>
             </section>

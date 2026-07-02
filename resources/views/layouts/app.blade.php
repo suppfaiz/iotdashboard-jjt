@@ -352,6 +352,10 @@
                                     class="{{ request()->routeIs('building.map') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap flex items-center gap-1.5">
                                     <span>🏢</span> 3D Map
                                 </a>
+                                <a href="{{ route('office.control') }}"
+                                    class="{{ request()->routeIs('office.control') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap flex items-center gap-1.5">
+                                    <span>🎮</span> Office Control
+                                </a>
                                 <a href="{{ route('changelog') }}"
                                     class="{{ request()->routeIs('changelog') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Changelog</a>
                                 <a href="{{ route('tv_mode') }}" target="_blank"
@@ -705,6 +709,12 @@
                     class="flex flex-col items-center justify-center py-2 flex-1 rounded-xl {{ request()->routeIs('building.map') ? 'text-blue-600 font-bold bg-blue-600/5' : 'text-slate-500 hover:text-slate-800' }}">
                     <span class="text-[18px] leading-none mb-1">🏢</span>
                     <span class="text-[9px] tracking-wide whitespace-nowrap truncate w-full text-center">3D Map</span>
+                </a>
+
+                <a href="{{ route('office.control') }}"
+                    class="flex flex-col items-center justify-center py-2 flex-1 rounded-xl {{ request()->routeIs('office.control') ? 'text-blue-600 font-bold bg-blue-600/5' : 'text-slate-500 hover:text-slate-800' }}">
+                    <span class="text-[18px] leading-none mb-1">🎮</span>
+                    <span class="text-[9px] tracking-wide whitespace-nowrap truncate w-full text-center">Control</span>
                 </a>
 
                 @if(auth()->user()->role === 'admin')

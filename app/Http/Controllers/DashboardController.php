@@ -740,5 +740,160 @@ Jawablah langsung menggunakan format HTML/Blade bersih (tag seperti <b>, <ul>, <
 
         return view('devices.building_map', compact('floors', 'plnTariff', 'alertConfig'));
     }
+
+    public function officeControl()
+    {
+        // Default mock rooms data which can be updated dynamically via MQTT
+        $rooms = [
+            'server_room' => [
+                'id' => 'server_room',
+                'name' => 'Server Room',
+                'temp' => floatval(Cache::get('office_temp:server_room', 19.8)),
+                'humi' => floatval(Cache::get('office_humi:server_room', 42.5)),
+                'comfort' => 'Cool',
+                'status_color' => 'text-blue-600 bg-blue-50 border-blue-100',
+            ],
+            'main_workspace' => [
+                'id' => 'main_workspace',
+                'name' => 'Main Workspace',
+                'temp' => floatval(Cache::get('office_temp:main_workspace', 24.2)),
+                'humi' => floatval(Cache::get('office_humi:main_workspace', 53.0)),
+                'comfort' => 'Comfortable',
+                'status_color' => 'text-emerald-600 bg-emerald-50 border-emerald-100',
+            ],
+            'meeting_room_a' => [
+                'id' => 'meeting_room_a',
+                'name' => 'Meeting Room A',
+                'temp' => floatval(Cache::get('office_temp:meeting_room_a', 22.5)),
+                'humi' => floatval(Cache::get('office_humi:meeting_room_a', 48.0)),
+                'comfort' => 'Cool',
+                'status_color' => 'text-blue-600 bg-blue-50 border-blue-100',
+            ],
+            'lobby_reception' => [
+                'id' => 'lobby_reception',
+                'name' => 'Lobby Reception',
+                'temp' => floatval(Cache::get('office_temp:lobby_reception', 25.1)),
+                'humi' => floatval(Cache::get('office_humi:lobby_reception', 58.5)),
+                'comfort' => 'Comfortable',
+                'status_color' => 'text-emerald-600 bg-emerald-50 border-emerald-100',
+            ],
+        ];
+
+        // Retrieve actual state of appliances from Cache (0 = Off, 1 = On)
+        $appliances = [
+            [
+                'id' => 'ac_server_1',
+                'name' => 'AC Server Room 1',
+                'category' => 'Air Conditioning',
+                'state' => (int)Cache::get('office_switch:ac_server_1', 1),
+                'icon' => '❄️',
+            ],
+            [
+                'id' => 'ac_server_2',
+                'name' => 'AC Server Room 2 (Backup)',
+                'category' => 'Air Conditioning',
+                'state' => (int)Cache::get('office_switch:ac_server_2', 0),
+                'icon' => '❄️',
+            ],
+            [
+                'id' => 'ac_workspace_1',
+                'name' => 'AC Workspace Left',
+                'category' => 'Air Conditioning',
+                'state' => (int)Cache::get('office_switch:ac_workspace_1', 1),
+                'icon' => '❄️',
+            ],
+            [
+                'id' => 'ac_workspace_2',
+                'name' => 'AC Workspace Right',
+                'category' => 'Air Conditioning',
+                'state' => (int)Cache::get('office_switch:ac_workspace_2', 1),
+                'icon' => '❄️',
+            ],
+            [
+                'id' => 'vent_fan',
+                'name' => 'Office Ventilation Fan',
+                'category' => 'Ventilation',
+                'state' => (int)Cache::get('office_switch:vent_fan', 1),
+                'icon' => '💨',
+            ],
+            [
+                'id' => 'lights_workspace',
+                'name' => 'Main Workspace Lighting',
+                'category' => 'Lighting',
+                'state' => (int)Cache::get('office_switch:lights_workspace', 1),
+                'icon' => '💡',
+            ],
+            [
+                'id' => 'lights_lobby',
+                'name' => 'Lobby & Reception Lights',
+                'category' => 'Lighting',
+                'state' => (int)Cache::get('office_switch:lights_lobby', 0),
+                'icon' => '💡',
+            ],
+            [
+                'id' => 'coffee_maker',
+                'name' => 'Pantry Coffee Machine',
+                'category' => 'Smart Appliances',
+                'state' => (int)Cache::get('office_switch:coffee_maker', 0),
+                'icon' => '☕',
+            ],
+        ];
+
+        return view('devices.office_control', compact('rooms', 'appliances'));
+    }
+
+    public function toggleOfficeAppliance(Request $request)
+    {
+        $request->validate([
+            'appliance_id' => 'required|string',
+            'state' => 'required|integer|in:0,1',
+        ]);
+
+        $applianceId = $request->appliance_id;
+        $state = (int)$request->state;
+
+        // Store target state in Cache
+        Cache::put("office_switch:{$applianceId}", $state, now()->addDays(30));
+
+        // Create log record to audit the action
+        \Illuminate\Support\Facades\Log::info("Pengguna " . auth()->user()->name . " mengubah status peralatan '" . $applianceId . "' menjadi " . ($state ? 'ON' : 'OFF') . ".", [
+            'appliance_id' => $applianceId,
+            'state' => $state,
+            'ip' => $request->ip()
+        ]);
+
+        // Dispatch MQTT payload to command topic to tell actual relays to toggle
+        $server   = SystemConfig::where('key', 'mqtt_host')->value('value') ?? config('mqtt.host', 'broker.emqx.io');
+        $port     = SystemConfig::where('key', 'mqtt_port')->value('value') ?? config('mqtt.port', 1883);
+        $username = SystemConfig::where('key', 'mqtt_user')->value('value') ?? config('mqtt.username');
+        $password = SystemConfig::where('key', 'mqtt_password')->value('value') ?? config('mqtt.password');
+        
+        try {
+            $mqtt = new \PhpMqtt\Client\MqttClient($server, (int)$port, 'laravel_control_' . rand(1000, 9999));
+            $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)
+                ->setKeepAliveInterval(10)
+                ->setUseTls(false);
+            if (!empty($username)) {
+                $connectionSettings = $connectionSettings->setUsername($username);
+            }
+            if (!empty($password)) {
+                $connectionSettings = $connectionSettings->setPassword($password);
+            }
+            $mqtt->connect($connectionSettings, true);
+            $mqtt->publish("cmd/office-control", json_encode([
+                'appliance' => $applianceId,
+                'state' => $state
+            ]), 0);
+            $mqtt->disconnect();
+        } catch (\Exception $e) {
+            \Log::warning("Failed to publish MQTT control message: " . $e->getMessage());
+        }
+
+        return response()->json([
+            'success' => true,
+            'appliance_id' => $applianceId,
+            'state' => $state
+        ]);
+    }
 }
 

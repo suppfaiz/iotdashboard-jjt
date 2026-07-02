@@ -21,6 +21,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/chatbot/chat', [DashboardController::class, 'chatbotChat'])->name('chatbot.chat');
     Route::get('/tv-mode', [DashboardController::class, 'tvMode'])->name('tv_mode');
     Route::get('/building-map', [DashboardController::class, 'buildingMap'])->name('building.map');
+    Route::get('/office-control', [DashboardController::class, 'officeControl'])->name('office.control');
+    Route::post('/office-control/toggle', [DashboardController::class, 'toggleOfficeAppliance'])->name('office.control.toggle');
 
 
     // Profile routes (Standard Breeze)

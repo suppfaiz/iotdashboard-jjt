@@ -83,7 +83,23 @@ class MqttWorker extends Command
                 return;
             }
 
-            // 2. Handle Historical offline telemetry uploads
+            // 2. Handle Office Environment (Temperature & Humidity) Updates
+            if ($actionOrGroup === 'office-env') {
+                $temp = floatval($data['temperature'] ?? 0.0);
+                $humi = floatval($data['humidity'] ?? 0.0);
+                
+                \Illuminate\Support\Facades\Cache::put("office_temp:{$deviceId}", $temp, now()->addHours(24));
+                \Illuminate\Support\Facades\Cache::put("office_humi:{$deviceId}", $humi, now()->addHours(24));
+                
+                broadcast(new \App\Events\TelemetryUpdated($deviceId, [
+                    'type' => 'office-env',
+                    'temperature' => $temp,
+                    'humidity' => $humi
+                ]));
+                return;
+            }
+
+            // 3. Handle Historical offline telemetry uploads
             if ($actionOrGroup === 'historical') {
                 $timestamp = isset($data['timestamp']) ? intval($data['timestamp']) : time();
                 $loggedAt = \Carbon\Carbon::createFromTimestamp($timestamp);

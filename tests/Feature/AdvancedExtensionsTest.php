@@ -403,4 +403,45 @@ class AdvancedExtensionsTest extends TestCase
         $response = $this->actingAs($this->admin)->get('/building-map');
         $response->assertStatus(200);
     }
+
+    public function test_office_control_route_security_and_access(): void
+    {
+        // 1. Guest is redirected
+        $response = $this->get('/office-control');
+        $response->assertRedirect('/login');
+
+        // 2. Auth user is allowed
+        $response = $this->actingAs($this->user)->get('/office-control');
+        $response->assertStatus(200);
+        $response->assertViewIs('devices.office_control');
+
+        // 3. Admin is allowed
+        $response = $this->actingAs($this->admin)->get('/office-control');
+        $response->assertStatus(200);
+    }
+
+    public function test_office_control_toggle_validation_and_action(): void
+    {
+        // 1. Unauthenticated request is redirected
+        $response = $this->postJson('/office-control/toggle', [
+            'appliance_id' => 'ac_server_1',
+            'state' => 1
+        ]);
+        $response->assertStatus(401);
+
+        // 2. Authenticated user can toggle and generates a log
+        $response = $this->actingAs($this->user)->postJson('/office-control/toggle', [
+            'appliance_id' => 'ac_server_1',
+            'state' => 0
+        ]);
+        
+        $response->assertOk();
+        $response->assertJson([
+            'success' => true,
+            'appliance_id' => 'ac_server_1',
+            'state' => 0
+        ]);
+
+        $this->assertEquals(0, \Illuminate\Support\Facades\Cache::get('office_switch:ac_server_1'));
+    }
 }
