@@ -67,7 +67,52 @@
     <!-- Timeline Container -->
     <div class="relative pl-8 md:pl-10 space-y-12">
         
-        <!-- Version 2.0.0 (Latest) -->
+        <!-- Version 2.1.0 (Latest) -->
+        <div class="timeline-item timeline-dot timeline-line">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
+                <div class="flex items-center gap-3">
+                    <span class="px-3.5 py-1 bg-emerald-600 text-white text-xs font-bold rounded-full shadow-sm">v2.1.0</span>
+                    <h2 class="text-xl font-bold text-slate-950">Dynamic Device Types & Adaptive Grid Visuals</h2>
+                </div>
+                <span class="text-xs font-bold text-slate-400 font-mono">July 02, 2026</span>
+            </div>
+            
+            <div class="changelog-card rounded-3xl p-6 shadow-sm mb-6">
+                <p class="text-sm font-semibold text-emerald-600 mb-4 uppercase tracking-widest font-bold">New Hardware Support & UI Refinement</p>
+                <div class="space-y-4 text-sm text-slate-600">
+                    <div class="flex items-start gap-3">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 mt-2 flex-shrink-0"></span>
+                        <div>
+                            <span class="font-bold text-slate-800">Dynamic Device Types:</span>
+                            Mendukung registrasi alat selain PZEM, yakni **Environment Sensor (DHT22)** dan **Relay Controller (4CH)** dengan tampilan kontrol detail dan rute validasi konfigurasi yang adaptif per tipe alat.
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 mt-2 flex-shrink-0"></span>
+                        <div>
+                            <span class="font-bold text-slate-800">Custom Arduino Sketches:</span>
+                            Menghasilkan kode otomatis sketch Arduino (.ino) khusus per jenis hardware (telemetri berkala untuk DHT22 dan penerimaan perintah toggle MQTT aktif untuk relay 4-channel).
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 mt-2 flex-shrink-0"></span>
+                        <div>
+                            <span class="font-bold text-slate-800">Live Office Control Hub & WebSocket Status:</span>
+                            Layout panel kontrol auxiliary baru (`/office-control`) yang bersih tanpa overlap, lengkap dengan umpan balik status relay real-time via topik `relay-status` dan sistem fallback simulasi.
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 mt-2 flex-shrink-0"></span>
+                        <div>
+                            <span class="font-bold text-slate-800">Adaptive Spacing Grid Flow:</span>
+                            Tinggi diagram alur listrik utama di dashboard diatur dinamis berdasarkan jumlah grup untuk menghindari tabrakan antar node. Garis aliran menyala hijau jika minimal ada satu perangkat di grup yang aktif (online).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Version 2.0.0 -->
         <div class="timeline-item timeline-dot timeline-line">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
                 <div class="flex items-center gap-3">
