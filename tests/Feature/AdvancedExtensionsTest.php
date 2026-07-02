@@ -451,4 +451,40 @@ class AdvancedExtensionsTest extends TestCase
 
         $this->assertEquals(0, \Illuminate\Support\Facades\Cache::get('office_switch:ac_server_1'));
     }
+
+    public function test_device_creation_with_type_and_provisioning_code(): void
+    {
+        $group = Group::create(['name' => 'Server Area']);
+
+        // 1. Register Environment Sensor (DHT22)
+        $response = $this->actingAs($this->admin)->post('/devices', [
+            'name' => 'Workspace Temp Sensor',
+            'device_type' => 'env_sensor',
+            'wifi_ssid' => 'OfficeWiFi',
+            'wifi_password' => 'SecretPass',
+            'group_id' => $group->id, // optional for env_sensor but passed
+        ]);
+
+        $response->assertRedirect();
+        
+        $device1 = Device::where('name', 'Workspace Temp Sensor')->firstOrFail();
+        $this->assertEquals('env_sensor', $device1->device_type);
+        $this->assertStringContainsString('DHT22', $device1->provisioning_code);
+        $this->assertStringContainsString('telemetry/office-env/', $device1->provisioning_code);
+
+        // 2. Register Relay Controller (4CH)
+        $response = $this->actingAs($this->admin)->post('/devices', [
+            'name' => 'Main Office Relays',
+            'device_type' => 'relay_controller',
+            'wifi_ssid' => 'OfficeWiFi',
+            'wifi_password' => 'SecretPass',
+        ]);
+
+        $response->assertRedirect();
+
+        $device2 = Device::where('name', 'Main Office Relays')->firstOrFail();
+        $this->assertEquals('relay_controller', $device2->device_type);
+        $this->assertStringContainsString('Relay Controller', $device2->provisioning_code);
+        $this->assertStringContainsString('cmd/office-control', $device2->provisioning_code);
+    }
 }

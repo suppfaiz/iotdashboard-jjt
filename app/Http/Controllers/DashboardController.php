@@ -743,103 +743,183 @@ Jawablah langsung menggunakan format HTML/Blade bersih (tag seperti <b>, <ul>, <
 
     public function officeControl()
     {
-        // Default mock rooms data which can be updated dynamically via MQTT
-        $rooms = [
-            'server_room' => [
-                'id' => 'server_room',
-                'name' => 'Server Room',
-                'temp' => floatval(Cache::get('office_temp:server_room', 19.8)),
-                'humi' => floatval(Cache::get('office_humi:server_room', 42.5)),
-                'comfort' => 'Cool',
-                'status_color' => 'text-blue-600 bg-blue-50 border-blue-100',
-            ],
-            'main_workspace' => [
-                'id' => 'main_workspace',
-                'name' => 'Main Workspace',
-                'temp' => floatval(Cache::get('office_temp:main_workspace', 24.2)),
-                'humi' => floatval(Cache::get('office_humi:main_workspace', 53.0)),
-                'comfort' => 'Comfortable',
-                'status_color' => 'text-emerald-600 bg-emerald-50 border-emerald-100',
-            ],
-            'meeting_room_a' => [
-                'id' => 'meeting_room_a',
-                'name' => 'Meeting Room A',
-                'temp' => floatval(Cache::get('office_temp:meeting_room_a', 22.5)),
-                'humi' => floatval(Cache::get('office_humi:meeting_room_a', 48.0)),
-                'comfort' => 'Cool',
-                'status_color' => 'text-blue-600 bg-blue-50 border-blue-100',
-            ],
-            'lobby_reception' => [
-                'id' => 'lobby_reception',
-                'name' => 'Lobby Reception',
-                'temp' => floatval(Cache::get('office_temp:lobby_reception', 25.1)),
-                'humi' => floatval(Cache::get('office_humi:lobby_reception', 58.5)),
-                'comfort' => 'Comfortable',
-                'status_color' => 'text-emerald-600 bg-emerald-50 border-emerald-100',
-            ],
-        ];
+        // 1. Load Environment Sensors (DHT22)
+        $sensorDevices = Device::where('device_type', 'env_sensor')->get();
+        $rooms = [];
+        $simulatedRoomIds = [];
 
-        // Retrieve actual state of appliances from Cache (0 = Off, 1 = On)
-        $appliances = [
-            [
-                'id' => 'ac_server_1',
-                'name' => 'AC Server Room 1',
-                'category' => 'Air Conditioning',
-                'state' => (int)Cache::get('office_switch:ac_server_1', 1),
-                'icon' => '❄️',
-            ],
-            [
-                'id' => 'ac_server_2',
-                'name' => 'AC Server Room 2 (Backup)',
-                'category' => 'Air Conditioning',
-                'state' => (int)Cache::get('office_switch:ac_server_2', 0),
-                'icon' => '❄️',
-            ],
-            [
-                'id' => 'ac_workspace_1',
-                'name' => 'AC Workspace Left',
-                'category' => 'Air Conditioning',
-                'state' => (int)Cache::get('office_switch:ac_workspace_1', 1),
-                'icon' => '❄️',
-            ],
-            [
-                'id' => 'ac_workspace_2',
-                'name' => 'AC Workspace Right',
-                'category' => 'Air Conditioning',
-                'state' => (int)Cache::get('office_switch:ac_workspace_2', 1),
-                'icon' => '❄️',
-            ],
-            [
-                'id' => 'vent_fan',
-                'name' => 'Office Ventilation Fan',
-                'category' => 'Ventilation',
-                'state' => (int)Cache::get('office_switch:vent_fan', 1),
-                'icon' => '💨',
-            ],
-            [
-                'id' => 'lights_workspace',
-                'name' => 'Main Workspace Lighting',
-                'category' => 'Lighting',
-                'state' => (int)Cache::get('office_switch:lights_workspace', 1),
-                'icon' => '💡',
-            ],
-            [
-                'id' => 'lights_lobby',
-                'name' => 'Lobby & Reception Lights',
-                'category' => 'Lighting',
-                'state' => (int)Cache::get('office_switch:lights_lobby', 0),
-                'icon' => '💡',
-            ],
-            [
-                'id' => 'coffee_maker',
-                'name' => 'Pantry Coffee Machine',
-                'category' => 'Smart Appliances',
-                'state' => (int)Cache::get('office_switch:coffee_maker', 0),
-                'icon' => '☕',
-            ],
-        ];
+        if ($sensorDevices->count() > 0) {
+            foreach ($sensorDevices as $device) {
+                $temp = floatval(Cache::get("office_temp:{$device->device_id}", 24.0));
+                $humi = floatval(Cache::get("office_humi:{$device->device_id}", 50.0));
 
-        return view('devices.office_control', compact('rooms', 'appliances'));
+                if ($temp < 20.0) {
+                    $comfort = 'Cool';
+                    $statusColor = 'text-blue-600 bg-blue-50 border-blue-100';
+                    $accentBg = 'bg-blue-500';
+                    $icon = '❄️';
+                } elseif ($temp >= 20.0 && $temp <= 25.0) {
+                    $comfort = 'Comfortable';
+                    $statusColor = 'text-emerald-600 bg-emerald-50 border-emerald-100';
+                    $accentBg = 'bg-emerald-500';
+                    $icon = '🏢';
+                } else {
+                    $comfort = 'Warm';
+                    $statusColor = 'text-amber-600 bg-amber-50 border-amber-100';
+                    $accentBg = 'bg-amber-500';
+                    $icon = '☀️';
+                }
+
+                $rooms[] = [
+                    'id' => $device->device_id,
+                    'name' => $device->name,
+                    'temp' => $temp,
+                    'humi' => $humi,
+                    'comfort' => $comfort,
+                    'status_color' => $statusColor,
+                    'icon' => $icon,
+                    'accent_bg' => $accentBg,
+                    'device_id' => $device->device_id,
+                    'source' => 'Sensor',
+                ];
+            }
+        } else {
+            // Fallback mock rooms data which can be updated dynamically via MQTT
+            $rooms = [
+                [
+                    'id' => 'server_room',
+                    'name' => 'Server Room',
+                    'temp' => floatval(Cache::get('office_temp:server_room', 19.8)),
+                    'humi' => floatval(Cache::get('office_humi:server_room', 42.5)),
+                    'comfort' => 'Cool',
+                    'status_color' => 'text-blue-600 bg-blue-50 border-blue-100',
+                    'icon' => '❄️',
+                    'accent_bg' => 'bg-blue-500',
+                    'device_id' => 'sim_server_room',
+                    'source' => 'Simulated',
+                ],
+                [
+                    'id' => 'main_workspace',
+                    'name' => 'Main Workspace',
+                    'temp' => floatval(Cache::get('office_temp:main_workspace', 24.2)),
+                    'humi' => floatval(Cache::get('office_humi:main_workspace', 53.0)),
+                    'comfort' => 'Comfortable',
+                    'status_color' => 'text-emerald-600 bg-emerald-50 border-emerald-100',
+                    'icon' => '🏢',
+                    'accent_bg' => 'bg-emerald-500',
+                    'device_id' => 'sim_workspace',
+                    'source' => 'Simulated',
+                ],
+                [
+                    'id' => 'meeting_room_a',
+                    'name' => 'Meeting Room A',
+                    'temp' => floatval(Cache::get('office_temp:meeting_room_a', 22.5)),
+                    'humi' => floatval(Cache::get('office_humi:meeting_room_a', 48.0)),
+                    'comfort' => 'Cool',
+                    'status_color' => 'text-blue-600 bg-blue-50 border-blue-100',
+                    'icon' => '❄️',
+                    'accent_bg' => 'bg-blue-500',
+                    'device_id' => 'sim_meeting_room',
+                    'source' => 'Simulated',
+                ],
+                [
+                    'id' => 'lobby_reception',
+                    'name' => 'Lobby Reception',
+                    'temp' => floatval(Cache::get('office_temp:lobby_reception', 25.1)),
+                    'humi' => floatval(Cache::get('office_humi:lobby_reception', 58.5)),
+                    'comfort' => 'Comfortable',
+                    'status_color' => 'text-emerald-600 bg-emerald-50 border-emerald-100',
+                    'icon' => '🏢',
+                    'accent_bg' => 'bg-emerald-500',
+                    'device_id' => 'sim_lobby',
+                    'source' => 'Simulated',
+                ],
+            ];
+            $simulatedRoomIds = ['server_room', 'main_workspace', 'meeting_room_a', 'lobby_reception'];
+        }
+
+        // 2. Load Relay Controllers (4CH)
+        $relayDevices = Device::where('device_type', 'relay_controller')->get();
+        $appliances = [];
+
+        if ($relayDevices->count() > 0) {
+            foreach ($relayDevices as $device) {
+                $categories = ['AC / Cooling', 'Ventilation', 'Lighting Grid', 'Smart Appliance'];
+                $icons = ['❄️', '💨', '💡', '🔌'];
+                for ($ch = 1; $ch <= 4; $ch++) {
+                    $applianceId = "{$device->device_id}_ch{$ch}";
+                    $appliances[] = [
+                        'id' => $applianceId,
+                        'name' => "{$device->name} (CH{$ch})",
+                        'category' => $categories[$ch - 1],
+                        'state' => (int)Cache::get("office_switch:{$applianceId}", 0),
+                        'icon' => $icons[$ch - 1],
+                    ];
+                }
+            }
+        } else {
+            // Retrieve actual state of appliances from Cache (0 = Off, 1 = On)
+            $appliances = [
+                [
+                    'id' => 'ac_server_1',
+                    'name' => 'AC Server Room 1',
+                    'category' => 'Air Conditioning',
+                    'state' => (int)Cache::get('office_switch:ac_server_1', 1),
+                    'icon' => '❄️',
+                ],
+                [
+                    'id' => 'ac_server_2',
+                    'name' => 'AC Server Room 2 (Backup)',
+                    'category' => 'Air Conditioning',
+                    'state' => (int)Cache::get('office_switch:ac_server_2', 0),
+                    'icon' => '❄️',
+                ],
+                [
+                    'id' => 'ac_workspace_1',
+                    'name' => 'AC Workspace Left',
+                    'category' => 'Air Conditioning',
+                    'state' => (int)Cache::get('office_switch:ac_workspace_1', 1),
+                    'icon' => '❄️',
+                ],
+                [
+                    'id' => 'ac_workspace_2',
+                    'name' => 'AC Workspace Right',
+                    'category' => 'Air Conditioning',
+                    'state' => (int)Cache::get('office_switch:ac_workspace_2', 1),
+                    'icon' => '❄️',
+                ],
+                [
+                    'id' => 'vent_fan',
+                    'name' => 'Office Ventilation Fan',
+                    'category' => 'Ventilation',
+                    'state' => (int)Cache::get('office_switch:vent_fan', 1),
+                    'icon' => '💨',
+                ],
+                [
+                    'id' => 'lights_workspace',
+                    'name' => 'Main Workspace Lighting',
+                    'category' => 'Lighting',
+                    'state' => (int)Cache::get('office_switch:lights_workspace', 1),
+                    'icon' => '💡',
+                ],
+                [
+                    'id' => 'lights_lobby',
+                    'name' => 'Lobby & Reception Lights',
+                    'category' => 'Lighting',
+                    'state' => (int)Cache::get('office_switch:lights_lobby', 0),
+                    'icon' => '💡',
+                ],
+                [
+                    'id' => 'coffee_maker',
+                    'name' => 'Pantry Coffee Machine',
+                    'category' => 'Smart Appliances',
+                    'state' => (int)Cache::get('office_switch:coffee_maker', 0),
+                    'icon' => '☕',
+                ],
+            ];
+        }
+
+        return view('devices.office_control', compact('rooms', 'appliances', 'simulatedRoomIds'));
     }
 
     public function toggleOfficeAppliance(Request $request)

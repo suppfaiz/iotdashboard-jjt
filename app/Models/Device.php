@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $group_id
  * @property bool $status
  * @property string $mqtt_topic
+ * @property string $device_type  pzem|env_sensor|relay_controller
  * @property string|null $provisioning_code
  * @property string|null $firmware_path
  * @property float $voltage_multiplier

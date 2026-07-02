@@ -41,23 +41,45 @@ class DeviceController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $deviceType = $request->input('device_type', 'pzem');
+
+        $rules = [
             'name' => 'required|string|max:255',
-            'group_id' => 'required|exists:groups,id',
+            'device_type' => 'required|string|in:pzem,env_sensor,relay_controller',
             'wifi_ssid' => 'required|string|max:255',
             'wifi_password' => 'required|string|max:255',
-        ]);
+        ];
 
-        $group = Group::findOrFail($request->group_id);
+        // group_id only required for pzem energy monitors
+        if ($deviceType === 'pzem') {
+            $rules['group_id'] = 'required|exists:groups,id';
+        }
+
+        $request->validate($rules);
+
         $deviceId = 'dev_' . Str::random(8);
-        $mqttTopic = 'telemetry/' . Str::slug($group->name) . '/' . $deviceId;
+
+        // Determine MQTT topic based on device type
+        if ($deviceType === 'pzem') {
+            $group = Group::findOrFail($request->group_id);
+            $mqttTopic = 'telemetry/' . Str::slug($group->name) . '/' . $deviceId;
+            $groupId = $group->id;
+        } elseif ($deviceType === 'env_sensor') {
+            $mqttTopic = 'telemetry/office-env/' . $deviceId;
+            $groupId = $request->group_id ?: Group::first()?->id ?? 1;
+        } else {
+            // relay_controller
+            $mqttTopic = 'cmd/office-control';
+            $groupId = $request->group_id ?: Group::first()?->id ?? 1;
+        }
 
         $device = new Device([
             'device_id' => $deviceId,
             'name' => $request->name,
-            'group_id' => $group->id,
+            'group_id' => $groupId,
             'status' => true,
             'mqtt_topic' => $mqttTopic,
+            'device_type' => $deviceType,
         ]);
 
         $wifi_ssid = $request->wifi_ssid;
@@ -70,7 +92,14 @@ class DeviceController extends Controller
         $mqtt_user = \App\Models\SystemConfig::where('key', 'mqtt_user')->value('value') ?? env('MQTT_USERNAME', '');
         $mqtt_password = \App\Models\SystemConfig::where('key', 'mqtt_password')->value('value') ?? env('MQTT_PASSWORD', '');
 
-        $code = view('devices.code_template', compact('device', 'wifi_ssid', 'wifi_password', 'mqtt_host', 'mqtt_port', 'mqtt_user', 'mqtt_password'))->render();
+        // Select the appropriate Arduino code template
+        $templateView = match ($deviceType) {
+            'env_sensor' => 'devices.code_template_env_sensor',
+            'relay_controller' => 'devices.code_template_relay',
+            default => 'devices.code_template',
+        };
+
+        $code = view($templateView, compact('device', 'wifi_ssid', 'wifi_password', 'mqtt_host', 'mqtt_port', 'mqtt_user', 'mqtt_password'))->render();
         $device->provisioning_code = $code;
         $device->save();
 
@@ -157,8 +186,13 @@ class DeviceController extends Controller
             if (preg_match('/const char\* mqtt_password = "(.*?)";/', $oldCode, $matchesPass) && !empty($matchesPass[1])) {
                 $mqtt_password = $matchesPass[1];
             }
+            $templateView = match ($device->device_type ?? 'pzem') {
+                'env_sensor' => 'devices.code_template_env_sensor',
+                'relay_controller' => 'devices.code_template_relay',
+                default => 'devices.code_template',
+            };
 
-            $code = view('devices.code_template', compact('device', 'wifi_ssid', 'wifi_password', 'mqtt_host', 'mqtt_port', 'mqtt_user', 'mqtt_password', 'mqtt_use_tls'))->render();
+            $code = view($templateView, compact('device', 'wifi_ssid', 'wifi_password', 'mqtt_host', 'mqtt_port', 'mqtt_user', 'mqtt_password', 'mqtt_use_tls'))->render();
             $device->provisioning_code = $code;
             $device->save();
         }

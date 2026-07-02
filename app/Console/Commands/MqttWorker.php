@@ -99,6 +99,24 @@ class MqttWorker extends Command
                 return;
             }
 
+            // 2b. Handle Relay Status Confirmation
+            if ($actionOrGroup === 'relay-status') {
+                $channels = $data['channels'] ?? [];
+                foreach ($channels as $ch) {
+                    $applianceId = $ch['id'] ?? null;
+                    $state = isset($ch['state']) ? intval($ch['state']) : 0;
+                    if ($applianceId) {
+                        \Illuminate\Support\Facades\Cache::put("office_switch:{$applianceId}", $state, now()->addDays(30));
+                    }
+                }
+                
+                broadcast(new \App\Events\TelemetryUpdated($deviceId, [
+                    'type' => 'relay-status',
+                    'channels' => $channels
+                ]));
+                return;
+            }
+
             // 3. Handle Historical offline telemetry uploads
             if ($actionOrGroup === 'historical') {
                 $timestamp = isset($data['timestamp']) ? intval($data['timestamp']) : time();
