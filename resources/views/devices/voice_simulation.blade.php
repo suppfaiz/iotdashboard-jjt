@@ -21,31 +21,31 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         <!-- Left: Voice Orb Interface (5 Cols) -->
-        <div class="lg:col-span-5 bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-3xl p-8 shadow-sm flex flex-col items-center text-center relative overflow-hidden" style="min-height: 520px;">
+        <div class="lg:col-span-5 bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-3xl p-8 shadow-sm flex flex-col items-center text-center relative overflow-hidden" style="min-height: 560px;">
             <!-- Ambient glows -->
             <div class="absolute -top-12 -right-12 w-48 h-48 bg-blue-400/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none"></div>
 
-            <span class="text-[10px] font-bold text-blue-500 tracking-widest uppercase mb-4">Voice Assistant Module</span>
+            <span class="text-[10px] font-bold text-blue-500 tracking-widest uppercase mb-4 flex-shrink-0">Voice Assistant Module</span>
 
             <!-- JASMIN Assistant Holographic Orb -->
-            <div class="relative flex items-center justify-center my-6">
+            <div class="relative flex items-center justify-center my-6 w-52 h-52 flex-shrink-0">
                 <!-- Outer Pulse Rings -->
-                <div id="orb-pulse-1" class="absolute w-52 h-52 rounded-full border border-blue-500/20 animate-ping" style="animation-duration: 3s; display: none;"></div>
-                <div id="orb-pulse-2" class="absolute w-44 h-44 rounded-full border border-emerald-500/20 animate-ping" style="animation-duration: 2s; display: none;"></div>
+                <div id="orb-pulse-1" class="absolute inset-0 rounded-full border border-blue-500/20 animate-ping" style="animation-duration: 3s; display: none;"></div>
+                <div id="orb-pulse-2" class="absolute inset-4 rounded-full border border-emerald-500/20 animate-ping" style="animation-duration: 2s; display: none;"></div>
 
                 <!-- Main Glassmorphic Orb -->
-                <button id="jasmin-orb" onclick="toggleListening()" class="w-36 h-36 rounded-full flex flex-col items-center justify-center shadow-2xl transition-all duration-500 focus:outline-none border-2 border-white/50 active:scale-95 cursor-pointer relative z-10" 
-                    style="background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(239, 246, 255, 0.8) 50%, rgba(191, 219, 254, 0.5) 100%); box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15), inset 0 0 15px rgba(255, 255, 255, 0.8);">
+                <button id="jasmin-orb" onclick="toggleListening()" class="w-36 h-36 min-w-[9rem] min-h-[9rem] rounded-full flex flex-col items-center justify-center shadow-2xl transition-all duration-500 focus:outline-none border-2 border-white/60 active:scale-95 cursor-pointer relative z-10 flex-shrink-0 aspect-square" 
+                    style="background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.98) 0%, rgba(239, 246, 255, 0.9) 50%, rgba(191, 219, 254, 0.65) 100%); box-shadow: 0 15px 35px rgba(59, 130, 246, 0.25), inset 0 0 15px rgba(255, 255, 255, 0.9);">
                     
                     <!-- Icon inside Orb -->
-                    <div id="orb-icon" class="text-4xl transition-all duration-550">🎙️</div>
+                    <div id="orb-icon" class="text-4xl transition-all duration-500">🎙️</div>
                     <span id="orb-label" class="text-[10px] font-black text-blue-600 uppercase tracking-widest mt-2">TAP TO TALK</span>
                 </button>
             </div>
 
             <!-- Waveform Animation -->
-            <div class="w-full h-10 flex items-center justify-center gap-1.5 my-3">
+            <div class="w-full h-10 flex items-center justify-center gap-1.5 my-3 flex-shrink-0">
                 <div class="wave-bar w-1.5 h-2 bg-blue-500 rounded-full transition-all duration-150"></div>
                 <div class="wave-bar w-1.5 h-3 bg-blue-500 rounded-full transition-all duration-150"></div>
                 <div class="wave-bar w-1.5 h-5 bg-blue-500 rounded-full transition-all duration-150"></div>
@@ -54,14 +54,27 @@
             </div>
 
             <!-- Status Message -->
-            <div class="mt-4 max-w-sm">
+            <div class="mt-4 max-w-sm flex-shrink-0">
                 <h3 id="assistant-status" class="text-lg font-bold text-slate-800">Hi! Saya JASMIN</h3>
                 <p id="assistant-sub" class="text-xs text-slate-500 mt-1 font-medium leading-relaxed">Ketuk bola di atas untuk memberikan perintah suara. Coba ucapkan: <br><strong class="text-blue-600">"Jasmin, nyalakan lampu lobby"</strong> atau <br><strong class="text-blue-600">"Matikan AC server room satu"</strong></p>
             </div>
 
             <!-- Speech Support Check -->
-            <div id="speech-warning" class="hidden mt-6 w-full p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs font-semibold flex items-center justify-center gap-2">
-                ⚠️ Browser Anda tidak mendukung Web Speech API (Gunakan Chrome/Safari/Edge).
+            <div id="speech-warning" class="hidden mt-4 w-full p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-[11px] font-semibold flex items-center justify-center gap-2 flex-shrink-0">
+                ⚠️ Mikrofon tidak aktif/didukung. Ketuk bola atau ketik di bawah untuk simulasi!
+            </div>
+
+            <!-- Fallback Text Input Simulator -->
+            <div class="w-full mt-6 pt-5 border-t border-slate-100 flex flex-col gap-2 flex-shrink-0">
+                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-left">Text Command Simulator (Ketik Manual)</span>
+                <div class="relative flex items-center">
+                    <input type="text" id="text-command-input" placeholder="Contoh: nyalakan lampu lobby..." 
+                        class="w-full pl-4 pr-20 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                        onkeydown="if(event.key === 'Enter') sendTextCommand()">
+                    <button onclick="sendTextCommand()" class="absolute right-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[10px] font-bold transition-colors cursor-pointer focus:outline-none">
+                        Kirim
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -89,7 +102,7 @@
 
                             <!-- Sim Switch -->
                             <button onclick="manualToggle('{{ $appliance['id'] }}')" 
-                                class="w-12 h-6 rounded-full p-1 transition-colors duration-300 focus:outline-none {{ $appliance['state'] ? 'bg-emerald-500' : 'bg-slate-300' }}">
+                                class="w-12 h-6 rounded-full p-1 transition-colors duration-300 focus:outline-none flex-shrink-0 {{ $appliance['state'] ? 'bg-emerald-500' : 'bg-slate-300' }}">
                                 <div class="w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 transform {{ $appliance['state'] ? 'translate-x-6' : 'translate-x-0' }}"></div>
                             </button>
                         </div>
@@ -149,9 +162,9 @@
         // 1. Check browser compatibility
         if (!SpeechRecognition) {
             document.getElementById('speech-warning').classList.remove('hidden');
-            document.getElementById('jasmin-orb').disabled = true;
-            document.getElementById('jasmin-orb').style.opacity = '0.5';
-            logToConsole('[ERROR]', 'Browser does not support SpeechRecognition API.', 'text-rose-500');
+            // Do not disable the orb, just change label to indicate simulation fallback
+            document.getElementById('orb-label').innerText = 'TAP TO SIMULATE';
+            logToConsole('[WARN]', 'Mikrofon/WebSpeech API dinonaktifkan browser. Anda tetap bisa mengeklik bola untuk simulasi ketik!', 'text-amber-500');
             return;
         }
 
@@ -187,7 +200,15 @@
     });
 
     function toggleListening() {
-        if (!recognition) return;
+        if (!recognition) {
+            // Text simulation prompt fallback
+            const typedCommand = prompt("Browser Anda memblokir Mikrofon / Web Speech API.\nMasukkan teks perintah suara Anda di bawah untuk simulasi (Bahasa Indonesia):");
+            if (typedCommand && typedCommand.trim() !== "") {
+                logToConsole('[SIMULASI]', `"${typedCommand}" (Manual via prompt)`, 'text-yellow-300');
+                processCommand(typedCommand);
+            }
+            return;
+        }
         
         if (isListening) {
             recognition.stop();
@@ -198,6 +219,16 @@
                 console.error(err);
             }
         }
+    }
+
+    function sendTextCommand() {
+        const input = document.getElementById('text-command-input');
+        const text = input.value.trim();
+        if (text === "") return;
+        
+        logToConsole('[TEXT SIM]', `"${text}" (Diketik)`, 'text-yellow-300');
+        input.value = ""; // Clear input
+        processCommand(text);
     }
 
     function stopListeningState() {
