@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Jamkrida Energy</title>
+    <title>Login | Jamkrida IoT</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
@@ -234,7 +234,7 @@
             <div class="loader-circle">⚡</div>
             <div id="loader-text" class="text-center mt-6 transition-all duration-700">
                 <h2 id="transition-status" class="text-lg font-black tracking-widest text-slate-800 uppercase" style="font-family: 'Orbitron', sans-serif;">Loading System</h2>
-                <p id="transition-sub" class="text-[9px] text-slate-400 font-bold tracking-widest uppercase mt-2">Opening Jamkrida Energy...</p>
+                <p id="transition-sub" class="text-[9px] text-slate-400 font-bold tracking-widest uppercase mt-2">Opening Jamkrida IoT...</p>
             </div>
         </div>
 
@@ -259,7 +259,7 @@
             
             <!-- Branding Header -->
             <div class="flex flex-col items-center mb-8 animate-item">
-                <img src="{{ asset('logo.png') }}" alt="Jamkrida Energy Logo" class="h-20 w-auto object-contain drop-shadow-sm mb-3">
+                <img src="{{ asset('logo.png') }}" alt="Jamkrida IoT Logo" class="h-20 w-auto object-contain drop-shadow-sm mb-3">
                 <p class="text-sm font-semibold tracking-wide text-gray-500 uppercase">IoT Smart Grid Portal</p>
             </div>
 
@@ -393,7 +393,7 @@
             }, 1000);
 
             setTimeout(() => {
-                if (statusSub) statusSub.innerText = 'Welcome to Jamkrida Energy!';
+                if (statusSub) statusSub.innerText = 'Welcome to Jamkrida IoT!';
             }, 1800);
 
             setTimeout(() => {

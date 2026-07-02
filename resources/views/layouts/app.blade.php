@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>IoT Energy Dashboard</title>
+    <title>{{ config('app.name', 'Jamkrida IoT') }}</title>
     <script>
         if (sessionStorage.getItem('has_seen_preloader')) {
             document.write('<style>#door-preloader { display: none !important; }</style>');
@@ -294,7 +294,7 @@
                 <div class="loader-circle">⚡</div>
                 <div id="loader-text" class="text-center mt-6 transition-all duration-700">
                     <h2 class="text-lg font-black tracking-widest text-slate-800 uppercase" style="font-family: 'Inter', sans-serif;">Loading System</h2>
-                    <p class="text-[9px] text-slate-400 font-bold tracking-widest uppercase mt-2">Opening Jamkrida Energy...</p>
+                    <p class="text-[9px] text-slate-400 font-bold tracking-widest uppercase mt-2">Opening Jamkrida IoT...</p>
                 </div>
             </div>
 
@@ -338,7 +338,7 @@
                 <div class="flex items-center justify-between h-20">
                     <div class="flex items-center">
                         <a href="{{ route('dashboard') }}" class="flex items-center mr-6">
-                            <img src="{{ asset('logo.png') }}" alt="Jamkrida Energy"
+                            <img src="{{ asset('logo.png') }}" alt="Jamkrida IoT"
                                 class="h-12 w-auto object-contain filter drop-shadow-sm">
                         </a>
 

@@ -549,7 +549,7 @@
     
     <!-- Printable Barcode Container -->
     <div id="print-label-container" style="display: none;" class="bg-white text-black text-center font-sans">
-        <img src="{{ asset('logo.png') }}" class="h-16 mx-auto mb-4" alt="Jamkrida Energy">
+        <img src="{{ asset('logo.png') }}" class="h-16 mx-auto mb-4" alt="Jamkrida IoT">
         <h2 class="text-2xl font-bold mb-1">{{ $device->name }}</h2>
         <p class="text-sm text-gray-600 mb-6 uppercase tracking-widest">{{ $device->group->name }}</p>
         <div id="device-qrcode" class="mx-auto flex justify-center mb-2"></div>
