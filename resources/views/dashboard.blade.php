@@ -265,9 +265,32 @@
     </div>
 
     <!-- SVG Container -->
+    <!-- SVG Container -->
+    @php
+        $numGroups = count($groups);
+        // Ensure at least 65px vertical spacing per group so circles (radius 24px) and text do not overlap
+        $svgHeight = max(300, 100 + ($numGroups * 65));
+        $yMin = 50;
+        $yMax = $svgHeight - 50;
+        $yRange = $yMax - $yMin;
+        $yMid = $svgHeight / 2;
+
+        $groupFlowData = [];
+        foreach($groups as $index => $group) {
+            if ($numGroups <= 1) {
+                $y = $yMid;
+            } else {
+                $y = $yMin + ($index * $yRange / ($numGroups - 1));
+            }
+            $groupFlowData[$group->id] = [
+                'name' => $group->name,
+                'y' => $y
+            ];
+        }
+    @endphp
     <div class="w-full overflow-x-auto">
         <div class="min-w-[800px] p-2">
-            <svg viewBox="0 0 800 300" class="w-full h-auto select-none" style="background: rgba(248, 250, 252, 0.35); border-radius: 20px; border: 1px solid rgba(226, 232, 240, 0.8);">
+            <svg viewBox="0 0 800 {{ $svgHeight }}" class="w-full h-auto select-none" style="background: rgba(248, 250, 252, 0.35); border-radius: 20px; border: 1px solid rgba(226, 232, 240, 0.8);">
                 <style>
                     .grid-flow-line {
                         stroke-dasharray: 8, 8;
@@ -309,35 +332,22 @@
                 <rect width="100%" height="100%" fill="url(#grid-pattern)" />
 
                 <!-- Connecting Flow Line: PLN to MDP -->
-                <path d="M 120,150 L 260,150" fill="none" stroke="#e2e8f0" stroke-width="3.5" stroke-linecap="round" />
-                <path id="flow-line-pln-mdp-active" d="M 120,150 L 260,150" fill="none" stroke="#10b981" stroke-width="3.5" stroke-linecap="round" class="grid-flow-line" />
+                <path d="M 120,{{ $yMid }} L 260,{{ $yMid }}" fill="none" stroke="#e2e8f0" stroke-width="3.5" stroke-linecap="round" />
+                <path id="flow-line-pln-mdp-active" d="M 120,{{ $yMid }} L 260,{{ $yMid }}" fill="none" stroke="#10b981" stroke-width="3.5" stroke-linecap="round" class="grid-flow-line" />
 
                 <!-- Dynamic Flow Lines: MDP to Groups -->
-                @php
-                    $numGroups = count($groups);
-                    $groupFlowData = [];
-                @endphp
                 @foreach($groups as $index => $group)
                     @php
-                        // Calculate Y coordinate based on group count
-                        if ($numGroups <= 1) {
-                            $y = 150;
-                        } else {
-                            $y = 50 + ($index * 200 / ($numGroups - 1));
-                        }
-                        $groupFlowData[$group->id] = [
-                            'name' => $group->name,
-                            'y' => $y
-                        ];
+                        $y = $groupFlowData[$group->id]['y'];
                     @endphp
                     <!-- Backing line (inactive grey) -->
-                    <path d="M 280,150 C 400,150 400,{{ $y }} 560,{{ $y }}" fill="none" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round" />
+                    <path d="M 280,{{ $yMid }} C 400,{{ $yMid }} 400,{{ $y }} 560,{{ $y }}" fill="none" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round" />
                     <!-- Animated overlay line (active green) -->
-                    <path id="flow-line-{{ $group->id }}" d="M 280,150 C 400,150 400,{{ $y }} 560,{{ $y }}" fill="none" stroke="#10b981" stroke-width="3.5" stroke-linecap="round" class="grid-flow-line" style="animation-duration: 2s;" />
+                    <path id="flow-line-{{ $group->id }}" d="M 280,{{ $yMid }} C 400,{{ $yMid }} 400,{{ $y }} 560,{{ $y }}" fill="none" stroke="#10b981" stroke-width="3.5" stroke-linecap="round" class="grid-flow-line" style="animation-duration: 2s;" />
                 @endforeach
 
                 <!-- 1. PLN Main Supply Node -->
-                <g class="grid-node" transform="translate(80, 150)">
+                <g class="grid-node" transform="translate(80, {{ $yMid }})">
                     <circle r="36" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" />
                     <circle r="30" fill="rgba(59, 130, 246, 0.08)" stroke="#3b82f6" stroke-width="2.5" />
                     <!-- Lightning Bolt Icon -->
@@ -347,7 +357,7 @@
                 </g>
 
                 <!-- 2. MDP (Main Distribution Panel) Node -->
-                <g class="grid-node" transform="translate(280, 150)">
+                <g class="grid-node" transform="translate(280, {{ $yMid }})">
                     <circle r="34" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" />
                     <circle r="28" fill="rgba(79, 70, 229, 0.06)" stroke="#4f46e5" stroke-width="2" />
                     <!-- Box/Grid Icon -->
