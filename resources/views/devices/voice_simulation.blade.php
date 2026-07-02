@@ -67,11 +67,11 @@
             <!-- Fallback Text Input Simulator -->
             <div class="w-full mt-6 pt-5 border-t border-slate-100 flex flex-col gap-2 flex-shrink-0">
                 <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-left">Text Command Simulator (Ketik Manual)</span>
-                <div class="relative flex items-center">
+                <div class="relative w-full">
                     <input type="text" id="text-command-input" placeholder="Contoh: nyalakan lampu lobby..." 
-                        class="w-full pl-4 pr-20 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                        class="block w-full pl-4 pr-20 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                         onkeydown="if(event.key === 'Enter') sendTextCommand()">
-                    <button onclick="sendTextCommand()" class="absolute right-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[10px] font-bold transition-colors cursor-pointer focus:outline-none">
+                    <button onclick="sendTextCommand()" class="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[10px] font-bold transition-colors cursor-pointer focus:outline-none">
                         Kirim
                     </button>
                 </div>
