@@ -487,4 +487,33 @@ class AdvancedExtensionsTest extends TestCase
         $this->assertStringContainsString('Relay Controller', $device2->provisioning_code);
         $this->assertStringContainsString('cmd/office-control', $device2->provisioning_code);
     }
+
+    public function test_non_pzem_device_settings_update(): void
+    {
+        $group = Group::create(['name' => 'General Area']);
+        $device = Device::create([
+            'device_id' => 'dev_dht01',
+            'name' => 'Original Sensor Name',
+            'group_id' => $group->id,
+            'status' => true,
+            'mqtt_topic' => 'telemetry/office-env/dev_dht01',
+            'device_type' => 'env_sensor',
+            'provisioning_code' => '// code',
+        ]);
+
+        // Non-admin cannot update
+        $response = $this->actingAs($this->user)->patch("/devices/{$device->id}", [
+            'name' => 'New Sensor Name',
+        ]);
+        $response->assertStatus(403);
+
+        // Admin can update name without needing electricity fields
+        $response = $this->actingAs($this->admin)->patch("/devices/{$device->id}", [
+            'name' => 'New Sensor Name',
+        ]);
+        $response->assertRedirect();
+        
+        $device->refresh();
+        $this->assertEquals('New Sensor Name', $device->name);
+    }
 }

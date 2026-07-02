@@ -316,21 +316,33 @@ class DeviceController extends Controller
 
     public function update(Request $request, Device $device)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'voltage_multiplier' => 'required|numeric|min:0.1|max:10.0',
-            'current_multiplier' => 'required|numeric|min:0.1|max:10.0',
-            'monthly_budget_kwh' => 'nullable|numeric|min:0',
-            'monthly_budget_cost' => 'nullable|numeric|min:0',
-        ]);
+        $deviceType = $device->device_type ?? 'pzem';
 
-        $device->update([
-            'name' => $request->name,
-            'voltage_multiplier' => floatval($request->voltage_multiplier),
-            'current_multiplier' => floatval($request->current_multiplier),
-            'monthly_budget_kwh' => $request->filled('monthly_budget_kwh') ? floatval($request->monthly_budget_kwh) : null,
-            'monthly_budget_cost' => $request->filled('monthly_budget_cost') ? floatval($request->monthly_budget_cost) : null,
-        ]);
+        if ($deviceType === 'pzem') {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'voltage_multiplier' => 'required|numeric|min:0.1|max:10.0',
+                'current_multiplier' => 'required|numeric|min:0.1|max:10.0',
+                'monthly_budget_kwh' => 'nullable|numeric|min:0',
+                'monthly_budget_cost' => 'nullable|numeric|min:0',
+            ]);
+
+            $device->update([
+                'name' => $request->name,
+                'voltage_multiplier' => floatval($request->voltage_multiplier),
+                'current_multiplier' => floatval($request->current_multiplier),
+                'monthly_budget_kwh' => $request->filled('monthly_budget_kwh') ? floatval($request->monthly_budget_kwh) : null,
+                'monthly_budget_cost' => $request->filled('monthly_budget_cost') ? floatval($request->monthly_budget_cost) : null,
+            ]);
+        } else {
+            $request->validate([
+                'name' => 'required|string|max:255',
+            ]);
+
+            $device->update([
+                'name' => $request->name,
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Device settings updated successfully!');
     }

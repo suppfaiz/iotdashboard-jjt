@@ -190,6 +190,7 @@
                         <input type="text" name="name" value="{{ $device->name }}" required class="mt-1 block w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     
+                    @if(($device->device_type ?? 'pzem') === 'pzem')
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-gray-500 uppercase">Volt Multiplier</label>
@@ -211,6 +212,7 @@
                             <input type="number" name="monthly_budget_cost" step="1" min="0" value="{{ $device->monthly_budget_cost }}" placeholder="None" class="mt-1 block w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         </div>
                     </div>
+                    @endif
 
                     <button type="submit" class="w-full text-center text-sm bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors shadow-sm">
                         Save Settings
@@ -223,6 +225,7 @@
         <!-- Right Column (2/3 width) -->
         <div class="lg:col-span-2 space-y-6">
             <!-- Real-Time Metrics -->
+            @if(($device->device_type ?? 'pzem') === 'pzem')
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5" id="device-metrics-container">
                 <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-100">
                     <h3 class="text-base font-semibold text-gray-900">Real-Time Metrics</h3>
@@ -290,6 +293,91 @@
 
                 </div>
             </div>
+            @elseif($device->device_type === 'env_sensor')
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5" id="device-metrics-container">
+                <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-100">
+                    <h3 class="text-base font-semibold text-gray-900">Real-Time Environment Metrics</h3>
+                    <span class="inline-flex items-center gap-1.5 text-xs text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full font-medium">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Live via WebSockets
+                    </span>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Temperature -->
+                    <div class="rounded-xl border border-blue-100 bg-blue-50 p-4 flex items-center gap-3 hover:shadow-sm transition-shadow">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-xl">
+                            🌡️
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-semibold text-blue-700 uppercase tracking-wide leading-none mb-1">Temperature</p>
+                            <p class="text-2xl font-extrabold text-gray-900 leading-none">
+                                <span id="metric-temperature">{{ floatval(Cache::get("office_temp:{$device->device_id}", 24.0)) }}</span> <span class="text-sm font-semibold text-gray-400">°C</span>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Humidity -->
+                    <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-4 flex items-center gap-3 hover:shadow-sm transition-shadow">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-xl">
+                            💧
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-semibold text-emerald-700 uppercase tracking-wide leading-none mb-1">Humidity</p>
+                            <p class="text-2xl font-extrabold text-gray-900 leading-none">
+                                <span id="metric-humidity">{{ floatval(Cache::get("office_humi:{$device->device_id}", 50.0)) }}</span> <span class="text-sm font-semibold text-gray-400">%</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @elseif($device->device_type === 'relay_controller')
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5" id="device-metrics-container">
+                <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-100">
+                    <h3 class="text-base font-semibold text-gray-900">Relay Channel Controls</h3>
+                    <span class="inline-flex items-center gap-1.5 text-xs text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full font-medium">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Live Control
+                    </span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @php
+                        $categories = ['AC / Cooling', 'Ventilation', 'Lighting Grid', 'Smart Appliance'];
+                        $icons = ['❄️', '💨', '💡', '🔌'];
+                    @endphp
+                    @for($ch = 1; $ch <= 4; $ch++)
+                        @php
+                            $applianceId = "{$device->device_id}_ch{$ch}";
+                            $state = (int)Cache::get("office_switch:{$applianceId}", 0);
+                        @endphp
+                        <div class="flex items-center justify-between bg-slate-50 border border-slate-200/50 rounded-2xl p-4 hover:bg-slate-50/80 transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-white border border-slate-200/70 shadow-sm flex items-center justify-center text-xl">
+                                    {{ $icons[$ch - 1] }}
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-black text-slate-800">Channel {{ $ch }}</span>
+                                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{{ $categories[$ch - 1] }}</span>
+                                </div>
+                            </div>
+                            <!-- Toggle Switch control -->
+                            <div class="flex items-center gap-2">
+                                <span id="label-state-{{ $applianceId }}" class="text-[9px] font-black uppercase tracking-wider {{ $state ? 'text-blue-600' : 'text-slate-400' }} mr-1">
+                                    {{ $state ? 'ON' : 'OFF' }}
+                                </span>
+                                
+                                <label class="inline-flex items-center cursor-pointer relative">
+                                    <input type="checkbox" 
+                                           id="switch-{{ $applianceId }}"
+                                           {{ $state ? 'checked' : '' }}
+                                           onchange="toggleApplianceState('{{ $applianceId }}')" 
+                                           class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                        </div>
+                    @endfor
+                </div>
+            </div>
+            @endif
 
             @if(auth()->user()->role === 'admin')
                 <!-- OTA Firmware Management -->
@@ -399,21 +487,28 @@
                         <div class="mt-4">
                             <span class="block text-[10px] font-extrabold text-slate-450 uppercase tracking-widest mb-2">Preset Commands</span>
                             <div class="flex flex-wrap gap-2">
-                                <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;restart\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
-                                    🔄 Reboot ESP32
-                                </button>
-                                <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;reset_energy\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
-                                    ⚡ Reset Energy
-                                </button>
-                                <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;relay\&quot;, \&quot;state\&quot;: 1}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
-                                    💡 Relay ON
-                                </button>
-                                <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;relay\&quot;, \&quot;state\&quot;: 0}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
-                                    🔌 Relay OFF
-                                </button>
-                                <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;get_status\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
-                                    📡 Get Status
-                                </button>
+                                @if(($device->device_type ?? 'pzem') === 'pzem')
+                                    <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;restart\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                                        🔄 Reboot ESP32
+                                    </button>
+                                    <button onclick="applyConsolePreset('{\&quot;cmd\&quot;: \&quot;reset_energy\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                                        ⚡ Reset Energy
+                                    </button>
+                                @elseif($device->device_type === 'env_sensor')
+                                    <button onclick="applyConsolePreset('{\&quot;action\&quot;: \&quot;restart\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                                        🔄 Reboot ESP32
+                                    </button>
+                                @elseif($device->device_type === 'relay_controller')
+                                    <button onclick="applyConsolePreset('{\&quot;action\&quot;: \&quot;restart\&quot;}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                                        🔄 Reboot ESP32
+                                    </button>
+                                    <button onclick="applyConsolePreset('{\&quot;appliance\&quot;: \&quot;{{ $device->device_id }}_ch1\&quot;, \&quot;state\&quot;: 1}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                                        💡 Channel 1 ON
+                                    </button>
+                                    <button onclick="applyConsolePreset('{\&quot;appliance\&quot;: \&quot;{{ $device->device_id }}_ch1\&quot;, \&quot;state\&quot;: 0}')" class="px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 hover:border-slate-350 transition shadow-sm flex items-center gap-1.5">
+                                        🔌 Channel 1 OFF
+                                    </button>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -495,6 +590,47 @@
             });
     };
 
+    window.toggleApplianceState = function(applianceId) {
+        const checkbox = document.getElementById(`switch-${applianceId}`);
+        const label = document.getElementById(`label-state-${applianceId}`);
+        const targetState = checkbox.checked ? 1 : 0;
+        
+        checkbox.disabled = true;
+        label.textContent = 'WAIT...';
+        label.className = 'text-[9px] font-black uppercase tracking-wider text-slate-400 animate-pulse';
+
+        fetch('{{ route("office.control.toggle") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                appliance_id: applianceId,
+                state: targetState
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            checkbox.disabled = false;
+            if (data.success) {
+                label.textContent = targetState ? 'ON' : 'OFF';
+                label.className = `text-[9px] font-black uppercase tracking-wider ${targetState ? 'text-blue-600' : 'text-slate-400'}`;
+                logDebug(`<span class="text-green-400">Control Success: Relay "${applianceId}" toggled to ${targetState ? 'ON' : 'OFF'}</span>`);
+            } else {
+                throw new Error();
+            }
+        })
+        .catch(() => {
+            checkbox.disabled = false;
+            checkbox.checked = !checkbox.checked;
+            const currentState = checkbox.checked ? 1 : 0;
+            label.textContent = currentState ? 'ON' : 'OFF';
+            label.className = `text-[9px] font-black uppercase tracking-wider ${currentState ? 'text-blue-600' : 'text-slate-400'}`;
+            logDebug(`<span class="text-red-400">Control Error: Failed to toggle relay "${applianceId}"</span>`);
+        });
+    };
+
     const initEcho = () => {
         if(window.Echo) {
             logDebug('WebSocket connected. Subscribed to telemetry channel.');
@@ -504,18 +640,58 @@
                     const data = e.data;
                     logDebug(`Received Telemetry: ${JSON.stringify(data)}`);
                     
-                    if(data.voltage !== undefined) document.getElementById('metric-voltage').innerText = parseFloat(data.voltage).toFixed(1);
-                    if(data.current !== undefined) document.getElementById('metric-current').innerText = parseFloat(data.current).toFixed(2);
-                    if(data.power !== undefined) document.getElementById('metric-power').innerText = parseFloat(data.power).toFixed(1);
+                    if(data.voltage !== undefined) {
+                        const el = document.getElementById('metric-voltage');
+                        if (el) el.innerText = parseFloat(data.voltage).toFixed(1);
+                    }
+                    if(data.current !== undefined) {
+                        const el = document.getElementById('metric-current');
+                        if (el) el.innerText = parseFloat(data.current).toFixed(2);
+                    }
+                    if(data.power !== undefined) {
+                        const el = document.getElementById('metric-power');
+                        if (el) el.innerText = parseFloat(data.power).toFixed(1);
+                    }
                     if(data.energy !== undefined) {
                         const energyVal = parseFloat(data.energy);
-                        document.getElementById('metric-energy').innerText = energyVal.toFixed(3);
+                        const el = document.getElementById('metric-energy');
+                        if (el) el.innerText = energyVal.toFixed(3);
                         
                         const costElem = document.getElementById('metric-cost');
                         if (costElem) {
                             const cost = energyVal * {{ $plnTariff }};
                             costElem.innerText = cost.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
                         }
+                    }
+
+                    // Environment Sensors
+                    if (data.type === 'office-env') {
+                        if (data.temperature !== undefined) {
+                            const tempEl = document.getElementById('metric-temperature');
+                            if (tempEl) tempEl.innerText = parseFloat(data.temperature).toFixed(1);
+                        }
+                        if (data.humidity !== undefined) {
+                            const humiEl = document.getElementById('metric-humidity');
+                            if (humiEl) humiEl.innerText = parseFloat(data.humidity).toFixed(1);
+                        }
+                    }
+
+                    // Relay Controllers
+                    if (data.type === 'relay-status') {
+                        const channels = data.channels || [];
+                        channels.forEach(ch => {
+                            const applianceId = ch.id;
+                            const state = ch.state;
+                            const checkbox = document.getElementById(`switch-${applianceId}`);
+                            const label = document.getElementById(`label-state-${applianceId}`);
+                            if (checkbox) {
+                                checkbox.checked = (state === 1);
+                            }
+                            if (label) {
+                                label.textContent = state ? 'ON' : 'OFF';
+                                label.className = `text-[9px] font-black uppercase tracking-wider ${state ? 'text-blue-600' : 'text-slate-400'}`;
+                            }
+                        });
                     }
                     
                     if(data.ip !== undefined) {
