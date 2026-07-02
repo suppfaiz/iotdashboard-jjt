@@ -975,5 +975,90 @@ Jawablah langsung menggunakan format HTML/Blade bersih (tag seperti <b>, <ul>, <
             'state' => $state
         ]);
     }
+
+    public function voiceSimulation()
+    {
+        $relayDevices = Device::where('device_type', 'relay_controller')->get();
+        $appliances = [];
+
+        if ($relayDevices->count() > 0) {
+            foreach ($relayDevices as $device) {
+                $categories = ['AC / Cooling', 'Ventilation', 'Lighting Grid', 'Smart Appliance'];
+                $icons = ['❄️', '💨', '💡', '🔌'];
+                for ($ch = 1; $ch <= 4; $ch++) {
+                    $applianceId = "{$device->device_id}_ch{$ch}";
+                    $appliances[] = [
+                        'id' => $applianceId,
+                        'name' => "{$device->name} (CH{$ch})",
+                        'category' => $categories[$ch - 1],
+                        'state' => (int)Cache::get("office_switch:{$applianceId}", 0),
+                        'icon' => $icons[$ch - 1],
+                    ];
+                }
+            }
+        } else {
+            // Simulated fallback appliances list
+            $appliances = [
+                [
+                    'id' => 'ac_server_1',
+                    'name' => 'AC Server Room 1',
+                    'category' => 'Air Conditioning',
+                    'state' => (int)Cache::get('office_switch:ac_server_1', 1),
+                    'icon' => '❄️',
+                ],
+                [
+                    'id' => 'ac_server_2',
+                    'name' => 'AC Server Room 2 (Backup)',
+                    'category' => 'Air Conditioning',
+                    'state' => (int)Cache::get('office_switch:ac_server_2', 0),
+                    'icon' => '❄️',
+                ],
+                [
+                    'id' => 'ac_workspace_1',
+                    'name' => 'AC Workspace Left',
+                    'category' => 'Air Conditioning',
+                    'state' => (int)Cache::get('office_switch:ac_workspace_1', 0),
+                    'icon' => '❄️',
+                ],
+                [
+                    'id' => 'ac_meeting_1',
+                    'name' => 'AC Meeting Room A',
+                    'category' => 'Air Conditioning',
+                    'state' => (int)Cache::get('office_switch:ac_meeting_1', 0),
+                    'icon' => '❄️',
+                ],
+                [
+                    'id' => 'lights_lobby',
+                    'name' => 'Main Lobby Lights',
+                    'category' => 'Lighting Grid',
+                    'state' => (int)Cache::get('office_switch:lights_lobby', 0),
+                    'icon' => '💡',
+                ],
+                [
+                    'id' => 'lights_workspace',
+                    'name' => 'Main Workspace Lights',
+                    'category' => 'Lighting Grid',
+                    'state' => (int)Cache::get('office_switch:lights_workspace', 0),
+                    'icon' => '💡',
+                ],
+                [
+                    'id' => 'lights_meeting',
+                    'name' => 'Meeting Room Lights',
+                    'category' => 'Lighting Grid',
+                    'state' => (int)Cache::get('office_switch:lights_meeting', 0),
+                    'icon' => '💡',
+                ],
+                [
+                    'id' => 'exhaust_server',
+                    'name' => 'Server Exhaust Fan',
+                    'category' => 'Ventilation',
+                    'state' => (int)Cache::get('office_switch:exhaust_server', 1),
+                    'icon' => '💨',
+                ]
+            ];
+        }
+
+        return view('devices.voice_simulation', compact('appliances'));
+    }
 }
 

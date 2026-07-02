@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/tv-mode', [DashboardController::class, 'tvMode'])->name('tv_mode');
         Route::get('/office-control', [DashboardController::class, 'officeControl'])->name('office.control');
         Route::post('/office-control/toggle', [DashboardController::class, 'toggleOfficeAppliance'])->name('office.control.toggle');
+        Route::get('/voice-simulation', [DashboardController::class, 'voiceSimulation'])->name('voice.simulation');
 
         // Device Management and Remote Controls
         Route::post('/devices', [DeviceController::class, 'store'])->name('devices.store');

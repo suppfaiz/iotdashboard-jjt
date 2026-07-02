@@ -368,6 +368,9 @@
                                             <a href="{{ route('office.control') }}" class="nav-dropdown-item">
                                                 <span>🎮</span> Office Control
                                             </a>
+                                            <a href="{{ route('voice.simulation') }}" class="nav-dropdown-item">
+                                                <span>🎙️</span> Voice Simulation
+                                            </a>
                                             <a href="{{ route('tv_mode') }}" target="_blank" class="nav-dropdown-item">
                                                 <span>📺</span> TV Mode ↗
                                             </a>

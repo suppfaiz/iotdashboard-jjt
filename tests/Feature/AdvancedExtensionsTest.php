@@ -516,4 +516,21 @@ class AdvancedExtensionsTest extends TestCase
         $device->refresh();
         $this->assertEquals('New Sensor Name', $device->name);
     }
+
+    public function test_voice_simulation_route_security_and_access(): void
+    {
+        // 1. Guest is redirected
+        $response = $this->get('/voice-simulation');
+        $response->assertRedirect('/login');
+
+        // 2. Non-admin gets 403
+        $response = $this->actingAs($this->user)->get('/voice-simulation');
+        $response->assertStatus(403);
+
+        // 3. Admin gets 200
+        $response = $this->actingAs($this->admin)->get('/voice-simulation');
+        $response->assertStatus(200);
+        $response->assertViewIs('devices.voice_simulation');
+        $response->assertSee('JASMIN VOICE ASSISTANT PLAYGROUND');
+    }
 }
