@@ -104,6 +104,23 @@ docker compose exec app php artisan scribe:generate
 
 ---
 
+## 🎙️ Konsep Masa Depan: Asisten Suara JASMIN (Jamkrida Assistant Smart Monitoring IoT Nodes)
+
+Proyek ini telah memetakan konsep asisten suara pintar bernama **JASMIN** yang bertindak sebagai "Google Home" versi privat dan mandiri untuk lingkungan kantor PT Jamkrida Jateng.
+
+### 🔌 Arsitektur & Cara Kerja
+JASMIN dirancang menggunakan pendekatan IoT terdistribusi:
+1. **Penerima Suara (Input Node)**: Kotak IoT kecil berbasis chip **ESP32-S3** dan Mikrofon Digital **INMP441 I2S** dipasang di dinding ruangan (seperti Lobby, Server Room, atau Workspace).
+2. **Pengenal Kata Pemicu (Wake Word)**: ESP32-S3 terus mendengarkan kata pemicu *"Halo Jasmin"* secara lokal offline menggunakan jaringan syaraf mikro (*WakeNet*).
+3. **Penerjemah Perintah (Speech-to-Text)**: Setelah terpicu, audio dikirimkan ke server/browser lokal menggunakan **Web Speech API** bawaan untuk diubah menjadi perintah teks bahasa Indonesia dengan akurasi sangat tinggi (>97%).
+4. **Eksekusi Aksi**: Server mencocokkan kata kunci tindakan (misal: *"nyalakan lampu lobby"*) dan mengirimkannya ke broker MQTT untuk mengubah kondisi fisik relay target.
+5. **Umpan Balik Suara (Voice Response)**: Modul mengeluarkan respon suara bahasa Indonesia dari speaker bawaan menggunakan **MAX98357A I2S DAC & Amplifier** (misal: *"Baik, lampu lobby telah dinyalakan"*).
+
+*Dokumen cetak biru lengkap konsep ini dapat dibaca pada file [jasmin_assistant_spec.md](resources/views/docs/jasmin_assistant_spec.md).*
+
+---
+
 ## 📜 Lisensi
-Proyek ini dilisensikan di bawah Lisensi MIT. Hak Cipta © 2025 Jamkrida Energy.
+Proyek ini dilisensikan di bawah Lisensi MIT. Hak Cipta © {{ date('Y') }} PT Jamkrida Jateng.
+
 
