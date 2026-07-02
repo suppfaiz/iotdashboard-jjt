@@ -758,16 +758,27 @@ function toggleDashGroupField(type) {
 
     function updateElectricalFlowUI() {
         let totalSystemPower = 0;
+        let isAnyGroupActive = false;
         
         for (const groupId in groupDevicesMap) {
             const deviceIds = groupDevicesMap[groupId];
             let groupPowerSum = 0;
+            let isGroupActive = false;
             
             deviceIds.forEach(id => {
                 groupPowerSum += (devicePowerRegistry[id] || 0);
+                
+                // A device is active/online if its card has the 'device-active' class
+                const card = document.getElementById('device-card-' + id);
+                if (card && card.classList.contains('device-active')) {
+                    isGroupActive = true;
+                }
             });
             
             totalSystemPower += groupPowerSum;
+            if (isGroupActive) {
+                isAnyGroupActive = true;
+            }
             
             // Update power label
             const powerText = document.getElementById('flow-group-power-' + groupId);
@@ -780,7 +791,7 @@ function toggleDashGroupField(type) {
                 powerText.textContent = groupPowerSum.toFixed(1) + ' W';
             }
             
-            if (groupPowerSum > 0) {
+            if (isGroupActive || groupPowerSum > 0) {
                 if (statusText) {
                     statusText.textContent = 'Active';
                     statusText.setAttribute('fill', '#10b981'); // emerald-500
@@ -828,7 +839,7 @@ function toggleDashGroupField(type) {
         // Update PLN line
         const plnLineActive = document.getElementById('flow-line-pln-mdp-active');
         if (plnLineActive) {
-            if (totalSystemPower > 0) {
+            if (isAnyGroupActive || totalSystemPower > 0) {
                 plnLineActive.style.display = 'block';
                 const plnSpeed = Math.max(0.35, 2 - (totalSystemPower / 4400) * 1.65);
                 plnLineActive.style.animationDuration = plnSpeed + 's';
