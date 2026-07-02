@@ -19,10 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/changelog', [DashboardController::class, 'changelog'])->name('changelog');
     Route::get('/chatbot/analysis', [DashboardController::class, 'chatbotAnalysis'])->name('chatbot.analysis');
     Route::post('/chatbot/chat', [DashboardController::class, 'chatbotChat'])->name('chatbot.chat');
-    Route::get('/tv-mode', [DashboardController::class, 'tvMode'])->name('tv_mode');
     Route::get('/building-map', [DashboardController::class, 'buildingMap'])->name('building.map');
-    Route::get('/office-control', [DashboardController::class, 'officeControl'])->name('office.control');
-    Route::post('/office-control/toggle', [DashboardController::class, 'toggleOfficeAppliance'])->name('office.control.toggle');
 
 
     // Profile routes (Standard Breeze)
@@ -38,6 +35,11 @@ Route::middleware('auth')->group(function () {
 
     // Admin-Only Routes
     Route::middleware('admin')->group(function () {
+        // TV Mode and Office Controls
+        Route::get('/tv-mode', [DashboardController::class, 'tvMode'])->name('tv_mode');
+        Route::get('/office-control', [DashboardController::class, 'officeControl'])->name('office.control');
+        Route::post('/office-control/toggle', [DashboardController::class, 'toggleOfficeAppliance'])->name('office.control.toggle');
+
         // Device Management and Remote Controls
         Route::post('/devices', [DeviceController::class, 'store'])->name('devices.store');
         Route::post('/groups', [DeviceController::class, 'storeGroup'])->name('groups.store');

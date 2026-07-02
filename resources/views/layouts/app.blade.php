@@ -352,29 +352,25 @@
                                     class="{{ request()->routeIs('building.map') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap flex items-center gap-1.5">
                                     <span>🏢</span> 3D Map
                                 </a>
-                                <a href="{{ route('office.control') }}"
-                                    class="{{ request()->routeIs('office.control') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap flex items-center gap-1.5">
-                                    <span>🎮</span> Office Control
-                                </a>
                                 <a href="{{ route('changelog') }}"
                                     class="{{ request()->routeIs('changelog') ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap">Changelog</a>
-                                <a href="{{ route('tv_mode') }}" target="_blank"
-                                    class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap flex items-center gap-1">
-                                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                    TV Mode
-                                </a>
+                                
                                 @if(auth()->user()->role === 'admin')
                                     <div class="nav-dropdown">
                                         <button type="button" 
-                                            class="{{ request()->routeIs(['logs.*', 'reports.*', 'settings.*', 'docs.*']) ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap flex items-center gap-1 cursor-pointer">
+                                            class="{{ request()->routeIs(['logs.*', 'reports.*', 'settings.*', 'docs.*', 'office.control']) ? 'bg-blue-600/10 text-blue-600 border border-blue-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent' }} rounded-xl px-3 py-2 text-sm font-semibold transition-all duration-300 whitespace-nowrap flex items-center gap-1 cursor-pointer">
                                             <span>Admin Menu</span>
                                             <svg class="w-4 h-4 text-slate-400 dropdown-arrow transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                             </svg>
                                         </button>
                                         <div class="nav-dropdown-content">
+                                            <a href="{{ route('office.control') }}" class="nav-dropdown-item">
+                                                <span>🎮</span> Office Control
+                                            </a>
+                                            <a href="{{ route('tv_mode') }}" target="_blank" class="nav-dropdown-item">
+                                                <span>📺</span> TV Mode ↗
+                                            </a>
                                             <a href="{{ route('logs.index') }}" class="nav-dropdown-item">
                                                 <span>📋</span> Historical Logs
                                             </a>
@@ -711,13 +707,12 @@
                     <span class="text-[9px] tracking-wide whitespace-nowrap truncate w-full text-center">3D Map</span>
                 </a>
 
-                <a href="{{ route('office.control') }}"
-                    class="flex flex-col items-center justify-center py-2 flex-1 rounded-xl {{ request()->routeIs('office.control') ? 'text-blue-600 font-bold bg-blue-600/5' : 'text-slate-500 hover:text-slate-800' }}">
-                    <span class="text-[18px] leading-none mb-1">🎮</span>
-                    <span class="text-[9px] tracking-wide whitespace-nowrap truncate w-full text-center">Control</span>
-                </a>
-
                 @if(auth()->user()->role === 'admin')
+                    <a href="{{ route('office.control') }}"
+                        class="flex flex-col items-center justify-center py-2 flex-1 rounded-xl {{ request()->routeIs('office.control') ? 'text-blue-600 font-bold bg-blue-600/5' : 'text-slate-500 hover:text-slate-800' }}">
+                        <span class="text-[18px] leading-none mb-1">🎮</span>
+                        <span class="text-[9px] tracking-wide whitespace-nowrap truncate w-full text-center">Control</span>
+                    </a>
                     <a href="{{ route('logs.index') }}"
                         class="flex flex-col items-center justify-center py-2 flex-1 rounded-xl {{ request()->routeIs('logs.*') ? 'text-blue-600 font-bold bg-blue-600/5' : 'text-slate-500 hover:text-slate-800' }}">
                         <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -378,14 +378,14 @@ class AdvancedExtensionsTest extends TestCase
         $response = $this->get('/tv-mode');
         $response->assertRedirect('/login');
 
-        // 2. Auth user is allowed
+        // 2. Standard user is forbidden
         $response = $this->actingAs($this->user)->get('/tv-mode');
-        $response->assertStatus(200);
-        $response->assertViewIs('devices.tv_mode');
+        $response->assertStatus(403);
 
         // 3. Admin is allowed
         $response = $this->actingAs($this->admin)->get('/tv-mode');
         $response->assertStatus(200);
+        $response->assertViewIs('devices.tv_mode');
     }
 
     public function test_building_map_route_security_and_access(): void
@@ -410,14 +410,14 @@ class AdvancedExtensionsTest extends TestCase
         $response = $this->get('/office-control');
         $response->assertRedirect('/login');
 
-        // 2. Auth user is allowed
+        // 2. Standard user is forbidden
         $response = $this->actingAs($this->user)->get('/office-control');
-        $response->assertStatus(200);
-        $response->assertViewIs('devices.office_control');
+        $response->assertStatus(403);
 
         // 3. Admin is allowed
         $response = $this->actingAs($this->admin)->get('/office-control');
         $response->assertStatus(200);
+        $response->assertViewIs('devices.office_control');
     }
 
     public function test_office_control_toggle_validation_and_action(): void
@@ -429,8 +429,15 @@ class AdvancedExtensionsTest extends TestCase
         ]);
         $response->assertStatus(401);
 
-        // 2. Authenticated user can toggle and generates a log
+        // 2. Standard user toggle is forbidden
         $response = $this->actingAs($this->user)->postJson('/office-control/toggle', [
+            'appliance_id' => 'ac_server_1',
+            'state' => 0
+        ]);
+        $response->assertStatus(403);
+
+        // 3. Admin user can toggle successfully
+        $response = $this->actingAs($this->admin)->postJson('/office-control/toggle', [
             'appliance_id' => 'ac_server_1',
             'state' => 0
         ]);
