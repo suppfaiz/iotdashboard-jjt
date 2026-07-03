@@ -31,6 +31,11 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
+                    @if(auth()->user()->role === 'admin')
+                        <th scope="col" class="w-10 px-6 py-3 text-left">
+                            <input type="checkbox" id="select-all-devices" onclick="toggleSelectAll(this)" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer">
+                        </th>
+                    @endif
                     <th scope="col" class="px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">Device & ID</th>
                     <th scope="col" class="hidden sm:table-cell px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">Group Area</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">Status</th>
@@ -43,6 +48,17 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($devices as $device)
                 <tr class="hover:bg-gray-50 transition-colors">
+                    @if(auth()->user()->role === 'admin')
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <input type="checkbox" name="selected_devices[]" value="{{ $device->id }}" 
+                                data-name="{{ $device->name }}" 
+                                data-id="{{ $device->device_id }}" 
+                                data-group="{{ $device->group ? $device->group->name : 'General Area' }}" 
+                                data-url="{{ route('devices.show', $device->id) }}" 
+                                onchange="updateSelectionBar()" 
+                                class="device-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer">
+                        </td>
+                    @endif
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
@@ -349,5 +365,235 @@ function toggleIdxGroupField(type) {
         </div>
     </div>
 </div>
+@endif
+
+@if(auth()->user()->role === 'admin')
+<!-- Floating Print Option Bar -->
+<div id="print-floating-bar" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40 bg-slate-900 text-white rounded-2xl px-6 py-4 shadow-2xl border border-slate-800 flex items-center gap-4 transition-all duration-300 translate-y-24 opacity-0 pointer-events-none">
+    <div class="flex items-center gap-2 flex-shrink-0">
+        <span class="flex h-3 w-3 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+        </span>
+        <span class="text-xs font-bold text-slate-300"><span id="selected-count" class="text-white font-extrabold">0</span> selected</span>
+    </div>
+    
+    <div class="h-6 w-px bg-slate-800"></div>
+    
+    <!-- Options -->
+    <div class="flex items-center gap-4 text-xs font-semibold">
+        <div class="flex items-center gap-1.5">
+            <label for="print-size" class="text-slate-400">Size:</label>
+            <select id="print-size" class="bg-slate-800 border border-slate-700 text-white rounded-lg px-2.5 py-1 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <option value="small">Small (50x30mm)</option>
+                <option value="medium" selected>Medium (80x50mm)</option>
+                <option value="large">Large (100x60mm)</option>
+            </select>
+        </div>
+        
+        <label class="flex items-center gap-1.5 cursor-pointer text-slate-300 hover:text-white transition-colors">
+            <input type="checkbox" id="print-opt-logo" checked class="rounded border-slate-700 bg-slate-800 text-blue-600 focus:ring-blue-500">
+            Logo
+        </label>
+        
+        <label class="flex items-center gap-1.5 cursor-pointer text-slate-300 hover:text-white transition-colors">
+            <input type="checkbox" id="print-opt-group" checked class="rounded border-slate-700 bg-slate-800 text-blue-600 focus:ring-blue-500">
+            Location
+        </label>
+        
+        <label class="flex items-center gap-1.5 cursor-pointer text-slate-300 hover:text-white transition-colors">
+            <input type="checkbox" id="print-opt-id" checked class="rounded border-slate-700 bg-slate-800 text-blue-600 focus:ring-blue-500">
+            ID
+        </label>
+    </div>
+    
+    <div class="h-6 w-px bg-slate-800"></div>
+    
+    <button onclick="startBatchPrint()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors shadow-md shadow-blue-900/40 cursor-pointer flex items-center gap-1.5">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+        Print
+    </button>
+</div>
+
+<!-- Hidden Batch Print Container -->
+<div id="batch-print-container" style="display: none;"></div>
+
+<style>
+/* Base print settings */
+@media print {
+    body * {
+        visibility: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    #batch-print-container, #batch-print-container * {
+        visibility: visible !important;
+    }
+    #batch-print-container {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        background: white !important;
+    }
+    .print-label-item {
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        background: white !important;
+        color: black !important;
+        border: 1px dashed #ddd !important;
+        margin: 10px auto !important;
+    }
+    @page {
+        margin: 0;
+        size: auto;
+    }
+}
+
+/* Custom Sizes for Label Templates */
+.label-size-small {
+    width: 50mm;
+    height: 30mm;
+    padding: 2mm;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 8px;
+    text-align: center;
+}
+.label-size-small .lbl-logo { height: 6mm; margin-bottom: 1px; }
+.label-size-small .lbl-title { font-size: 8px; font-weight: bold; line-height: 1.1; margin-bottom: 1px; }
+.label-size-small .lbl-sub { font-size: 6px; color: #555; margin-bottom: 1px; text-transform: uppercase; }
+.label-size-small .lbl-qrcode { width: 14mm; height: 14mm; margin: 0 auto; }
+.label-size-small .lbl-qrcode canvas, .label-size-small .lbl-qrcode img { width: 14mm !important; height: 14mm !important; }
+.label-size-small .lbl-id { font-size: 5px; color: #666; font-family: monospace; margin-top: 1px; }
+
+.label-size-medium {
+    width: 80mm;
+    height: 50mm;
+    padding: 4mm;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 11px;
+    text-align: center;
+}
+.label-size-medium .lbl-logo { height: 9mm; margin-bottom: 2mm; }
+.label-size-medium .lbl-title { font-size: 12px; font-weight: bold; line-height: 1.2; margin-bottom: 2px; }
+.label-size-medium .lbl-sub { font-size: 8px; color: #555; margin-bottom: 2mm; text-transform: uppercase; }
+.label-size-medium .lbl-qrcode { width: 22mm; height: 22mm; margin: 0 auto; }
+.label-size-medium .lbl-qrcode canvas, .label-size-medium .lbl-qrcode img { width: 22mm !important; height: 22mm !important; }
+.label-size-medium .lbl-id { font-size: 8px; color: #666; font-family: monospace; margin-top: 3px; }
+
+.label-size-large {
+    width: 100mm;
+    height: 60mm;
+    padding: 5mm;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    text-align: center;
+}
+.label-size-large .lbl-logo { height: 12mm; margin-bottom: 3mm; }
+.label-size-large .lbl-title { font-size: 14px; font-weight: bold; line-height: 1.2; margin-bottom: 3px; }
+.label-size-large .lbl-sub { font-size: 10px; color: #555; margin-bottom: 3mm; text-transform: uppercase; }
+.label-size-large .lbl-qrcode { width: 26mm; height: 26mm; margin: 0 auto; }
+.label-size-large .lbl-qrcode canvas, .label-size-large .lbl-qrcode img { width: 26mm !important; height: 26mm !important; }
+.label-size-large .lbl-id { font-size: 9px; color: #666; font-family: monospace; margin-top: 4px; }
+</style>
+
+<script src="{{ asset('js/qrcode.min.js') }}"></script>
+<script>
+function toggleSelectAll(masterCb) {
+    const checkboxes = document.querySelectorAll('.device-checkbox');
+    checkboxes.forEach(cb => {
+        cb.checked = masterCb.checked;
+    });
+    updateSelectionBar();
+}
+
+function updateSelectionBar() {
+    const checkboxes = document.querySelectorAll('.device-checkbox:checked');
+    const floatingBar = document.getElementById('print-floating-bar');
+    const selectedCount = document.getElementById('selected-count');
+    
+    if (checkboxes.length > 0) {
+        selectedCount.innerText = checkboxes.length;
+        floatingBar.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+    } else {
+        floatingBar.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+        document.getElementById('select-all-devices').checked = false;
+    }
+}
+
+function startBatchPrint() {
+    const checkedBoxes = document.querySelectorAll('.device-checkbox:checked');
+    if (checkedBoxes.length === 0) return;
+
+    const size = document.getElementById('print-size').value;
+    const incLogo = document.getElementById('print-opt-logo').checked;
+    const incGroup = document.getElementById('print-opt-group').checked;
+    const incId = document.getElementById('print-opt-id').checked;
+
+    const printContainer = document.getElementById('batch-print-container');
+    printContainer.innerHTML = ''; // Clear previous
+
+    const logoUrl = "{{ asset('logo.png') }}";
+
+    checkedBoxes.forEach((cb, idx) => {
+        const name = cb.getAttribute('data-name');
+        const devId = cb.getAttribute('data-id');
+        const group = cb.getAttribute('data-group');
+        const url = cb.getAttribute('data-url');
+
+        // Create label item container
+        const labelItem = document.createElement('div');
+        labelItem.className = `print-label-item label-size-${size}`;
+
+        // Assemble content
+        let htmlContent = '';
+        if (incLogo) {
+            htmlContent += `<img src="${logoUrl}" class="lbl-logo mx-auto" alt="Logo">`;
+        }
+        htmlContent += `<div class="lbl-title">${name}</div>`;
+        if (incGroup) {
+            htmlContent += `<div class="lbl-sub">${group}</div>`;
+        }
+        
+        // QR Code Placeholder
+        const qrId = `qrcode-batch-${idx}`;
+        htmlContent += `<div id="${qrId}" class="lbl-qrcode"></div>`;
+        
+        if (incId) {
+            htmlContent += `<div class="lbl-id">${devId}</div>`;
+        }
+
+        labelItem.innerHTML = htmlContent;
+        printContainer.appendChild(labelItem);
+
+        // Generate QR code
+        let qrDimension = 80;
+        if (size === 'small') qrDimension = 50;
+        if (size === 'large') qrDimension = 100;
+
+        new QRCode(document.getElementById(qrId), {
+            text: url,
+            width: qrDimension,
+            height: qrDimension,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    });
+
+    // Short timeout to allow QRCode canvas/images to render before opening print dialog
+    setTimeout(() => {
+        window.print();
+    }, 350);
+}
+</script>
 @endif
 @endsection
