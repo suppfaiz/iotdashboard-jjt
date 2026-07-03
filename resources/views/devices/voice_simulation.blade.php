@@ -1,152 +1,315 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<div class="voice-sim-page">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-200 pb-5 mb-8 gap-4">
-        <div>
-            <h1 class="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-2">
-                🎙️ JASMIN VOICE ASSISTANT PLAYGROUND
-            </h1>
-            <p class="text-xs text-slate-500 font-medium tracking-wide mt-1 uppercase">Simulasi & Uji Coba Kendali Suara Lokal Jamkrida IoT</p>
-        </div>
-        <div>
-            <a href="{{ route('office.control') }}" class="px-4 py-2 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 transition-colors shadow-sm">
-                ← Panel Kontrol Fisik
-            </a>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-2">
+                    🎙️ JASMIN VOICE ASSISTANT PLAYGROUND
+                </h1>
+                <p class="text-xs text-slate-500 font-medium tracking-wide mt-1 uppercase">Simulasi & Uji Coba Kendali Suara Lokal Jamkrida IoT</p>
+            </div>
+            <div>
+                <a href="{{ route('office.control') }}" class="px-4 py-2 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 transition-colors shadow-sm">
+                    ← Panel Kontrol Fisik
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Main Content Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        <!-- Left: Voice Orb Interface (5 Cols) -->
-        <div class="lg:col-span-5 bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-3xl p-8 shadow-sm flex flex-col items-center text-center relative overflow-hidden" style="min-height: 560px;">
-            <!-- Ambient glows -->
-            <div class="absolute -top-12 -right-12 w-48 h-48 bg-blue-400/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none"></div>
+    <!-- Hero Voice Assistant Section -->
+    <div class="voice-hero-section">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex flex-col items-center text-center relative z-10">
+                
+                <!-- Floating ambient particles -->
+                <div class="voice-particle voice-particle-1"></div>
+                <div class="voice-particle voice-particle-2"></div>
+                <div class="voice-particle voice-particle-3"></div>
 
-            <span class="text-[10px] font-bold text-blue-500 tracking-widest uppercase mb-4 flex-shrink-0">Voice Assistant Module</span>
+                <span class="voice-module-badge">Voice Assistant Module</span>
 
-            <!-- JASMIN Assistant Holographic Orb -->
-            <div class="relative flex items-center justify-center my-6 w-52 h-52 flex-shrink-0">
-                <!-- Outer Pulse Rings -->
-                <div id="orb-pulse-1" class="absolute inset-0 rounded-full border border-blue-500/20 animate-ping" style="animation-duration: 3s; display: none;"></div>
-                <div id="orb-pulse-2" class="absolute inset-4 rounded-full border border-emerald-500/20 animate-ping" style="animation-duration: 2s; display: none;"></div>
-
-                <!-- Main Glassmorphic Orb -->
-                <button id="jasmin-orb" onclick="toggleListening()" class="w-36 h-36 min-w-[9rem] min-h-[9rem] rounded-full flex flex-col items-center justify-center shadow-2xl transition-all duration-500 focus:outline-none border-2 border-white/60 active:scale-95 cursor-pointer relative z-10 flex-shrink-0 aspect-square" 
-                    style="background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.98) 0%, rgba(239, 246, 255, 0.9) 50%, rgba(191, 219, 254, 0.65) 100%); box-shadow: 0 15px 35px rgba(59, 130, 246, 0.25), inset 0 0 15px rgba(255, 255, 255, 0.9);">
+                <!-- JASMIN Orb Container -->
+                <div class="voice-orb-container">
+                    <!-- Outer glow rings -->
+                    <div id="orb-pulse-1" class="voice-orb-ring voice-orb-ring-1"></div>
+                    <div id="orb-pulse-2" class="voice-orb-ring voice-orb-ring-2"></div>
                     
-                    <!-- Icon inside Orb -->
-                    <div id="orb-icon" class="text-4xl transition-all duration-500">🎙️</div>
-                    <span id="orb-label" class="text-[10px] font-black text-blue-600 uppercase tracking-widest mt-2">TAP TO TALK</span>
-                </button>
-            </div>
+                    <!-- Static ambient ring -->
+                    <div class="voice-orb-ambient"></div>
 
-            <!-- Waveform Animation -->
-            <div class="w-full h-10 flex items-center justify-center gap-1.5 my-3 flex-shrink-0">
-                <div class="wave-bar w-1.5 h-2 bg-blue-500 rounded-full transition-all duration-150"></div>
-                <div class="wave-bar w-1.5 h-3 bg-blue-500 rounded-full transition-all duration-150"></div>
-                <div class="wave-bar w-1.5 h-5 bg-blue-500 rounded-full transition-all duration-150"></div>
-                <div class="wave-bar w-1.5 h-2 bg-blue-500 rounded-full transition-all duration-150"></div>
-                <div class="wave-bar w-1.5 h-4 bg-blue-500 rounded-full transition-all duration-150"></div>
-            </div>
-
-            <!-- Status Message -->
-            <div class="mt-4 max-w-sm flex-shrink-0">
-                <h3 id="assistant-status" class="text-lg font-bold text-slate-800">Hi! Saya JASMIN</h3>
-                <p id="assistant-sub" class="text-xs text-slate-500 mt-1 font-medium leading-relaxed">Ketuk bola di atas untuk memberikan perintah suara. Coba ucapkan: <br><strong class="text-blue-600">"Jasmin, nyalakan lampu lobby"</strong> atau <br><strong class="text-blue-600">"Matikan AC server room satu"</strong></p>
-            </div>
-
-            <!-- Speech Support Check -->
-            <div id="speech-warning" class="hidden mt-4 w-full p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-[11px] font-semibold flex items-center justify-center gap-2 flex-shrink-0">
-                ⚠️ Mikrofon tidak aktif/didukung. Ketuk bola atau ketik di bawah untuk simulasi!
-            </div>
-
-            <!-- Fallback Text Input Simulator -->
-            <div class="w-full mt-6 pt-5 border-t border-slate-100 flex flex-col gap-2 flex-shrink-0">
-                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider text-left">Text Command Simulator (Ketik Manual)</span>
-                <div class="relative w-full">
-                    <input type="text" id="text-command-input" placeholder="Contoh: nyalakan lampu lobby..." 
-                        class="block w-full pl-4 pr-20 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-                        onkeydown="if(event.key === 'Enter') sendTextCommand()">
-                    <button onclick="sendTextCommand()" class="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[10px] font-bold transition-colors cursor-pointer focus:outline-none">
-                        Kirim
+                    <!-- Main Orb Button -->
+                    <button id="jasmin-orb" onclick="toggleListening()" class="voice-orb-button" title="Klik untuk berbicara">
+                        <div class="voice-orb-inner-glow"></div>
+                        <div id="orb-icon" class="voice-orb-icon">🎙️</div>
+                        <span id="orb-label" class="voice-orb-label">TAP TO TALK</span>
                     </button>
                 </div>
+
+                <!-- Waveform Animation -->
+                <div class="voice-waveform">
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                </div>
+
+                <!-- Status Message -->
+                <div class="voice-status-area">
+                    <h3 id="assistant-status" class="voice-status-title">Hi! Saya JASMIN</h3>
+                    <p id="assistant-sub" class="voice-status-sub">Ketuk bola di atas untuk memberikan perintah suara. Coba ucapkan: <br><strong>"Jasmin, nyalakan lampu lobby"</strong> atau <strong>"Matikan AC server room satu"</strong></p>
+                </div>
+
+                <!-- Speech Support Warning -->
+                <div id="speech-warning" class="voice-speech-warning hidden">
+                    ⚠️ Mikrofon tidak aktif/didukung. Ketuk bola atau ketik di bawah untuk simulasi!
+                </div>
+
+                <!-- Fallback Text Input -->
+                <div class="voice-text-input-area">
+                    <span class="voice-text-input-label">Text Command Simulator</span>
+                    <div class="voice-text-input-wrapper">
+                        <input type="text" id="text-command-input" placeholder="Ketik perintah... contoh: nyalakan lampu lobby" 
+                            class="voice-text-input"
+                            onkeydown="if(event.key === 'Enter') sendTextCommand()">
+                        <button onclick="sendTextCommand()" class="voice-text-input-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- Right: Simulator Grid & Console (7 Cols) -->
-        <div class="lg:col-span-7 flex flex-col gap-6">
+    <!-- Device Console & Logs -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- Simulated Devices Control Panel -->
-            <div class="bg-white/70 backdrop-blur-md border border-slate-200/80 rounded-3xl p-6 shadow-sm">
-                <h2 class="text-sm font-black text-slate-800 uppercase tracking-wider mb-5 flex items-center gap-2">
-                    🖥️ Simulated Device Console
-                </h2>
+            <!-- Left: Simulated Devices Control Panel -->
+            <div class="lg:col-span-7">
+                <div class="voice-devices-panel">
+                    <div class="voice-devices-header">
+                        <h2>🖥️ Simulated Device Console</h2>
+                        <span class="voice-devices-count">{{ count($appliances) }} Peralatan</span>
+                    </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    @foreach($appliances as $appliance)
-                        <div id="appliance-card-{{ $appliance['id'] }}" class="p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between {{ $appliance['state'] ? 'bg-emerald-50/50 border-emerald-200/70 shadow-sm shadow-emerald-500/5' : 'bg-slate-50/55 border-slate-200/50' }}">
-                            <div class="flex items-center gap-3">
-                                <div id="appliance-icon-{{ $appliance['id'] }}" class="w-10 h-10 rounded-xl flex items-center justify-center text-lg {{ $appliance['state'] ? 'bg-emerald-500 text-white shadow-md' : 'bg-slate-200 text-slate-500' }}">
-                                    {{ $appliance['icon'] }}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        @foreach($appliances as $appliance)
+                            <div id="appliance-card-{{ $appliance['id'] }}" class="voice-device-card {{ $appliance['state'] ? 'voice-device-card-on' : 'voice-device-card-off' }}">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div id="appliance-icon-{{ $appliance['id'] }}" class="voice-device-icon {{ $appliance['state'] ? 'voice-device-icon-on' : 'voice-device-icon-off' }}">
+                                        {{ $appliance['icon'] }}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h4 class="voice-device-name">{{ $appliance['name'] }}</h4>
+                                        <span class="voice-device-category">{{ $appliance['category'] }}</span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h4 class="text-xs font-bold text-slate-800">{{ $appliance['name'] }}</h4>
-                                    <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{{ $appliance['category'] }}</span>
-                                </div>
+
+                                <!-- Toggle Switch -->
+                                <button onclick="manualToggle('{{ $appliance['id'] }}')" 
+                                    class="voice-toggle-switch flex-shrink-0 {{ $appliance['state'] ? 'voice-toggle-on' : 'voice-toggle-off' }}">
+                                    <div class="voice-toggle-knob {{ $appliance['state'] ? 'voice-toggle-knob-on' : 'voice-toggle-knob-off' }}"></div>
+                                </button>
                             </div>
-
-                            <!-- Sim Switch -->
-                            <button onclick="manualToggle('{{ $appliance['id'] }}')" 
-                                class="w-12 h-6 rounded-full p-1 transition-colors duration-300 focus:outline-none flex-shrink-0 {{ $appliance['state'] ? 'bg-emerald-500' : 'bg-slate-300' }}">
-                                <div class="w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 transform {{ $appliance['state'] ? 'translate-x-6' : 'translate-x-0' }}"></div>
-                            </button>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             </div>
 
-            <!-- Speech Recognition Logs -->
-            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-sm text-slate-300 font-mono text-xs flex flex-col justify-between" style="min-height: 220px;">
-                <div>
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-                        <span class="text-slate-400 font-bold tracking-wider uppercase text-[10px]">Real-Time Transcription Logs</span>
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <!-- Right: Speech Recognition Logs -->
+            <div class="lg:col-span-5">
+                <div class="voice-console-panel">
+                    <div class="voice-console-header">
+                        <span>Real-Time Transcription Logs</span>
+                        <span class="voice-console-dot"></span>
                     </div>
-                    <div id="console-logs" class="space-y-2.5 max-h-36 overflow-y-auto pr-2">
+                    <div id="console-logs" class="voice-console-logs">
                         <div class="text-slate-500 font-bold">[SYSTEM] JASMIN Playground initialized. Waiting for activation...</div>
                     </div>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between items-center text-[10px] text-slate-500 font-bold">
-                    <span>API ROUTE: /office-control/toggle</span>
-                    <button onclick="clearLogs()" class="hover:text-slate-350 transition-colors uppercase cursor-pointer">Clear Console</button>
+                    <div class="voice-console-footer">
+                        <span>API ROUTE: /office-control/toggle</span>
+                        <button onclick="clearLogs()" class="voice-console-clear-btn">Clear Console</button>
+                    </div>
                 </div>
             </div>
 
         </div>
-
     </div>
 </div>
 
 <style>
-    /* Styling for glassmorphic voice assistant page */
-    .wave-bar {
-        animation: none;
+    .voice-sim-page { min-height: 100vh; background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%); }
+
+    /* Hero Section */
+    .voice-hero-section {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #0f172a 100%);
+        position: relative; overflow: hidden;
+        border-radius: 0 0 2rem 2rem; margin: 0 1rem;
+        box-shadow: 0 20px 60px rgba(15, 23, 42, 0.3);
     }
-    
-    @keyframes wave-bounce {
-        0%, 100% {
-            transform: scaleY(1);
-        }
-        50% {
-            transform: scaleY(3);
-        }
+    .voice-hero-section::before {
+        content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+        background: radial-gradient(ellipse at 50% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
+        pointer-events: none;
+    }
+    .voice-hero-section::after {
+        content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), rgba(16, 185, 129, 0.3), transparent);
+    }
+
+    /* Particles */
+    .voice-particle { position: absolute; border-radius: 50%; pointer-events: none; animation: particle-float 8s ease-in-out infinite; }
+    .voice-particle-1 { width: 6px; height: 6px; background: rgba(59, 130, 246, 0.4); top: 20%; left: 15%; }
+    .voice-particle-2 { width: 4px; height: 4px; background: rgba(16, 185, 129, 0.4); top: 60%; right: 20%; animation-delay: 3s; }
+    .voice-particle-3 { width: 5px; height: 5px; background: rgba(139, 92, 246, 0.3); bottom: 30%; left: 25%; animation-delay: 5s; }
+    @keyframes particle-float {
+        0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+        25% { transform: translate(20px, -30px) scale(1.5); opacity: 0.8; }
+        50% { transform: translate(-15px, -20px) scale(1); opacity: 0.3; }
+        75% { transform: translate(25px, 10px) scale(1.3); opacity: 0.7; }
+    }
+
+    /* Module badge */
+    .voice-module-badge {
+        display: inline-block; padding: 4px 16px; border-radius: 20px;
+        font-size: 10px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase;
+        color: rgba(147, 197, 253, 0.9); background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2); margin-bottom: 2rem;
+    }
+
+    /* Orb */
+    .voice-orb-container { position: relative; width: 200px; height: 200px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .voice-orb-ambient {
+        position: absolute; inset: -8px; border-radius: 50%;
+        background: conic-gradient(from 0deg, rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.1), rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.15));
+        animation: orb-rotate 10s linear infinite; filter: blur(8px);
+    }
+    @keyframes orb-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .voice-orb-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(59, 130, 246, 0.15); display: none; }
+    .voice-orb-ring-1 { inset: -16px; animation: orb-ping 3s cubic-bezier(0, 0, 0.2, 1) infinite; }
+    .voice-orb-ring-2 { inset: -4px; animation: orb-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite; border-color: rgba(16, 185, 129, 0.15); }
+    @keyframes orb-ping { 0% { transform: scale(1); opacity: 1; } 75%, 100% { transform: scale(1.6); opacity: 0; } }
+
+    .voice-orb-button {
+        position: relative; z-index: 10; width: 140px; height: 140px; min-width: 140px; min-height: 140px;
+        border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        border: 2px solid rgba(255, 255, 255, 0.15); cursor: pointer;
+        background: radial-gradient(circle at 35% 35%, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+        box-shadow: 0 0 40px rgba(59, 130, 246, 0.2), 0 0 80px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); outline: none;
+    }
+    .voice-orb-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 50px rgba(59, 130, 246, 0.35), 0 0 100px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+    .voice-orb-button:active { transform: scale(0.95); }
+
+    .voice-orb-inner-glow {
+        position: absolute; inset: 8px; border-radius: 50%;
+        background: radial-gradient(circle at 40% 35%, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .voice-orb-icon { font-size: 2.5rem; line-height: 1; transition: all 0.5s ease; filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4)); }
+    .voice-orb-label { font-size: 9px; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(147, 197, 253, 0.8); margin-top: 6px; transition: all 0.3s ease; }
+
+    /* Waveform */
+    .voice-waveform { display: flex; align-items: center; justify-content: center; gap: 4px; margin: 1.5rem 0; height: 32px; }
+    .wave-bar { width: 3px; background: linear-gradient(180deg, rgba(59, 130, 246, 0.8), rgba(16, 185, 129, 0.6)); border-radius: 4px; transition: all 0.15s ease; animation: none; }
+    .wave-bar:nth-child(1) { height: 6px; } .wave-bar:nth-child(2) { height: 10px; } .wave-bar:nth-child(3) { height: 16px; }
+    .wave-bar:nth-child(4) { height: 20px; } .wave-bar:nth-child(5) { height: 16px; } .wave-bar:nth-child(6) { height: 10px; } .wave-bar:nth-child(7) { height: 6px; }
+    @keyframes wave-bounce { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(2.5); } }
+
+    /* Status */
+    .voice-status-area { max-width: 28rem; margin-top: 0.5rem; }
+    .voice-status-title { font-size: 1.25rem; font-weight: 800; color: #e2e8f0; letter-spacing: -0.02em; }
+    .voice-status-sub { font-size: 12px; color: rgba(148, 163, 184, 0.8); font-weight: 500; line-height: 1.7; margin-top: 6px; }
+    .voice-status-sub strong { color: rgba(147, 197, 253, 0.9); }
+
+    /* Speech Warning */
+    .voice-speech-warning {
+        margin-top: 1rem; padding: 8px 16px;
+        background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2);
+        border-radius: 12px; color: rgba(253, 224, 71, 0.9); font-size: 11px; font-weight: 600;
+        display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+
+    /* Text Input */
+    .voice-text-input-area { width: 100%; max-width: 420px; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+    .voice-text-input-label { display: block; font-size: 9px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(148, 163, 184, 0.5); margin-bottom: 8px; text-align: left; }
+    .voice-text-input-wrapper { position: relative; width: 100%; }
+    .voice-text-input {
+        display: block; width: 100%; padding: 12px 52px 12px 16px;
+        background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px; font-size: 13px; font-weight: 600; color: #e2e8f0; outline: none; transition: all 0.3s ease;
+    }
+    .voice-text-input::placeholder { color: rgba(148, 163, 184, 0.4); }
+    .voice-text-input:focus { border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); background: rgba(255, 255, 255, 0.08); }
+    .voice-text-input-btn {
+        position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+        width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+        background: linear-gradient(135deg, #3b82f6, #2563eb); border: none; border-radius: 10px;
+        color: white; cursor: pointer; transition: all 0.2s ease; outline: none;
+    }
+    .voice-text-input-btn:hover { background: linear-gradient(135deg, #60a5fa, #3b82f6); transform: translateY(-50%) scale(1.05); }
+
+    /* Devices Panel */
+    .voice-devices-panel { background: white; border: 1px solid #e2e8f0; border-radius: 1.5rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+    .voice-devices-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid #f1f5f9; }
+    .voice-devices-header h2 { font-size: 13px; font-weight: 900; color: #1e293b; text-transform: uppercase; letter-spacing: 0.05em; }
+    .voice-devices-count { font-size: 10px; font-weight: 700; color: #94a3b8; background: #f1f5f9; padding: 3px 10px; border-radius: 20px; }
+
+    .voice-device-card { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-radius: 14px; border: 1px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .voice-device-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); }
+    .voice-device-card-on { background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(16, 185, 129, 0.02)); border-color: rgba(16, 185, 129, 0.2); }
+    .voice-device-card-off { background: #f8fafc; border-color: #e2e8f0; }
+
+    .voice-device-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; transition: all 0.3s ease; }
+    .voice-device-icon-on { background: linear-gradient(135deg, #10b981, #059669); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+    .voice-device-icon-off { background: #e2e8f0; color: #94a3b8; }
+    .voice-device-name { font-size: 12px; font-weight: 700; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .voice-device-category { font-size: 9px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* Toggle Switch */
+    .voice-toggle-switch { position: relative; width: 44px; height: 24px; border-radius: 24px; padding: 2px; cursor: pointer; border: none; outline: none; transition: background 0.3s ease; }
+    .voice-toggle-on { background: linear-gradient(135deg, #10b981, #059669); }
+    .voice-toggle-off { background: #cbd5e1; }
+    .voice-toggle-knob { width: 20px; height: 20px; border-radius: 50%; background: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .voice-toggle-knob-on { transform: translateX(20px); }
+    .voice-toggle-knob-off { transform: translateX(0); }
+
+    /* Console Panel */
+    .voice-console-panel {
+        background: #0f172a; border: 1px solid rgba(51, 65, 85, 0.5); border-radius: 1.5rem; padding: 1.5rem;
+        font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 11px; color: #94a3b8;
+        display: flex; flex-direction: column; min-height: 380px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    }
+    .voice-console-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid rgba(51, 65, 85, 0.4); font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; }
+    .voice-console-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; animation: pulse 2s ease-in-out infinite; box-shadow: 0 0 8px rgba(16, 185, 129, 0.4); }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .voice-console-logs { flex: 1; overflow-y: auto; padding-right: 4px; max-height: 260px; }
+    .voice-console-logs > div { padding: 3px 0; line-height: 1.6; }
+    .voice-console-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; margin-top: 12px; border-top: 1px solid rgba(51, 65, 85, 0.4); font-size: 10px; font-weight: 700; color: #475569; }
+    .voice-console-clear-btn { background: none; border: none; color: #475569; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: color 0.2s; outline: none; }
+    .voice-console-clear-btn:hover { color: #94a3b8; }
+
+    @media (max-width: 768px) {
+        .voice-hero-section { margin: 0 0.5rem; border-radius: 0 0 1.5rem 1.5rem; }
+        .voice-orb-container { width: 160px; height: 160px; }
+        .voice-orb-button { width: 110px; height: 110px; min-width: 110px; min-height: 110px; }
+        .voice-orb-icon { font-size: 2rem; }
     }
 </style>
+
+
 
 <script>
     // System registry for appliances state (injected from Controller)
@@ -246,22 +409,24 @@
         const statusTitle = document.getElementById('assistant-status');
 
         if (state === 'listening') {
-            orb.style.background = 'radial-gradient(circle at 30% 30%, #ecfdf5 0%, #d1fae5 50%, #a7f3d0 100%)';
+            orb.style.background = 'radial-gradient(circle at 35% 35%, rgba(6, 78, 59, 0.9) 0%, rgba(4, 47, 46, 0.95) 100%)';
             orb.style.borderColor = 'rgba(16, 185, 129, 0.4)';
-            orb.style.boxShadow = '0 15px 35px rgba(16, 185, 129, 0.35), inset 0 0 15px rgba(255, 255, 255, 0.9)';
+            orb.style.boxShadow = '0 0 40px rgba(16, 185, 129, 0.35), 0 0 80px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)';
             icon.innerText = '🟢';
             label.innerText = 'LISTENING...';
-            label.className = 'text-[10px] font-black text-emerald-650 uppercase tracking-widest mt-2';
+            label.className = 'voice-orb-label';
+            label.style.color = 'rgba(110, 231, 183, 0.9)';
             p1.style.display = 'block';
             p2.style.display = 'block';
             statusTitle.innerText = 'JASMIN Mendengarkan...';
         } else {
-            orb.style.background = 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(239, 246, 255, 0.8) 50%, rgba(191, 219, 254, 0.5) 100%)';
-            orb.style.borderColor = 'rgba(255, 255, 255, 0.5)';
-            orb.style.boxShadow = '0 15px 35px rgba(59, 130, 246, 0.15), inset 0 0 15px rgba(255, 255, 255, 0.8)';
+            orb.style.background = 'radial-gradient(circle at 35% 35%, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%)';
+            orb.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+            orb.style.boxShadow = '0 0 40px rgba(59, 130, 246, 0.2), 0 0 80px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)';
             icon.innerText = '🎙️';
             label.innerText = 'TAP TO TALK';
-            label.className = 'text-[10px] font-black text-blue-600 uppercase tracking-widest mt-2';
+            label.className = 'voice-orb-label';
+            label.style.color = 'rgba(147, 197, 253, 0.8)';
             p1.style.display = 'none';
             p2.style.display = 'none';
             statusTitle.innerText = 'Hi! Saya JASMIN';
@@ -525,15 +690,15 @@
         const switchCircle = button.querySelector('div');
 
         if (state === 1) {
-            card.className = "p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between bg-emerald-50/50 border-emerald-200/70 shadow-sm shadow-emerald-500/5";
-            iconDiv.className = "w-10 h-10 rounded-xl flex items-center justify-center text-lg bg-emerald-500 text-white shadow-md";
-            button.className = "w-12 h-6 rounded-full p-1 transition-colors duration-300 focus:outline-none bg-emerald-500";
-            switchCircle.className = "w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 transform translate-x-6";
+            card.className = "voice-device-card voice-device-card-on";
+            iconDiv.className = "voice-device-icon voice-device-icon-on";
+            button.className = "voice-toggle-switch flex-shrink-0 voice-toggle-on";
+            switchCircle.className = "voice-toggle-knob voice-toggle-knob-on";
         } else {
-            card.className = "p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between bg-slate-50/55 border-slate-200/50";
-            iconDiv.className = "w-10 h-10 rounded-xl flex items-center justify-center text-lg bg-slate-200 text-slate-500";
-            button.className = "w-12 h-6 rounded-full p-1 transition-colors duration-300 focus:outline-none bg-slate-300";
-            switchCircle.className = "w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 transform translate-x-0";
+            card.className = "voice-device-card voice-device-card-off";
+            iconDiv.className = "voice-device-icon voice-device-icon-off";
+            button.className = "voice-toggle-switch flex-shrink-0 voice-toggle-off";
+            switchCircle.className = "voice-toggle-knob voice-toggle-knob-off";
         }
     }
 
