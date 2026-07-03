@@ -12,6 +12,12 @@
         <h3 class="text-base font-bold leading-6 text-gray-900">Active Devices List</h3>
         @if(auth()->user()->role === 'admin')
             <div class="flex items-center gap-2">
+                <button type="button" id="batch-print-btn" onclick="openPrintModal()" disabled class="relative inline-flex items-center gap-x-1.5 rounded-lg bg-emerald-600 opacity-55 cursor-not-allowed px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 transition-all duration-200">
+                    <svg class="-ml-0.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                    Print Labels (<span id="selected-print-count">0</span>)
+                </button>
                 <button type="button" onclick="document.getElementById('add-group-modal').classList.remove('hidden')" class="relative inline-flex items-center gap-x-1.5 rounded-lg bg-indigo-650 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-650 transition-colors">
                     <svg class="-ml-0.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -368,51 +374,73 @@ function toggleIdxGroupField(type) {
 @endif
 
 @if(auth()->user()->role === 'admin')
-<!-- Floating Print Option Bar -->
-<div id="print-floating-bar" style="display: none; position: fixed; bottom: 24px; left: 50%; transform: translate(-50%, 20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; z-index: 9999; pointer-events: none;" class="bg-slate-900 text-white rounded-2xl px-6 py-4 shadow-2xl border border-slate-800 flex items-center gap-4">
-    <div class="flex items-center gap-2 flex-shrink-0">
-        <span class="flex h-3 w-3 relative">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
-        </span>
-        <span class="text-xs font-bold text-slate-300"><span id="selected-count" class="text-white font-extrabold">0</span> selected</span>
-    </div>
-    
-    <div class="h-6 w-px bg-slate-800"></div>
-    
-    <!-- Options -->
-    <div class="flex items-center gap-4 text-xs font-semibold">
-        <div class="flex items-center gap-1.5">
-            <label for="print-size" class="text-slate-400">Size:</label>
-            <select id="print-size" class="bg-slate-800 border border-slate-700 text-white rounded-lg px-2.5 py-1 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                <option value="small">Small (50x30mm)</option>
-                <option value="medium" selected>Medium (80x50mm)</option>
-                <option value="large">Large (100x60mm)</option>
-            </select>
+<!-- Label Print Options Modal -->
+<div id="print-options-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title-print" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background backdrop -->
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" aria-hidden="true" onclick="closePrintModal()"></div>
+
+        <span class="hidden sm:inline-block sm:align-middle sm:min-h-screen" aria-hidden="true">&#8203;</span>
+
+        <!-- Modal Panel -->
+        <div class="inline-block align-middle bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full border border-slate-200/60">
+            <!-- Modal Header -->
+            <div class="px-6 py-5 border-b border-slate-100 flex items-start gap-3.5 bg-slate-50/50">
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100 flex-shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-slate-900" id="modal-title-print">Label Print Options</h3>
+                    <p class="text-xs text-slate-500 mt-0.5 font-medium">Configure layout and size parameters for stiker thermal.</p>
+                </div>
+            </div>
+
+            <!-- Form Options -->
+            <div class="px-6 py-5 space-y-4">
+                <!-- Size Select -->
+                <div class="relative group">
+                    <label for="print-size" class="block text-xs font-semibold text-slate-600 mb-1.5 transition-colors">Label Size</label>
+                    <select id="print-size" class="w-full px-3 py-2.5 bg-white border border-slate-250 rounded-xl text-slate-900 text-sm font-semibold focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 hover:border-slate-300 transition-all duration-200">
+                        <option value="small">Small (50x30mm)</option>
+                        <option value="medium" selected>Medium (80x50mm)</option>
+                        <option value="large">Large (100x60mm)</option>
+                    </select>
+                </div>
+
+                <!-- Toggles -->
+                <div class="space-y-3 pt-2">
+                    <label class="flex items-center gap-3 cursor-pointer text-slate-700 hover:text-slate-900 transition-colors text-sm font-semibold">
+                        <input type="checkbox" id="print-opt-logo" checked class="rounded border-slate-305 text-indigo-650 focus:ring-indigo-500 w-4 h-4">
+                        <span>Include Jamkrida Logo</span>
+                    </label>
+
+                    <label class="flex items-center gap-3 cursor-pointer text-slate-700 hover:text-slate-900 transition-colors text-sm font-semibold">
+                        <input type="checkbox" id="print-opt-group" checked class="rounded border-slate-305 text-indigo-650 focus:ring-indigo-500 w-4 h-4">
+                        <span>Include Location/Group Area</span>
+                    </label>
+
+                    <label class="flex items-center gap-3 cursor-pointer text-slate-700 hover:text-slate-900 transition-colors text-sm font-semibold">
+                        <input type="checkbox" id="print-opt-id" checked class="rounded border-slate-305 text-indigo-650 focus:ring-indigo-500 w-4 h-4">
+                        <span>Include Device Unique ID</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="bg-slate-50/60 px-6 py-4 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                <button type="button" onclick="closePrintModal()" 
+                    class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors duration-200">
+                    Cancel
+                </button>
+                <button onclick="startBatchPrint()" 
+                    class="px-5 py-2.5 rounded-xl bg-indigo-650 hover:bg-indigo-600 active:bg-indigo-750 text-xs font-bold text-white shadow-md shadow-indigo-500/10 transition-colors duration-200">
+                    Print Now
+                </button>
+            </div>
         </div>
-        
-        <label class="flex items-center gap-1.5 cursor-pointer text-slate-300 hover:text-white transition-colors">
-            <input type="checkbox" id="print-opt-logo" checked class="rounded border-slate-700 bg-slate-800 text-blue-600 focus:ring-blue-500">
-            Logo
-        </label>
-        
-        <label class="flex items-center gap-1.5 cursor-pointer text-slate-300 hover:text-white transition-colors">
-            <input type="checkbox" id="print-opt-group" checked class="rounded border-slate-700 bg-slate-800 text-blue-600 focus:ring-blue-500">
-            Location
-        </label>
-        
-        <label class="flex items-center gap-1.5 cursor-pointer text-slate-300 hover:text-white transition-colors">
-            <input type="checkbox" id="print-opt-id" checked class="rounded border-slate-700 bg-slate-800 text-blue-600 focus:ring-blue-500">
-            ID
-        </label>
     </div>
-    
-    <div class="h-6 w-px bg-slate-800"></div>
-    
-    <button onclick="startBatchPrint()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors shadow-md shadow-blue-900/40 cursor-pointer flex items-center gap-1.5">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-        Print
-    </button>
 </div>
 
 <!-- Hidden Batch Print Container -->
@@ -517,34 +545,41 @@ function toggleSelectAll(masterCb) {
 
 function updateSelectionBar() {
     const checkboxes = document.querySelectorAll('.device-checkbox:checked');
-    const floatingBar = document.getElementById('print-floating-bar');
-    const selectedCount = document.getElementById('selected-count');
+    const printBtn = document.getElementById('batch-print-btn');
+    const selectedCountSpan = document.getElementById('selected-print-count');
     
     if (checkboxes.length > 0) {
-        selectedCount.innerText = checkboxes.length;
-        floatingBar.style.display = 'flex';
-        // Force browser layout reflow to trigger transition animation
-        floatingBar.offsetHeight;
-        floatingBar.style.opacity = '1';
-        floatingBar.style.transform = 'translate(-50%, 0)';
-        floatingBar.style.pointerEvents = 'auto';
+        selectedCountSpan.innerText = checkboxes.length;
+        printBtn.disabled = false;
+        printBtn.classList.remove('opacity-55', 'cursor-not-allowed');
+        printBtn.classList.add('cursor-pointer');
     } else {
-        floatingBar.style.opacity = '0';
-        floatingBar.style.transform = 'translate(-50%, 20px)';
-        floatingBar.style.pointerEvents = 'none';
-        // Delay display setting to allow fade-out animation to finish
-        setTimeout(() => {
-            if (document.querySelectorAll('.device-checkbox:checked').length === 0) {
-                floatingBar.style.display = 'none';
-            }
-        }, 300);
-        document.getElementById('select-all-devices').checked = false;
+        selectedCountSpan.innerText = '0';
+        printBtn.disabled = true;
+        printBtn.classList.add('opacity-55', 'cursor-not-allowed');
+        printBtn.classList.remove('cursor-pointer');
+        
+        const selectAllCb = document.getElementById('select-all-devices');
+        if (selectAllCb) selectAllCb.checked = false;
     }
+}
+
+function openPrintModal() {
+    const modal = document.getElementById('print-options-modal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closePrintModal() {
+    const modal = document.getElementById('print-options-modal');
+    if (modal) modal.classList.add('hidden');
 }
 
 function startBatchPrint() {
     const checkedBoxes = document.querySelectorAll('.device-checkbox:checked');
     if (checkedBoxes.length === 0) return;
+
+    // Close options modal before printing
+    closePrintModal();
 
     const size = document.getElementById('print-size').value;
     const incLogo = document.getElementById('print-opt-logo').checked;
