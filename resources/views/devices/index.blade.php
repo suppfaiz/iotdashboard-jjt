@@ -369,7 +369,7 @@ function toggleIdxGroupField(type) {
 
 @if(auth()->user()->role === 'admin')
 <!-- Floating Print Option Bar -->
-<div id="print-floating-bar" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40 bg-slate-900 text-white rounded-2xl px-6 py-4 shadow-2xl border border-slate-800 flex items-center gap-4 transition-all duration-300 translate-y-24 opacity-0 pointer-events-none">
+<div id="print-floating-bar" style="display: none; position: fixed; bottom: 24px; left: 50%; transform: translate(-50%, 20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; z-index: 9999; pointer-events: none;" class="bg-slate-900 text-white rounded-2xl px-6 py-4 shadow-2xl border border-slate-800 flex items-center gap-4">
     <div class="flex items-center gap-2 flex-shrink-0">
         <span class="flex h-3 w-3 relative">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
@@ -522,9 +522,22 @@ function updateSelectionBar() {
     
     if (checkboxes.length > 0) {
         selectedCount.innerText = checkboxes.length;
-        floatingBar.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+        floatingBar.style.display = 'flex';
+        // Force browser layout reflow to trigger transition animation
+        floatingBar.offsetHeight;
+        floatingBar.style.opacity = '1';
+        floatingBar.style.transform = 'translate(-50%, 0)';
+        floatingBar.style.pointerEvents = 'auto';
     } else {
-        floatingBar.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+        floatingBar.style.opacity = '0';
+        floatingBar.style.transform = 'translate(-50%, 20px)';
+        floatingBar.style.pointerEvents = 'none';
+        // Delay display setting to allow fade-out animation to finish
+        setTimeout(() => {
+            if (document.querySelectorAll('.device-checkbox:checked').length === 0) {
+                floatingBar.style.display = 'none';
+            }
+        }, 300);
         document.getElementById('select-all-devices').checked = false;
     }
 }
