@@ -12,7 +12,7 @@
         <h3 class="text-base font-bold leading-6 text-gray-900">Active Devices List</h3>
         @if(auth()->user()->role === 'admin')
             <div class="flex items-center gap-2">
-                <button type="button" id="batch-print-btn" onclick="openPrintModal()" disabled class="relative inline-flex items-center gap-x-1.5 rounded-lg bg-emerald-600 opacity-55 cursor-not-allowed px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 transition-all duration-200">
+                <button type="button" id="batch-print-btn" onclick="openPrintModal()" disabled class="relative inline-flex items-center gap-x-1.5 rounded-lg bg-emerald-600 opacity-50 cursor-not-allowed px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 transition-all duration-200">
                     <svg class="-ml-0.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                     </svg>
@@ -547,18 +547,20 @@ function updateSelectionBar() {
     const checkboxes = document.querySelectorAll('.device-checkbox:checked');
     const printBtn = document.getElementById('batch-print-btn');
     const selectedCountSpan = document.getElementById('selected-print-count');
-    
+
+    if (!printBtn) return;
+
     if (checkboxes.length > 0) {
-        selectedCountSpan.innerText = checkboxes.length;
+        if (selectedCountSpan) selectedCountSpan.innerText = checkboxes.length;
         printBtn.disabled = false;
-        printBtn.classList.remove('opacity-55', 'cursor-not-allowed');
+        printBtn.classList.remove('opacity-50', 'cursor-not-allowed');
         printBtn.classList.add('cursor-pointer');
     } else {
-        selectedCountSpan.innerText = '0';
+        if (selectedCountSpan) selectedCountSpan.innerText = '0';
         printBtn.disabled = true;
-        printBtn.classList.add('opacity-55', 'cursor-not-allowed');
+        printBtn.classList.add('opacity-50', 'cursor-not-allowed');
         printBtn.classList.remove('cursor-pointer');
-        
+
         const selectAllCb = document.getElementById('select-all-devices');
         if (selectAllCb) selectAllCb.checked = false;
     }
@@ -610,11 +612,11 @@ function startBatchPrint() {
         if (incGroup) {
             htmlContent += `<div class="lbl-sub">${group}</div>`;
         }
-        
-        // QR Code Placeholder
+
+        // QR Code placeholder
         const qrId = `qrcode-batch-${idx}`;
         htmlContent += `<div id="${qrId}" class="lbl-qrcode"></div>`;
-        
+
         if (incId) {
             htmlContent += `<div class="lbl-id">${devId}</div>`;
         }
@@ -637,10 +639,10 @@ function startBatchPrint() {
         });
     });
 
-    // Short timeout to allow QRCode canvas/images to render before opening print dialog
+    // Short timeout to allow QRCode canvas/images to render
     setTimeout(() => {
         window.print();
-    }, 350);
+    }, 500);
 }
 </script>
 @endif
