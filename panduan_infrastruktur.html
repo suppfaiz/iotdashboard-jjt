@@ -2091,6 +2091,48 @@
       </div>
     </div>
 
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon red">❌</div>
+        <div>
+          <div class="card-title">ESP32 Error: No more free space (LittleFS)</div>
+        </div>
+      </div>
+      <p><strong>Penyebab:</strong> ESP32 menyimpan data offline ke dalam file system internal (<span class="mono">LittleFS</span>) saat koneksi terputus. Jika terputus terlalu lama, memori flash akan penuh total dan mengunci filesystem.</p>
+      <p><strong>Solusi:</strong> Program template terbaru telah dilengkapi dengan auto-cleanup/auto-format jika sisa ruang &lt; 16KB. Untuk mereset manual ESP32 yang terlanjur penuh:</p>
+      <div class="cmd-block">
+        <span class="comment"># Flash program kosong sementara ke ESP32 untuk memformat LittleFS</span><br>
+        <span class="comment"># Di dalam setup():</span><br>
+        if (LittleFS.begin(true)) { LittleFS.format(); }
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon red">❌</div>
+        <div>
+          <div class="card-title">MQTT Koneksi Gagal (rc=5 / not authorised)</div>
+        </div>
+      </div>
+      <p><strong>Penyebab:</strong> Password MQTT di database (Web Settings) tidak selaras dengan file password terenkripsi Mosquitto di VPS.</p>
+      <p><strong>Solusi:</strong> Jalankan sinkronisasi kredensial dari terminal VPS:</p>
+      <div class="cmd-block">
+        <span class="comment"># 1. Hapus file password lama yang terkunci di VPS</span><br>
+        <span class="prompt">$</span> sudo rm -f .docker/passwd<br>
+        <span class="prompt">$</span> sudo touch .docker/passwd<br><br>
+        <span class="comment"># 2. Re-create container agar Docker me-refresh file mount</span><br>
+        <span class="prompt">$</span> sudo docker compose down<br>
+        <span class="prompt">$</span> sudo docker compose up -d<br>
+        <span class="prompt">$</span> sleep 3<br><br>
+        <span class="comment"># 3. Masukkan kembali user &amp; pass database ke Mosquitto (contoh: jamkrida_sensor &amp; pass_db)</span><br>
+        <span class="prompt">$</span> sudo docker compose exec mqtt mosquitto_passwd -b /mosquitto/config/passwd "jamkrida_sensor" "PASSWORD_DATABASE_ANDA"<br><br>
+        <span class="comment"># 4. Amankan kembali hak akses file</span><br>
+        <span class="prompt">$</span> sudo chown 1883:1883 .docker/passwd<br>
+        <span class="prompt">$</span> sudo chmod 600 .docker/passwd<br>
+        <span class="prompt">$</span> sudo docker compose restart mqtt
+      </div>
+    </div>
+
     <div class="divider"></div>
     <p style="text-align:center; color:#94a3b8; font-size:9pt; margin-top:20px;">
       📄 Jamkrida Energy IoT Dashboard — Panduan Infrastruktur v2.0<br>
