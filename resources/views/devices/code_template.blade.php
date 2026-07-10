@@ -309,6 +309,21 @@ void setup() {
   // Initialize LittleFS
   if (!LittleFS.begin(true)) {
     Serial.println("LittleFS Mount Failed");
+  } else {
+    size_t freeSpace = LittleFS.totalBytes() - LittleFS.usedBytes();
+    Serial.printf("[FS] LittleFS free space at boot: %u bytes\n", freeSpace);
+    if (freeSpace < 16384) {
+      Serial.println("[FS] Storage space is full or low at boot! Performing auto-cleanup...");
+      LittleFS.remove("/offline_log.json");
+      size_t freeSpaceAfter = LittleFS.totalBytes() - LittleFS.usedBytes();
+      if (freeSpaceAfter < 16384) {
+        Serial.println("[FS] Storage still critical. Formatting LittleFS...");
+        LittleFS.format();
+        Serial.println("[FS] LittleFS Formatted successfully.");
+      } else {
+        Serial.println("[FS] Storage cleared successfully by removing log file.");
+      }
+    }
   }
   
   #if {{ $mqtt_use_tls ?? 0 }}
