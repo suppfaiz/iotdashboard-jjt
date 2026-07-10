@@ -82,6 +82,13 @@ bool syncNTP() {
 
 // Offline telemetry logging to LittleFS
 void log_offline(float v, float a, float w, float kwh) {
+  // Check free space to prevent storage exhaustion
+  size_t freeSpace = LittleFS.totalBytes() - LittleFS.usedBytes();
+  if (freeSpace < 16384) { // less than 16KB free space
+    Serial.println("[FS] LittleFS free space is critically low! Removing old logs to free up space...");
+    LittleFS.remove("/offline_log.json");
+  }
+
   File file = LittleFS.open("/offline_log.json", "a");
   if (!file) {
     Serial.println("Failed to open offline_log.json for appending");
