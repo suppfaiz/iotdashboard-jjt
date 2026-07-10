@@ -306,6 +306,9 @@ bool reconnect() {
 void setup() {
   Serial.begin(115200);
   
+  // Initialize Serial2 for PZEM-004T communication
+  Serial2.begin(9600, SERIAL_8N1, PZEM_RX_PIN, PZEM_TX_PIN);
+  
   // Initialize LittleFS
   if (!LittleFS.begin(true)) {
     Serial.println("LittleFS Mount Failed");
