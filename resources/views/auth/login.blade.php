@@ -356,6 +356,9 @@
                     if (preloader) {
                         preloader.style.opacity = '0';
                         preloader.style.pointerEvents = 'none';
+                        setTimeout(() => {
+                            preloader.style.display = 'none';
+                        }, 800);
                     }
                 }, 2200);
             }, 600);

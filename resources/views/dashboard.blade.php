@@ -959,8 +959,10 @@ function toggleDashGroupField(type) {
         // Apply flash animation to indicate live WebSocket push in light theme
         if(cardElem) {
             cardElem.classList.remove('flash-active');
-            void cardElem.offsetWidth; // Trigger reflow
-            cardElem.classList.add('flash-active');
+            // Reset flash animation asynchronously without forcing a costly synchronous DOM reflow (offsetWidth)
+            setTimeout(() => {
+                cardElem.classList.add('flash-active');
+            }, 10);
             cardElem.classList.add('device-active');
             cardElem.setAttribute('data-last-seen', Math.floor(Date.now() / 1000));
 
