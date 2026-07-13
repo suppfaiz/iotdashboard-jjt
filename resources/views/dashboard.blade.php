@@ -78,18 +78,23 @@
 <!-- System Alerts & Status Banner -->
 <div id="active-alerts-container" class="mb-10 {{ count($activeWarnings) > 0 ? '' : 'hidden' }} space-y-3">
     <div class="bg-rose-50/60 border border-rose-150 rounded-3xl p-5 shadow-sm backdrop-blur-md">
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center justify-between mb-3 cursor-pointer select-none" onclick="toggleAlertsDropdown()">
             <div class="flex items-center gap-2 text-rose-800 font-extrabold text-sm tracking-tight">
                 <svg class="w-5 h-5 text-rose-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
                 Real-time System Alerts & Warnings
             </div>
-            <span id="alerts-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-200 text-rose-800">
-                {{ count($activeWarnings) }} Warnings
-            </span>
+            <div class="flex items-center gap-2">
+                <span id="alerts-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-200 text-rose-800">
+                    {{ count($activeWarnings) }} Warnings
+                </span>
+                <svg id="alerts-chevron" class="w-4 h-4 text-rose-600 transition-transform duration-200 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
         </div>
-        <div id="alerts-list" class="space-y-2">
+        <div id="alerts-list" class="space-y-2 hidden">
             @foreach($activeWarnings as $warning)
                 <div class="flex items-center justify-between p-3 rounded-2xl bg-white/70 border border-rose-100 text-slate-800 text-xs font-semibold shadow-sm gap-4" id="alert-item-{{ $warning['device_id'] }}-{{ $warning['type'] }}">
                     <div class="flex items-center gap-2">
@@ -743,6 +748,17 @@ function toggleDashGroupField(type) {
 
 <!-- Real-time WebSocket Listeners and Timeout Checks -->
 <script>
+    function toggleAlertsDropdown() {
+        const list = document.getElementById('alerts-list');
+        const chevron = document.getElementById('alerts-chevron');
+        if (list) {
+            list.classList.toggle('hidden');
+        }
+        if (chevron) {
+            chevron.classList.toggle('rotate-180');
+        }
+    }
+
     const plnTariff = {{ $plnTariff }};
     const vMin = {{ $vMin }};
     const vMax = {{ $vMax }};
