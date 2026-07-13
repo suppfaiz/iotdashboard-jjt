@@ -65,14 +65,14 @@
                                 class="device-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer">
                         </td>
                     @endif
-                    <td class="px-4 py-4 whitespace-nowrap">
+                    <td class="px-4 py-4">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>
                             </div>
-                            <div class="ml-4">
-                                <div class="text-sm font-bold text-gray-900">{{ $device->name }}</div>
-                                <div class="text-xs font-medium text-gray-500">{{ $device->device_id }}</div>
+                            <div class="ml-4 max-w-[180px] md:max-w-[240px]">
+                                <div class="text-sm font-bold text-gray-900 break-words whitespace-normal">{{ $device->name }}</div>
+                                <div class="text-xs font-medium text-gray-500 font-mono">{{ $device->device_id }}</div>
                             </div>
                         </div>
                     </td>

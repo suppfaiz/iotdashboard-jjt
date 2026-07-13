@@ -559,7 +559,7 @@
             </div>
         </nav>
 
-        <main class="flex-grow container mx-auto px-4 py-8 max-w-7xl relative z-10">
+        <main class="flex-grow container mx-auto px-4 py-8 max-w-[1400px] relative z-10">
             @yield('content')
             @isset($slot)
                 {{ $slot }}
