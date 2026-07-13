@@ -23,11 +23,10 @@
             min-height: 100vh;
         }
 
-        /* Floating background orbs */
+        /* Floating background orbs - Optimized to prevent GPU switching on dual-GPU Macbooks */
         .orb {
             position: fixed;
             border-radius: 50%;
-            filter: blur(120px);
             opacity: 0.35;
             z-index: 1;
             /* Render in front of body background but behind z-10 content wrapper */
@@ -41,7 +40,7 @@
         .orb-1 {
             width: 500px;
             height: 500px;
-            background: radial-gradient(circle, #60a5fa 0%, rgba(96, 165, 250, 0.1) 70%);
+            background: radial-gradient(circle, rgba(96, 165, 250, 0.35) 0%, rgba(96, 165, 250, 0) 70%);
             top: -10%;
             left: -10%;
             animation-delay: 0s;
@@ -50,7 +49,7 @@
         .orb-2 {
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, #34d399 0%, rgba(52, 211, 153, 0.1) 70%);
+            background: radial-gradient(circle, rgba(52, 211, 153, 0.35) 0%, rgba(52, 211, 153, 0) 70%);
             bottom: -15%;
             right: -10%;
             animation-delay: -5s;
@@ -59,7 +58,7 @@
         .orb-3 {
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, #22d3ee 0%, rgba(34, 211, 238, 0.1) 70%);
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.35) 0%, rgba(34, 211, 238, 0) 70%);
             bottom: 30%;
             left: 15%;
             animation-delay: -10s;

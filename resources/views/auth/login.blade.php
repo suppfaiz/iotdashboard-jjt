@@ -19,11 +19,10 @@
             inset: 0;
         }
 
-        /* Floating background elements */
+        /* Floating background elements - Optimized to prevent GPU switching on dual-GPU Macbooks */
         .orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
             opacity: 0.45;
             z-index: 0;
             animation: float 25s infinite ease-in-out;
@@ -31,7 +30,7 @@
         .orb-1 {
             width: 500px;
             height: 500px;
-            background: radial-gradient(circle, #3b82f6 0%, #60a5fa 100%);
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.45) 0%, rgba(59, 130, 246, 0) 70%);
             top: -10%;
             left: -10%;
             animation-delay: 0s;
@@ -39,7 +38,7 @@
         .orb-2 {
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, #10b981 0%, #34d399 100%);
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.45) 0%, rgba(16, 185, 129, 0) 70%);
             bottom: -20%;
             right: -10%;
             animation-delay: -5s;
@@ -47,7 +46,7 @@
         .orb-3 {
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, #06b6d4 0%, #22d3ee 100%);
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, rgba(6, 182, 212, 0) 70%);
             bottom: 30%;
             left: 20%;
             animation-delay: -10s;
@@ -55,10 +54,10 @@
 
         @keyframes float {
             0%, 100% {
-                transform: translateY(0) scale(1) rotate(0deg);
+                transform: translateY(0);
             }
             50% {
-                transform: translateY(-40px) scale(1.15) rotate(180deg);
+                transform: translateY(-30px);
             }
         }
 
