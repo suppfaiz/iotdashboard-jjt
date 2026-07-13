@@ -66,14 +66,13 @@
         }
 
         @keyframes float {
-
             0%,
             100% {
-                transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+                transform: translate3d(0, 0, 0);
             }
 
             50% {
-                transform: translate3d(0, -40px, 0) scale(1.15) rotate(180deg);
+                transform: translate3d(0, -30px, 0);
             }
         }
 

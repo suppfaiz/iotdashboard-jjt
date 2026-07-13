@@ -759,6 +759,28 @@ function toggleDashGroupField(type) {
         }
     }
 
+    // Throttling helper to prevent DOM thrashing and CPU/GPU spikes from high-frequency WebSocket updates
+    function throttle(func, limit) {
+        let lastFunc;
+        let lastRan;
+        return function() {
+            const context = this;
+            const args = arguments;
+            if (!lastRan) {
+                func.apply(context, args);
+                lastRan = Date.now();
+            } else {
+                clearTimeout(lastFunc);
+                lastFunc = setTimeout(function() {
+                    if ((Date.now() - lastRan) >= limit) {
+                        func.apply(context, args);
+                        lastRan = Date.now();
+                    }
+                }, limit - (Date.now() - lastRan));
+            }
+        }
+    }
+
     const plnTariff = {{ $plnTariff }};
     const vMin = {{ $vMin }};
     const vMax = {{ $vMax }};
@@ -772,7 +794,7 @@ function toggleDashGroupField(type) {
 
     const groupDevicesMap = {!! json_encode($groups->mapWithKeys(fn($g) => [$g->id => $g->devices->pluck('device_id')->all()])) !!};
 
-    function updateElectricalFlowUI() {
+    function rawUpdateElectricalFlowUI() {
         let totalSystemPower = 0;
         let isAnyGroupActive = false;
         
@@ -873,7 +895,7 @@ function toggleDashGroupField(type) {
         ($w['device_id'] . '_' . $w['type']) => $w
     ])->all()) !!};
 
-    function renderWarningsUI() {
+    function rawRenderWarningsUI() {
         const container = document.getElementById('active-alerts-container');
         const list = document.getElementById('alerts-list');
         const badge = document.getElementById('alerts-count-badge');
@@ -908,7 +930,7 @@ function toggleDashGroupField(type) {
         });
     }
 
-    function recalculateTotalEnergy() {
+    function rawRecalculateTotalEnergy() {
         let totalEnergy = 0;
         let totalCost = 0;
         for (const deviceId in energyRegistry) {
@@ -922,6 +944,11 @@ function toggleDashGroupField(type) {
         document.getElementById('total-energy-value').innerText = totalEnergy.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
         document.getElementById('estimated-cost-value').innerText = totalCost.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
+
+    // Expose throttled versions to prevent high-frequency DOM/SVG redraw CPU spikes
+    const updateElectricalFlowUI = throttle(rawUpdateElectricalFlowUI, 1000);
+    const renderWarningsUI = throttle(rawRenderWarningsUI, 1000);
+    const recalculateTotalEnergy = throttle(rawRecalculateTotalEnergy, 1000);
 
     // Function to update UI dynamically when telemetries are received
     function updateDeviceUI(deviceId, data) {
