@@ -38,24 +38,24 @@
             <thead class="bg-gray-50">
                 <tr>
                     @if(auth()->user()->role === 'admin')
-                        <th scope="col" class="w-10 px-6 py-3 text-left">
+                        <th scope="col" class="w-10 px-3 py-3 text-left">
                             <input type="checkbox" id="select-all-devices" onclick="toggleSelectAll(this)" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer">
                         </th>
                     @endif
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">Device & ID</th>
-                    <th scope="col" class="hidden sm:table-cell px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">Group Area</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">Status</th>
-                    <th scope="col" class="hidden sm:table-cell px-6 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">IP Address</th>
-                    <th scope="col" class="hidden md:table-cell px-6 py-3 text-right text-xs font-extrabold text-gray-500 uppercase tracking-wider">Indicators (V/A/W)</th>
-                    <th scope="col" class="px-6 py-3 text-right text-xs font-extrabold text-gray-500 uppercase tracking-wider">Total Energy</th>
-                    <th scope="col" class="px-6 py-3 text-right text-xs font-extrabold text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">Device & ID</th>
+                    <th scope="col" class="hidden sm:table-cell px-4 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">Group Area</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">Status</th>
+                    <th scope="col" class="hidden sm:table-cell px-4 py-3 text-left text-xs font-extrabold text-gray-500 uppercase tracking-wider">IP Address</th>
+                    <th scope="col" class="hidden md:table-cell px-4 py-3 text-right text-xs font-extrabold text-gray-500 uppercase tracking-wider">Indicators (V/A/W)</th>
+                    <th scope="col" class="px-4 py-3 text-right text-xs font-extrabold text-gray-500 uppercase tracking-wider">Total Energy</th>
+                    <th scope="col" class="px-4 py-3 text-right text-xs font-extrabold text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($devices as $device)
                 <tr class="hover:bg-gray-50 transition-colors">
                     @if(auth()->user()->role === 'admin')
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-3 py-4 whitespace-nowrap">
                             <input type="checkbox" name="selected_devices[]" value="{{ $device->id }}" 
                                 data-name="{{ $device->name }}" 
                                 data-id="{{ $device->device_id }}" 
@@ -65,7 +65,7 @@
                                 class="device-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer">
                         </td>
                     @endif
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td class="px-4 py-4 whitespace-nowrap">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>
@@ -76,10 +76,10 @@
                             </div>
                         </div>
                     </td>
-                    <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+                    <td class="hidden sm:table-cell px-4 py-4 whitespace-nowrap">
                         <div class="text-sm font-semibold text-gray-900">{{ $device->group->name }}</div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td class="px-4 py-4 whitespace-nowrap">
                         @if($metrics[$device->id]['status'] === 'Online')
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -92,12 +92,12 @@
                             </span>
                         @endif
                     </td>
-                    <td class="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+                    <td class="hidden sm:table-cell px-4 py-4 whitespace-nowrap">
                         <span class="inline-flex items-center rounded-lg bg-slate-50 px-2.5 py-1 text-xs font-bold text-slate-700 ring-1 ring-inset ring-slate-600/20 font-mono">
                             {{ $metrics[$device->id]['ip'] }}
                         </span>
                     </td>
-                    <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-right">
+                    <td class="hidden md:table-cell px-4 py-4 whitespace-nowrap text-right">
                         <div class="text-sm text-gray-900 space-x-2 font-mono">
                             <span class="font-semibold text-blue-600" title="Voltage">{{ number_format($metrics[$device->id]['voltage'], 1) }}V</span>
                             <span class="text-gray-300">|</span>
@@ -106,18 +106,18 @@
                             <span class="font-semibold text-indigo-600" title="Power">{{ number_format($metrics[$device->id]['power'], 1) }}W</span>
                         </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                    <td class="px-4 py-4 whitespace-nowrap text-right">
                         <span class="inline-flex items-center rounded-lg bg-teal-50 px-2.5 py-1 text-xs font-bold text-teal-700 ring-1 ring-inset ring-teal-600/20">
                             {{ number_format($metrics[$device->id]['energy'], 3) }} kWh
                         </span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <a href="{{ route('devices.show', $device->id) }}" class="text-blue-600 hover:text-blue-900 font-bold hover:underline decoration-2 underline-offset-4">View Detail</a>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="px-6 py-12 text-center text-sm font-medium text-gray-500">
+                    <td colspan="8" class="px-4 py-12 text-center text-sm font-medium text-gray-500">
                         <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
