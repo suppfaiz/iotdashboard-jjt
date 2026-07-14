@@ -551,6 +551,16 @@ class AdvancedExtensionsTest extends TestCase
         $this->assertNull($outage->outage_end);
         $this->assertNull($outage->duration_seconds);
 
+        // Assert Telegram API was called for total outage alert
+        Http::assertSent(function ($request) {
+            return str_contains($request->url(), 'fake_token/sendMessage') &&
+                   $request['chat_id'] === 'fake_chat' &&
+                   str_contains($request['text'], 'NOTIFIKASI MATI LAMPU TOTAL');
+        });
+
+        // Clear HTTP fake recorder history
+        Http::fake();
+
         // 2. Mark device as online
         Cache::put("last_seen:dev_test123", now()->timestamp);
 
@@ -561,6 +571,13 @@ class AdvancedExtensionsTest extends TestCase
         $outage->refresh();
         $this->assertNotNull($outage->outage_end);
         $this->assertNotNull($outage->duration_seconds);
+
+        // Assert Telegram API was called for recovery alert
+        Http::assertSent(function ($request) {
+            return str_contains($request->url(), 'fake_token/sendMessage') &&
+                   $request['chat_id'] === 'fake_chat' &&
+                   str_contains($request['text'], 'NOTIFIKASI LISTRIK MENYALA KEMBALI');
+        });
     }
 
     public function test_logs_outages_view(): void

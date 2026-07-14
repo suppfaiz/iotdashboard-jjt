@@ -34,11 +34,18 @@ class MonitorDevicesCommand extends Command
 
             // 1. Heartbeat Check
             $lastSeen = Cache::get("last_seen:{$device->device_id}", 0);
-            $isOffline = ($lastSeen === 0 || (now()->timestamp - $lastSeen) > 300); // 5 minutes threshold
+            
+            // Individual alert threshold remains 5 minutes (300 seconds)
+            $isOffline = ($lastSeen === 0 || (now()->timestamp - $lastSeen) > 300);
             $offlineCacheKey = "offline_alert_sent:{$device->device_id}";
 
-            if ($isOffline) {
+            // Total Outage check uses a faster 30-second threshold
+            $isOffline30s = ($lastSeen === 0 || (now()->timestamp - $lastSeen) > 30);
+            if ($isOffline30s) {
                 $offlineCount++;
+            }
+
+            if ($isOffline) {
                 if (!Cache::has($offlineCacheKey)) {
                     $lastSeenStr = $lastSeen > 0 ? Carbon::createFromTimestamp($lastSeen)->diffForHumans() : 'Never';
                     $message = "⚠️ <b>DEVICE OFFLINE ALERT</b>\nPerangkat <b>{$device->name}</b> terdeteksi OFFLINE.\nTerakhir terlihat: {$lastSeenStr}";
@@ -118,6 +125,10 @@ class MonitorDevicesCommand extends Command
                     \App\Models\OutageLog::create([
                         'outage_start' => now(),
                     ]);
+                    
+                    // Send alert to Telegram immediately
+                    $message = "🚨 <b>NOTIFIKASI MATI LAMPU TOTAL (SEMUA DEVICE OFFLINE)</b>\n\nSeluruh perangkat IoT (<b>{$totalDevices} alat</b>) terdeteksi offline secara bersamaan sejak 30 detik yang lalu.\n\n⚠️ Kemungkinan terjadi pemadaman listrik total di lokasi.";
+                    $this->sendTelegram($botToken, $chatId, $message);
                 }
             } else {
                 if ($activeOutage) {
@@ -127,6 +138,11 @@ class MonitorDevicesCommand extends Command
                         'outage_end' => $end,
                         'duration_seconds' => $duration,
                     ]);
+                    
+                    // Send recovery alert to Telegram immediately
+                    $durationStr = $this->formatDuration($duration);
+                    $message = "⚡️ <b>NOTIFIKASI LISTRIK MENYALA KEMBALI</b>\n\nPerangkat IoT mulai online kembali.\n\n🔌 Listrik menyala setelah padam selama: <b>{$durationStr}</b>.";
+                    $this->sendTelegram($botToken, $chatId, $message);
                 }
             }
         }
@@ -147,5 +163,27 @@ class MonitorDevicesCommand extends Command
         } catch (\Exception $e) {
             $this->error("Failed to send Telegram alert: " . $e->getMessage());
         }
+    }
+
+    protected function formatDuration($seconds)
+    {
+        if ($seconds <= 0) return '0 detik';
+        
+        $parts = [];
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds % 3600) / 60);
+        $remainingSeconds = $seconds % 60;
+
+        if ($hours > 0) {
+            $parts[] = "{$hours} jam";
+        }
+        if ($minutes > 0) {
+            $parts[] = "{$minutes} menit";
+        }
+        if ($remainingSeconds > 0 || empty($parts)) {
+            $parts[] = "{$remainingSeconds} detik";
+        }
+
+        return implode(' ', $parts);
     }
 }
