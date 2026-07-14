@@ -26,6 +26,8 @@ class MonitorDevicesCommand extends Command
 
         $devices = Device::where('status', true)->get();
         $plnTariff = floatval(SystemConfig::where('key', 'pln_tariff')->value('value') ?? 1444.70);
+        $totalDevices = $devices->count();
+        $offlineCount = 0;
 
         foreach ($devices as $device) {
             $this->info("Monitoring device: {$device->name} ({$device->device_id})");
@@ -36,6 +38,7 @@ class MonitorDevicesCommand extends Command
             $offlineCacheKey = "offline_alert_sent:{$device->device_id}";
 
             if ($isOffline) {
+                $offlineCount++;
                 if (!Cache::has($offlineCacheKey)) {
                     $lastSeenStr = $lastSeen > 0 ? Carbon::createFromTimestamp($lastSeen)->diffForHumans() : 'Never';
                     $message = "⚠️ <b>DEVICE OFFLINE ALERT</b>\nPerangkat <b>{$device->name}</b> terdeteksi OFFLINE.\nTerakhir terlihat: {$lastSeenStr}";
@@ -101,6 +104,29 @@ class MonitorDevicesCommand extends Command
                             Cache::put($cost80Key, true, now()->addDay()); // 24-hour cooldown
                         }
                     }
+                }
+            }
+        }
+
+        // 3. Outage Logs Tracking (Detect if ALL devices are offline -> full power outage)
+        if ($totalDevices > 0) {
+            $allOffline = ($offlineCount === $totalDevices);
+            $activeOutage = \App\Models\OutageLog::whereNull('outage_end')->first();
+
+            if ($allOffline) {
+                if (!$activeOutage) {
+                    \App\Models\OutageLog::create([
+                        'outage_start' => now(),
+                    ]);
+                }
+            } else {
+                if ($activeOutage) {
+                    $end = now();
+                    $duration = $end->diffInSeconds($activeOutage->outage_start);
+                    $activeOutage->update([
+                        'outage_end' => $end,
+                        'duration_seconds' => $duration,
+                    ]);
                 }
             }
         }

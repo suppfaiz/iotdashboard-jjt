@@ -533,4 +533,53 @@ class AdvancedExtensionsTest extends TestCase
         $response->assertViewIs('devices.voice_simulation');
         $response->assertSee('JASMIN VOICE ASSISTANT PLAYGROUND');
     }
+
+    public function test_outage_logs_detection_and_resolution(): void
+    {
+        // Clear table
+        \App\Models\OutageLog::truncate();
+
+        // 1. Mark device as offline
+        Cache::put("last_seen:dev_test123", now()->subMinutes(6)->timestamp);
+
+        // Run monitor
+        $this->artisan('devices:monitor')->assertExitCode(0);
+
+        // Assert outage log was created
+        $this->assertDatabaseCount('outage_logs', 1);
+        $outage = \App\Models\OutageLog::first();
+        $this->assertNull($outage->outage_end);
+        $this->assertNull($outage->duration_seconds);
+
+        // 2. Mark device as online
+        Cache::put("last_seen:dev_test123", now()->timestamp);
+
+        // Run monitor again
+        $this->artisan('devices:monitor')->assertExitCode(0);
+
+        // Assert outage log was resolved
+        $outage->refresh();
+        $this->assertNotNull($outage->outage_end);
+        $this->assertNotNull($outage->duration_seconds);
+    }
+
+    public function test_logs_outages_view(): void
+    {
+        // Clear table
+        \App\Models\OutageLog::truncate();
+
+        // Seed an outage
+        \App\Models\OutageLog::create([
+            'outage_start' => now()->subMinutes(10),
+            'outage_end' => now(),
+            'duration_seconds' => 600,
+        ]);
+
+        $response = $this->actingAs($this->admin)->get('/logs?type=outages');
+        $response->assertStatus(200);
+        $response->assertSee('Outage Logs');
+        $response->assertSee('Server Uptime');
+        $response->assertSee('Total Mati Lampu');
+        $response->assertSee('1 kali');
+    }
 }
